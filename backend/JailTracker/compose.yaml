@@ -1,0 +1,6 @@
+﻿services:
+  jailtracker:
+    image: jailtracker
+    build:
+      context: .
+      dockerfile: JailTracker/Dockerfile
