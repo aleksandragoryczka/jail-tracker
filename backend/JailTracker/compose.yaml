@@ -1,0 +1,27 @@
+﻿services:
+  jail-tracker-db:
+    image: postgres:latest
+    container_name: jail-tracker-db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  jail-tracker-backend:
+    build:
+      context: .
+      dockerfile: JailTracker.Api/Dockerfile
+    ports:
+      - "8080:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__Default=Host=jail-tracker-db;Port=5432;Username=postgres;Password=password;Database=postgres
+    depends_on:
+      - jail-tracker-db
+
+volumes:
+  postgres_data:
