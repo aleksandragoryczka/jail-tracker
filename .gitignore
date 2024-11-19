@@ -9,3 +9,18 @@
 
 backend/JailTracker/JailTracker.*/bin/*
 backend/JailTracker/JailTracker.*/obj/*
+
+frontend/JailTracker/node_modules/
+frontend/JailTracker/dist/
+frontend/JailTracker/.angular/
+frontend/JailTracker/.history/
+frontend/JailTracker/.idea/
+
+*.log
+*.tmp
+*.swp
+.DS_Store
+Thumbs.db
+
+.dockerignore
+.git/
