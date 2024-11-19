@@ -9,6 +9,7 @@
 
 backend/JailTracker/JailTracker.*/bin/*
 backend/JailTracker/JailTracker.*/obj/*
+backend/JailTracker/.vs
 
 frontend/JailTracker/node_modules/
 frontend/JailTracker/dist/
