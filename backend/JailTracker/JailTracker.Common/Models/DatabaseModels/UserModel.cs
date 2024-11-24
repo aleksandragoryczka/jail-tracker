@@ -29,7 +29,7 @@ public class UserModel
     [JsonIgnore]
     public virtual ICollection<PermissionModel> Permissions { get; set; }
     [JsonIgnore]
-    public virtual ICollection<PassModel> Passes { get; set; }
+    public virtual ICollection<RequestModel> Passes { get; set; }
     [JsonIgnore]
-    public virtual ICollection<PassModel> PassesSupervised { get; set; }
+    public virtual ICollection<RequestModel> PassesSupervised { get; set; }
 }

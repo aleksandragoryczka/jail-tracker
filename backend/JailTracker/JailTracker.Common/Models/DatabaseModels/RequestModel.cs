@@ -3,9 +3,9 @@ using JailTracker.Common.Enums;
 
 namespace JailTracker.Common.Models.DatabaseModels;
 
-public class PassModel
+public class RequestModel
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     public DateTime FromDate { get; set; }
     public DateTime ToDate { get; set; }
     public bool IsActive { get; set; }
@@ -14,6 +14,7 @@ public class PassModel
     public virtual UserModel User { get; set; }
     public ApprovalState ApprovalState { get; set; }
     public int? PassSupervisorId { get; set; }
+    public RequestType RequestType { get; set; }
     [JsonIgnore]
     public virtual UserModel PassSupervisor { get; set; }
 }

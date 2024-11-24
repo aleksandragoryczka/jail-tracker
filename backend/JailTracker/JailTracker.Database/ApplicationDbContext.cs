@@ -13,13 +13,13 @@ public class ApplicationDbContext : DbContext
             .WithOne(x => x.CurrentPassesSupervisor)
             .HasForeignKey(x => x.CurrentPassesSupervisorId);
 
-        modelBuilder.Entity<PassModel>()
+        modelBuilder.Entity<RequestModel>()
             .HasOne(a => a.User)
             .WithMany(g => g.Passes)
             .HasForeignKey(a => a.UserId)
             .OnDelete(DeleteBehavior.NoAction);
 
-        modelBuilder.Entity<PassModel>()
+        modelBuilder.Entity<RequestModel>()
             .HasOne(a => a.PassSupervisor)
             .WithMany(g => g.PassesSupervised)
             .HasForeignKey(a => a.PassSupervisorId)
@@ -29,5 +29,5 @@ public class ApplicationDbContext : DbContext
     public DbSet<UserModel> Users { get; set; }
     public DbSet<PrisonModel> Prisons { get; set; }
     public DbSet<PermissionModel> Permissions { get; set; }
-    public DbSet<PassModel> Passes { get; set; }
+    public DbSet<RequestModel> Requests { get; set; }
 }
