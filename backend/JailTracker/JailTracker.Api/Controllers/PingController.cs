@@ -10,7 +10,7 @@ public class PingController : ControllerBase
     [HttpGet]
     public ActionResult Pong()
     {
-        return Ok($"png");
+        return Ok($"pong");
     }
     /*[HttpGet("auth"), Authorize]
     public ActionResult PongAuth()

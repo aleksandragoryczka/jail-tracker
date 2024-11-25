@@ -4,7 +4,7 @@ namespace JailTracker.Common.Dto
 {
     public class RequestApprovalStateDto
     {
-        public Guid AbsenceId { get; set; }
+        public Guid RequestId { get; set; }
         public ApprovalState ApprovalState { get; set; }
     }
 }

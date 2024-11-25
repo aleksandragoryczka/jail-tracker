@@ -5,7 +5,6 @@ using JailTracker.Common.Enums;
 using JailTracker.Common.Identity;
 using JailTracker.Common.Interfaces;
 using JailTracker.Common.Models.DatabaseModels;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JailTracker.Api.Controllers
@@ -36,15 +35,13 @@ namespace JailTracker.Api.Controllers
         {
             try
             {
-                // var userId = User.Identity.GetUserId(); // Uncomment if using Identity
-                var userId = 1; // Default for testing
+                var userId = User.Identity.GetUserId(); 
 
                 RequestModel createdRequest = _requestsService.CreateRequest(userId, requestDto);
                 return Ok(createdRequest);
             }
             catch (Exception ex)
             {
-                // Return a more descriptive error message
                 return StatusCode(500, new { message = "An error occurred while processing your request.", details = ex.Message });
             }
         }

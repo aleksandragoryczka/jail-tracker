@@ -17,18 +17,24 @@ namespace JailTracker.Infrastructure.Services
 
         public RequestModel SetApprovalState(RequestApprovalStateDto requestApprovalState, int supervisorId)
         {
-            var absence = _context.Requests
+            var supervisor = _context.Users.Where(x => x.Id == supervisorId).First();
+            if (supervisor == null)
+            {
+                throw new ArgumentException("Supervisor not found");
+            }
+
+            var request = _context.Requests
                 .Where(x => x.IsActive)
-                .Where(x => x.Id == requestApprovalState.AbsenceId)
+                .Where(x => x.Id == requestApprovalState.RequestId)
                 .Where(x => x.PassSupervisorId == supervisorId)
                 .FirstOrDefault();
 
-            if (absence == default) return default;
+            if (request == default) return default;
 
-            absence.ApprovalState = requestApprovalState.ApprovalState;
+            request.ApprovalState = requestApprovalState.ApprovalState;
             _context.SaveChanges();
 
-            return absence;
+            return request;
         }
 
         public RequestModel CreateRequest(int userId, CreateRequestDto requestDto)
@@ -38,21 +44,23 @@ namespace JailTracker.Infrastructure.Services
             {
                 throw new ArgumentException("User not found");
             }
-
+            
             if (user.CurrentPassesSupervisor == null)
             {
                 throw new ArgumentException("CurrentPassesSupervisor is not assigned to the user");
             }
+            var fromDateUtc = requestDto.FromDate.ToUniversalTime();
+            var toDateUtc = requestDto.ToDate.ToUniversalTime();
+
             RequestModel newRequest = new RequestModel
             {
                 Id = Guid.NewGuid(),
-                FromDate = requestDto.FromDate,
-                ToDate = requestDto.ToDate,
+                FromDate = fromDateUtc,
+                ToDate = toDateUtc,
                 IsActive = true,
                 UserId = userId,
                 ApprovalState = ApprovalState.Pending,
-                //PassSupervisorId = user.CurrentPassesSupervisor.Id,
-                PassSupervisorId = 1,
+                PassSupervisorId = user.CurrentPassesSupervisor.Id,
                 RequestType = requestDto.RequestType
             };
 
