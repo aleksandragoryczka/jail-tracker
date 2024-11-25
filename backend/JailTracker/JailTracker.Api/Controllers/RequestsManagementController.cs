@@ -21,14 +21,14 @@ public class RequestsManagementController : ControllerBase
     
     [HttpGet]
     //[Authorize(Policy = IdentityData.MatchOrganizationIdQueryPolicy)]
-    public ActionResult<PaginatedResult<RequestModelDto>> GetAbsencesByOrganizationId(int prisonId, DateTime from, DateTime to, int skip = 0, int take = 10)
+    public ActionResult<PaginatedResult<RequestModelDto>> GetRequestsByPrisonId(int prisonId, DateTime from, DateTime to, int skip = 0, int take = 10)
     {
         var res = _requestsManagementService.GetRequestsByPrisonId(prisonId, from, to, skip, take);
         return Ok(res);
     }
     
     [HttpGet]
-    public ActionResult<PaginatedResult<RequestModel>> GetAbsencesByDateForUser(DateTime from, DateTime to, int skip = 0, int take = 10)
+    public ActionResult<PaginatedResult<RequestModel>> GetRequestsByDateForUser(DateTime from, DateTime to, int skip = 0, int take = 10)
     {
         var userId = User.Identity.GetUserId();
         var res = _requestsManagementService.GetRequestsByUserId(userId, from, to, skip, take);
