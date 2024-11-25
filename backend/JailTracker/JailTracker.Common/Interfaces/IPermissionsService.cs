@@ -6,5 +6,4 @@ namespace JailTracker.Common.Interfaces;
 public interface IPermissionsService
 {
     bool UpdatePermissions(UpdatePermissionsDto updatePermissionsDto);
-    bool VerifyPermissionDatabase(int userId, PermissionType permType, int? prisonId);
 }

@@ -26,7 +26,7 @@ namespace JailTracker.Infrastructure.Services
             var request = _context.Requests
                 .Where(x => x.IsActive)
                 .Where(x => x.Id == requestApprovalState.RequestId)
-                .Where(x => x.PassSupervisorId == supervisorId)
+                .Where(x => x.RequestSupervisorId == supervisorId)
                 .FirstOrDefault();
 
             if (request == default) return default;
@@ -45,9 +45,9 @@ namespace JailTracker.Infrastructure.Services
                 throw new ArgumentException("User not found");
             }
             
-            if (user.CurrentPassesSupervisor == null)
+            if (user.CurrentRequestsSupervisor == null)
             {
-                throw new ArgumentException("CurrentPassesSupervisor is not assigned to the user");
+                throw new ArgumentException("CurrentRequestsSupervisor is not assigned to the user");
             }
             var fromDateUtc = requestDto.FromDate.ToUniversalTime();
             var toDateUtc = requestDto.ToDate.ToUniversalTime();
@@ -60,7 +60,7 @@ namespace JailTracker.Infrastructure.Services
                 IsActive = true,
                 UserId = userId,
                 ApprovalState = ApprovalState.Pending,
-                PassSupervisorId = user.CurrentPassesSupervisor.Id,
+                RequestSupervisorId = user.CurrentRequestsSupervisor.Id,
                 RequestType = requestDto.RequestType
             };
 

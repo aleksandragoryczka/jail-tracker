@@ -10,19 +10,19 @@ public class ApplicationDbContext : DbContext
     {
         modelBuilder.Entity<UserModel>()
             .HasMany(x => x.SupervisedPrisoners)
-            .WithOne(x => x.CurrentPassesSupervisor)
-            .HasForeignKey(x => x.CurrentPassesSupervisorId);
+            .WithOne(x => x.CurrentRequestsSupervisor)
+            .HasForeignKey(x => x.CurrentRequestsSupervisorId);
 
         modelBuilder.Entity<RequestModel>()
             .HasOne(a => a.User)
-            .WithMany(g => g.Passes)
+            .WithMany(g => g.Requests)
             .HasForeignKey(a => a.UserId)
             .OnDelete(DeleteBehavior.NoAction);
 
         modelBuilder.Entity<RequestModel>()
-            .HasOne(a => a.PassSupervisor)
-            .WithMany(g => g.PassesSupervised)
-            .HasForeignKey(a => a.PassSupervisorId)
+            .HasOne(a => a.RequestSupervisor)
+            .WithMany(g => g.RequestsSupervised)
+            .HasForeignKey(a => a.RequestSupervisorId)
             .OnDelete(DeleteBehavior.NoAction);
     }
 

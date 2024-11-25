@@ -13,8 +13,8 @@ public class RequestModel
     [JsonIgnore]
     public virtual UserModel User { get; set; }
     public ApprovalState ApprovalState { get; set; }
-    public int? PassSupervisorId { get; set; }
+    public int? RequestSupervisorId { get; set; }
     public RequestType RequestType { get; set; }
     [JsonIgnore]
-    public virtual UserModel PassSupervisor { get; set; }
+    public virtual UserModel RequestSupervisor { get; set; }
 }

@@ -21,15 +21,15 @@ public class UserModel
     public int? PrisonId { get; set; }
     [JsonIgnore]
     public virtual PrisonModel Prison { get; set; }
-    public int? CurrentPassesSupervisorId { get; set; }
+    public int? CurrentRequestsSupervisorId { get; set; }
     [JsonIgnore]
-    public virtual UserModel CurrentPassesSupervisor { get; set; }
+    public virtual UserModel CurrentRequestsSupervisor { get; set; }
     [JsonIgnore]
     public virtual ICollection<UserModel> SupervisedPrisoners { get; set; }
     [JsonIgnore]
     public virtual ICollection<PermissionModel> Permissions { get; set; }
     [JsonIgnore]
-    public virtual ICollection<RequestModel> Passes { get; set; }
+    public virtual ICollection<RequestModel> Requests { get; set; }
     [JsonIgnore]
-    public virtual ICollection<RequestModel> PassesSupervised { get; set; }
+    public virtual ICollection<RequestModel> RequestsSupervised { get; set; }
 }
