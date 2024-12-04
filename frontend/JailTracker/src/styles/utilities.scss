@@ -1,0 +1,112 @@
+@import '../_variables';
+.upwork-btn {
+  min-width: 80px;
+  min-height: 40px;
+  font-weight: 500;
+  color: $black;
+  padding: 8px 20px;
+  border: solid 2px;
+  border-radius: 5px;
+  transition: 255ms;
+  transform: translateY(0);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.upwork-btn-primary {
+  background-color: $light-orange;
+  border-color: $light-orange;
+}
+
+.upwork-btn-secondary {
+  background-color: $light-beige;
+  border-color: $light-beige;
+}
+
+.upwork-btn:hover {
+  transition: 255ms;
+  color: $dark-blue;
+  border: none;
+  border: solid 2px $dark-blue;
+}
+
+// <input matInput type="text" class="upwork-input" />
+
+.upwork-input {
+  font-weight: 500;
+  border-color: $dark-blue;
+  border-style: solid;
+  border-radius: 5px;
+  outline-width: 0;
+  width: 100%;
+  height: 38px;
+  padding: 5px 5px 5px 10px;
+  border-width: 2px;
+}
+
+.upwork-input:focus-visible {
+  border: 2px solid $light-grey;
+}
+
+// <mat-select class="upwork-select" panelClass="upwork-select-panel">
+//       <mat-option value="red">Red</mat-option>
+//       <mat-option value="green">Green</mat-option>
+//       <mat-option value="blue">Blue</mat-option>
+// </mat-select>
+
+.upwork-select {
+  font-weight: 500;
+  border-color: $dark-blue;
+  border-style: solid;
+  border-radius: 5px;
+  outline-width: 0;
+  width: 100%;
+  height: 38px;
+  padding: 5px 5px 5px 10px;
+  border-width: 2px;
+  background-color: $white;
+}
+
+.upwork-select-panel {
+  background-color: $white;
+  left: -12px;
+  top: 3px;
+  position: relative !important;
+  border-style: solid;
+  border-color: $dark-blue;
+  border-width: 0 2px 2px 2px;
+}
+.mat-mdc-option:hover:not(.mdc-list-item--disabled),
+.mat-mdc-option:focus:not(.mdc-list-item--disabled),
+.mat-mdc-option.mat-mdc-option-active,
+.mat-mdc-option.mdc-list-item--selected:not(.mat-mdc-option-multiple):not(
+    .mdc-list-item--disabled
+  ) {
+  background-color: $light-blue;
+}
+
+.mat-pseudo-checkbox-checked.mat-pseudo-checkbox-minimal::after,
+.mat-pseudo-checkbox-indeterminate.mat-pseudo-checkbox-minimal::after {
+  color: $dark-blue;
+}
+
+.mat-mdc-select-arrow svg {
+  color: $white;
+  height: 37px;
+  background-color: $dark-blue;
+  border: 2px solid $dark-blue;
+  border-radius: 0 5px 5px 0;
+}
+
+mat-form-field .mat-mdc-select-arrow svg {
+  height: 56px;
+  width: 36px;
+  margin-left: 5px;
+}
+
+.mat-mdc-option {
+  min-height: 38px !important;
+}

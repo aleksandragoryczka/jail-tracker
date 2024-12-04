@@ -1,0 +1,24 @@
+.form-group {
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+
+  label {
+    width: 100%;
+  }
+}
+
+.upwork-default-content-container {
+  min-width: 500px;
+}
+
+@media screen and (max-width: 1024px) {
+  .upwork-default-container {
+    justify-content: center;
+  }
+
+  .upwork-default-content-container {
+    min-width: 300px;
+    width: unset;
+  }
+}

@@ -1,0 +1,69 @@
+<div class="navigation-container">
+  <nav
+    class="navbar navbar-expand-lg navbar-light custom-navbar"
+    *ngIf="userService.isUserAuthenticated">
+    <a class="upwork-nav-brand" routerLink="">
+      <img alt="logo" src="../../../assets/images/logo.svg" width="160px" />
+    </a>
+    <div class="nav-ng-container">
+      <div class="nav-items-container">
+        <div class="navbar-nav">
+          <ul class="nav-item-div">
+            <ng-container *ngIf="url">
+              <li
+                *ngFor="
+                  let element of menuData;
+                  trackBy: trackByFn;
+                  let i = index
+                "
+                class="nav-item my-3"
+                (click)="onItemClick(i)"
+                [class.active]="isMenuActive(i)">
+                <div *ngIf="isMenuActive(i)"></div>
+                <a class="nav-link" routerLink="{{ element.router_link }}"
+                  ><mat-icon>{{ element.icon }}</mat-icon
+                  ><span class="nav-text-link">{{ element.text }}</span></a
+                >
+              </li>
+            </ng-container>
+
+            <ng-container *ngIf="userService.isAdmin$ | async">
+              <li
+                class="nav-item"
+                (click)="onItemClick(menuData.length)"
+                [class.active]="isMenuActive(menuData.length)">
+                <p *ngIf="isMenuActive(menuData.length)"></p>
+                <a class="nav-link" routerLink="admin-panel"
+                  ><mat-icon>settings</mat-icon
+                  ><span class="nav-text-link">{{
+                    'navigation.admin-panel' | translate
+                  }}</span></a
+                >
+                <p
+                  class="rounding-bottom"
+                  *ngIf="isMenuActive(menuData.length)"></p>
+              </li>
+            </ng-container>
+          </ul>
+        </div>
+      </div>
+      <div class="nav-items-container logout-container">
+        <div class="navbar-nav">
+          <ul class="nav-item-div">
+            <li class="nav-item" (click)="logout()">
+              <a class="nav-link" routerLink="#"
+                ><mat-icon>logout</mat-icon
+                ><span class="nav-text-link">{{
+                  'navigation.logout' | translate
+                }}</span></a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div class="content-container">
+    <router-outlet></router-outlet>
+  </div>
+</div>

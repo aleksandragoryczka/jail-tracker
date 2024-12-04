@@ -1,0 +1,58 @@
+{
+    "navigation": {
+        "logout": "Logout",
+        "admin-panel": "Admin panel"
+    },
+    "admin-panel": {
+        "popup": {
+            "popup-header": "'s owners",
+            "add-owner-button": "Add owner"
+        },
+        "header": "Admin Panel",
+        "create-organization-button": "Create Organization"
+    },
+    "dashboard": {
+        "today-time-offs-part": "Today's time offs",
+        "week-time-offs-part": "This week's time offs",
+        "show-all-button": "Show all"
+    },
+    "login": {
+        "header": "Log in",
+        "email-field-label": "Email address",
+        "password-field-label": "Password",
+        "sign-in-button": "Sign in"
+    },
+    "page-not-found": {
+        "meaning": "Page not found",
+        "description": "The page you are looking for doesn't exist or a different error occured.",
+        "before-link-text": "Go back or head over to",
+        "after-link-text": "to choose a new direction",
+        "link": "main page"
+    },
+    "calendar": {
+        "header": "Your calendar",
+        "previous": "Previous",
+        "today": "Today",
+        "next": "Next"
+    },
+    "organization-control": {
+        "permissions": {
+            "header": "Permissions"
+        },
+        "info": "Informations about your organization",
+        "name": "Name:",
+        "url-name": "URL Name:",
+        "users-header": "Your Organization Users",
+        "add-user-button": "Add User"
+    },
+    "requests": {
+        "requested-time-offs": "Requested Time offs",
+        "requested-time-offs-history": "History of Requested Time offs"
+    },
+    "time-off": {
+        "header": "Time off",
+        "year-days-counter1": "You have used ",
+        "year-days-counter2": "days off this year",
+        "new-request-button": "New request"
+    }
+}

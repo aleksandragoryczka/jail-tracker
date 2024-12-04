@@ -17,6 +17,7 @@
       dockerfile: JailTracker.Api/Dockerfile
     ports:
       - "8080:80"
+      - "5256:5256"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__Default=Host=jail-tracker-db;Port=5432;Username=postgres;Password=password;Database=postgres

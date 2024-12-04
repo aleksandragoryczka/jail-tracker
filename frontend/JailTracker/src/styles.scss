@@ -1,0 +1,18 @@
+@import '_variables';
+@import 'src/styles/utilities.scss';
+@import 'src/styles/containers.scss';
+@import '../node_modules/angular-calendar/css/angular-calendar.css';
+@import '../node_modules/ngx-toastr/toastr.css';
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+body {
+  margin: 0;
+  background-color: $white;
+}
+
+* {
+  font-size: 16px;
+}

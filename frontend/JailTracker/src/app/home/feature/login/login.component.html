@@ -1,0 +1,43 @@
+<div class="upwork-default-container">
+  <div class="upwork-default-content-container">
+    <div class="upwork-default-content-heading">
+      {{ 'login.header' | translate }}
+    </div>
+    <div class="upwork-default-content-data">
+      <div class="d-flex justify-content-center p-2">
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+          <div class="form-group">
+            <!-- Email input -->
+            <div class="my-2">
+              <label>
+                <input
+                  matInput
+                  type="email"
+                  formControlName="email"
+                  class="upwork-input" />
+                {{ 'login.email-field-label' | translate }}
+              </label>
+            </div>
+
+            <!-- Password input -->
+            <div class="my-2">
+              <label>
+                <input
+                  matInput
+                  type="password"
+                  formControlName="password"
+                  class="upwork-input" />
+                {{ 'login.password-field-label' | translate }}
+              </label>
+            </div>
+
+            <!-- Submit button -->
+            <button type="submit" class="upwork-btn upwork-btn-primary">
+              {{ 'login.sign-in-button' | translate }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
