@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import {HttpClient, HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from '@angular/common/http';
 import { AppComponent } from './app.component';
 import {LoginComponent} from './home/feature/login/login.component';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
@@ -12,14 +12,16 @@ import { environment } from 'src/environments/environment';
 import {NgbModalModule, NgbModule, NgbTooltipModule,} from '@ng-bootstrap/ng-bootstrap';
 import { NavigationComponent } from './home/feature/navigation/navigation.component';
 import { MatIconModule } from '@angular/material/icon';
-
-
+import { DashboardComponent } from './home/feature/dashboard/dashboard.component';
+import { DatePipe } from '@angular/common';
+import { ErrorInterceptor } from './interceptor/error.interceptor';
 
 @NgModule({
   declarations: [
     NavigationComponent,
     AppComponent,
-    LoginComponent],
+    LoginComponent,
+    DashboardComponent],
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -56,6 +58,9 @@ import { MatIconModule } from '@angular/material/icon';
         disallowedRoutes: [],
       },
     }),
+  ],
+  providers: [
+    DatePipe
   ],
   bootstrap: [AppComponent],
 })

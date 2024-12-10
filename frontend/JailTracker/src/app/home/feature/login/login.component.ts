@@ -58,4 +58,24 @@ export class LoginComponent implements OnInit {
       })();
     });
   }
+
+  //for testing without login backend integration
+  
+  //async ngOnInit() {
+    // if (this.userService.isUserAuthenticated) {
+    //   this.organizationService.organization$.subscribe(res => async () => {
+    //     if (res?.urlName) {
+    //       const url = res.urlName;
+    //       await this.router.navigate([`/org/${url}/dashboard`]);
+    //     }
+    //   });
+    // }
+  //}
+
+  
+  //onSubmit(): void {
+    //console.log('Form submitted!');
+    //if (this.loginForm.invalid) return;
+    //this.router.navigate([`/dashboard`]);
+  //}
 }

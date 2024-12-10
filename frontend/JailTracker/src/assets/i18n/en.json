@@ -12,8 +12,11 @@
         "create-organization-button": "Create Organization"
     },
     "dashboard": {
-        "today-time-offs-part": "Today's time offs",
-        "week-time-offs-part": "This week's time offs",
+        "today-visit-part": "Today's visits",
+        "week-visit-part": "This week's visits",
+        "today-pass-part": "Today's passes",
+        "week-pass-part": "This week's passes",
+        "pending-requests": "Pending requests",
         "show-all-button": "Show all"
     },
     "login": {
