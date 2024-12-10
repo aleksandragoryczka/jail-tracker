@@ -3,6 +3,7 @@ using JailTracker.Common.Enums;
 using JailTracker.Common.Interfaces;
 using JailTracker.Common.Models.DatabaseModels;
 using JailTracker.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace JailTracker.Infrastructure.Services
 {
@@ -39,7 +40,8 @@ namespace JailTracker.Infrastructure.Services
 
         public RequestModel CreateRequest(int userId, CreateRequestDto requestDto)
         {
-            var user = _context.Users.Where(x => x.Id == userId).First();
+            var user = _context.Users
+                .Include(x => x.CurrentRequestsSupervisor).Where(x => x.Id == userId).First();
             if (user == null)
             {
                 throw new ArgumentException("User not found");

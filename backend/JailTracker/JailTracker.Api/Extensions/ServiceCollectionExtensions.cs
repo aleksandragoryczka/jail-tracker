@@ -17,5 +17,6 @@ public static class ServiceCollectionExtensions
     {
         services.AddSingleton(configuration);
         services.AddScoped<IRequestsService, RequestsService>();
+        services.AddScoped<IRequestsManagementService, RequestsManagementService>();
     }
 }

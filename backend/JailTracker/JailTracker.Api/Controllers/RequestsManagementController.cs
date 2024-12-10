@@ -1,8 +1,10 @@
 ﻿using JailTracker.Api.Extensions;
 using JailTracker.Common.Dto;
+using JailTracker.Common.Enums;
 using JailTracker.Common.Interfaces;
 using JailTracker.Common.Models;
 using JailTracker.Common.Models.DatabaseModels;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JailTracker.Api.Controllers;
@@ -18,23 +20,20 @@ public class RequestsManagementController : ControllerBase
     {
         _requestsManagementService = requestsManagementService;
     }
-    
+
     [HttpGet]
     //[Authorize(Policy = IdentityData.MatchOrganizationIdQueryPolicy)]
     public ActionResult<PaginatedResult<RequestModelDto>> GetRequestsByPrisonId(int prisonId, DateTime from, DateTime to, int skip = 0, int take = 10)
     {
-        var res = _requestsManagementService.GetRequestsByPrisonId(prisonId, from, to, skip, take);
-        return Ok(res);
-    }
-    
-    [HttpGet]
-    public ActionResult<PaginatedResult<RequestModel>> GetRequestsByDateForUser(DateTime from, DateTime to, int skip = 0, int take = 10)
-    {
+        from = DateTime.SpecifyKind(from, DateTimeKind.Utc);
+        to = DateTime.SpecifyKind(to, DateTimeKind.Utc);
+
         var userId = User.Identity.GetUserId();
-        var res = _requestsManagementService.GetRequestsByUserId(userId, from, to, skip, take);
+        var res = _requestsManagementService.GetRequestsByUserId(userId, from, to, type, skip, take);
         return Ok(res);
     }
-    
+
+
     [HttpGet]
     public ActionResult<PaginatedResult<RequestModelDto>> GetRequestsForUser(int skip = 0, int take = 10)
     {

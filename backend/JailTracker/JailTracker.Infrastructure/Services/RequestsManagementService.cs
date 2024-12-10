@@ -15,26 +15,13 @@ public class RequestsManagementService : IRequestsManagementService
     {
         _context = context;
     }
-    
-    
-    public PaginatedResult<RequestModelDto> GetRequestsByPrisonId(int prisonId, DateTime from, DateTime to, int skip, int take)
-    {
-        var requests = _context.Requests
-            .Include(x => x.User)
-            .Where(x => x.User.PrisonId == prisonId)
-            .Where(x => x.IsActive)
-            .Where(x => (x.FromDate >= from && x.FromDate <= to) || x.ToDate >= from && x.ToDate <= to)
-            .Select(x => new RequestModelDto(x));
-        
-        var res = new PaginatedResult<RequestModelDto>(requests.Skip(skip).Take(take), requests.Count(), take);
-        return res;
-    }
 
-    public PaginatedResult<RequestModelDto> GetRequestsByUserId(int userId, DateTime from, DateTime to, int skip, int take)
+    public PaginatedResult<RequestModelDto> GetRequestsByUserId(int userId, DateTime from, DateTime to, RequestType type, int skip, int take)
     {
         var requests = _context.Requests
             .Where(x => x.UserId == userId)
             .Where(x => x.IsActive)
+            .Where(x => x.RequestType == type)
             .Include(x => x.User)
             .Where(x => (x.FromDate >= from && x.FromDate <= to) || x.ToDate >= from && x.ToDate <= to)
             .Select(x => new RequestModelDto(x));
