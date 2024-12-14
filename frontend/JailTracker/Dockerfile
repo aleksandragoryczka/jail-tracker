@@ -8,7 +8,7 @@ RUN npm install
 
 COPY . .
 
-RUN npm run build -- --configuration=production --output-path=dist/jail-tracker
+RUN npm run build -- --configuration=production
 
 FROM nginx:alpine
 

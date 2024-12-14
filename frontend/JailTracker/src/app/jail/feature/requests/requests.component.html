@@ -1,0 +1,39 @@
+<!-- <ng-container *appPermission="permissionTypes.CanSupervise"> -->
+<ng-container>
+    <div class="jail-tracker-default-container">
+      <div class="jail-tracker-default-content-container">
+        <div class="jail-tracker-default-content-heading">
+          {{ 'requests.requested-time-offs' | translate }}
+        </div>
+        <div class="jail-tracker-default-content-data">
+          <app-shared-table
+            [caption]="'List of all pending requests time off'"
+            [headers]="header"
+            [data]="(listOfRequests$ | async) ?? []"
+            [currentPage]="(currentPage$ | async) ?? 1"
+            [totalNumberOfPages]="totalNumberOfPages"
+            (nextPageEvent)="setPage($event)"
+            (prevPageEvent)="setPage($event)"></app-shared-table>
+        </div>
+      </div>
+    </div>
+  
+    <div class="jail-tracker-default-container">
+      <div class="jail-tracker-default-content-container">
+        <div class="jail-tracker-default-content-heading">
+          {{ 'requests.requested-time-offs-history' | translate }}
+        </div>
+        <div class="jail-tracker-default-content-data">
+          <app-shared-table
+            [caption]="'List of history of requested time offs'"
+            [headers]="headerHistory"
+            [data]="(listOfRequestsHistory$ | async) ?? []"
+            [currentPage]="(currentPageHistory$ | async) ?? 1"
+            [totalNumberOfPages]="totalNumberOfPagesHistory"
+            (nextPageEvent)="setPageHistory($event)"
+            (prevPageEvent)="setPageHistory($event)"></app-shared-table>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  

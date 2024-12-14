@@ -48,9 +48,9 @@ export class NavigationComponent implements OnInit {
       },
       { icon: 'person_outline', text: 'Profile', router_link: `/profile` },
       {
-        icon: 'beach_access',
-        text: 'Time off',
-        router_link: `/org/${this.url}/time-off`,
+        icon: 'content_paste_go',
+        text: 'Events',
+        router_link: `/org/${this.url}/events`,
       },
       {
         icon: 'calendar_today',

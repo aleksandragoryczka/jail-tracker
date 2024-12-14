@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "upwork-client": {
+    "jail-tracker": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/upwork-client",
+            "outputPath": "dist/jail-tracker",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": ["zone.js"],
@@ -88,13 +88,13 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "upwork-client:build:production"
+              "browserTarget": "jail-tracker:build:production"
             },
             "azure": {
-              "browserTarget": "upwork-client:build:azure"
+              "browserTarget": "jail-tracker:build:azure"
             },
             "development": {
-              "browserTarget": "upwork-client:build:development"
+              "browserTarget": "jail-tracker:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -102,7 +102,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "upwork-client:build"
+            "browserTarget": "jail-trackert:build"
           }
         },
         "test": {
@@ -133,11 +133,11 @@
         "cypress-run": {
           "builder": "@cypress/schematic:cypress",
           "options": {
-            "devServerTarget": "upwork-client:serve"
+            "devServerTarget": "jail-tracker:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "upwork-client:serve:production"
+              "devServerTarget": "jail-tracker:serve:production"
             }
           }
         },
@@ -151,27 +151,27 @@
         "ct": {
           "builder": "@cypress/schematic:cypress",
           "options": {
-            "devServerTarget": "upwork-client:serve",
+            "devServerTarget": "jail-tracker:serve",
             "watch": true,
             "headless": false,
             "testingType": "component"
           },
           "configurations": {
             "development": {
-              "devServerTarget": "upwork-client:serve:development"
+              "devServerTarget": "jail-tracker:serve:development"
             }
           }
         },
         "e2e": {
           "builder": "@cypress/schematic:cypress",
           "options": {
-            "devServerTarget": "upwork-client:serve",
+            "devServerTarget": "jail-tracker:serve",
             "watch": true,
             "headless": false
           },
           "configurations": {
             "production": {
-              "devServerTarget": "upwork-client:serve:production"
+              "devServerTarget": "jail-tracker:serve:production"
             }
           }
         }

@@ -1,0 +1,73 @@
+<mat-dialog-content class="jail-tracker-default-container">
+    <div class="jail-tracker-default-content-container">
+      <div class="jail-tracker-popup-close-button" (click)="closePopup()">
+        <mat-icon>close</mat-icon>
+      </div>
+      <div class="jail-tracker-default-content-heading">
+        {{ data.title }}
+      </div>
+      <div class="jail-tracker-default-content-data">
+        <div class="jail-tracker-popup-inputs-container">
+          <span>{{ data.description }}</span>
+          <ng-container
+            *ngFor="let input of getDict(data.inputs); trackBy: trackByFn">
+            <ng-container [ngSwitch]="input[1].type">
+              <input
+                *ngSwitchCase="'text'"
+                type="text"
+                class="jail-tracker-input"
+                [placeholder]="input[1].placeholder ?? ''"
+                [(ngModel)]="input[1].value" />
+              <input
+                *ngSwitchCase="'password'"
+                type="password"
+                class="jail-tracker-input"
+                [placeholder]="input[1].placeholder ?? ''"
+                [(ngModel)]="input[1].value" />
+              <mat-form-field
+                *ngSwitchCase="'date'"
+                appearance="fill"
+                class="jail-tracker-date-input">
+                <mat-label>{{ input[1].placeholder ?? '' }}</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="input[1].value"
+                  [matDatepicker]="picker"
+                  placeholder="DD/MM/YYYY" />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+              <mat-form-field
+                *ngSwitchCase="'select'"
+                class="jail-tracker-select-input">
+                <mat-label>{{ input[1].placeholder ?? '' }}</mat-label>
+                <mat-select [(ngModel)]="input[1].value">
+                  <mat-option
+                    *ngFor="let option of input[1].selectOptions"
+                    [value]="option.value">
+                    {{ option.displayValue }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </ng-container>
+          </ng-container>
+        </div>
+        <div class="jail-tracker-popup-buttons-container">
+          <div
+            *ngFor="let button of data.buttons"
+            class="jail-tracker-btn jail-tracker-btn-primary"
+            [class]="
+              button.type === primary
+                ? 'jail-tracker-btn jail-tracker-btn-primary'
+                : 'jail-tracker-btn jail-tracker-btn-secondary'
+            "
+            (click)="btnClick(button)">
+            {{ button.text }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-dialog-content>
+  

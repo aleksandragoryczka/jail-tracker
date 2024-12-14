@@ -1,0 +1,23 @@
+.jail-tracker-default-content-data {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    min-height: 150px;
+  }
+  
+  .jail-tracker-default-content-container {
+    min-width: 450px;
+  }
+  
+  mat-form-field {
+    margin-bottom: -1.25em;
+  }
+  
+  @media screen and (max-width: 1024px) {
+    .jail-tracker-default-content-container {
+      min-width: 95%;
+    }
+  }
+  
