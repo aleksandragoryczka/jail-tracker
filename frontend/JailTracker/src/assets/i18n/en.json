@@ -46,13 +46,13 @@
         "add-user-button": "Add User"
     },
     "requests": {
-        "requested-time-offs": "Requested Time offs",
-        "requested-time-offs-history": "History of Requested Time offs"
+        "requested-time-offs": "Requested Events",
+        "requested-time-offs-history": "History of Requested Events"
     },
     "time-off": {
-        "header": "Time off",
+        "header": "Your requests",
         "year-days-counter1": "You have used ",
-        "year-days-counter2": "days off this year",
+        "year-days-counter2": "hours this year",
         "new-request-button": "New request"
     }
 }
