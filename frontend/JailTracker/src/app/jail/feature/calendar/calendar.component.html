@@ -1,0 +1,117 @@
+<div class="jail-tracker-default-container">
+    <div class="jail-tracker-default-content-container">
+      <div class="jail-tracker-default-content-heading">{{ 'calendar.header' | translate }}</div>
+      <div class="jail-tracker-default-content-data">
+        <div class="calendar-container">
+          <div class="row text-center">
+            <div class="col-md-6">
+              <h2>{{ viewDate | calendarDate : view + 'ViewTitle' : 'en' }}</h2>
+            </div>
+            <div class="col-md-4 test">
+              <div
+                class="btn-group display-flex flex-row justify-content-space-between">
+                <div
+                  class="jail-tracker-btn jail-tracker-btn-primary"
+                  mwlCalendarPreviousView
+                  [view]="view"
+                  [(viewDate)]="viewDate"
+                  (viewDateChange)="closeOpenMonthViewDay()"
+                  (click)="prevMonth()">
+                  {{ 'calendar.previous' | translate }}
+                </div>
+                <div
+                  class="jail-tracker-btn jail-tracker-btn-secondary"
+                  mwlCalendarToday
+                  [(viewDate)]="viewDate"
+                  (click)="presentMonth()">
+                  {{ 'calendar.today' | translate }}
+                </div>
+                <div
+                  class="jail-tracker-btn jail-tracker-btn-primary"
+                  mwlCalendarNextView
+                  [view]="view"
+                  [(viewDate)]="viewDate"
+                  (viewDateChange)="closeOpenMonthViewDay()"
+                  (click)="nextMonth()">
+                  {{ 'calendar.next' | translate }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <br />
+  
+          <ng-template
+            #customCellTemplate
+            let-day="day"
+            let-openDay="openDay"
+            let-locale="locale"
+            let-tooltipPlacement="tooltipPlacement"
+            let-highlightDay="highlightDay"
+            let-unhighlightDay="unhighlightDay"
+            let-eventClicked="eventClicked"
+            let-tooltipTemplate="tooltipTemplate"
+            let-tooltipAppendToBody="tooltipAppendToBody"
+            let-tooltipDelay="tooltipDelay"
+            let-trackByEventId="trackByEventId"
+            let-validateDrag="validateDrag">
+            <div
+              class="cal-cell-top"
+              [attr.aria-label]="
+                { day: day, locale: locale } | calendarA11y : 'monthCell'
+              ">
+              <span aria-hidden="true">
+                <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">{{
+                  day.badgeTotal
+                }}</span>
+                <span class="cal-day-number">{{
+                  day.date | calendarDate : 'monthViewDayNumber' : locale
+                }}</span>
+              </span>
+            </div>
+            <div class="cal-events" *ngIf="day.events.length > 0">
+              <div
+                class="custom-cal-event"
+                *ngFor="let event of day.events; trackBy: trackByEventId"
+                [ngStyle]="{ backgroundColor: event.color?.primary }"
+                [ngClass]="event?.cssClass"
+                (mouseenter)="highlightDay.emit({ event: event })"
+                (mouseleave)="unhighlightDay.emit({ event: event })"
+                [mwlCalendarTooltip]="
+                  event.title | calendarEventTitle : 'monthTooltip' : event
+                "
+                [tooltipPlacement]="tooltipPlacement"
+                [tooltipEvent]="event"
+                [tooltipTemplate]="tooltipTemplate"
+                [tooltipAppendToBody]="tooltipAppendToBody"
+                [tooltipDelay]="tooltipDelay"
+                mwlDraggable
+                [class.cal-draggable]="event.draggable"
+                dragActiveClass="cal-drag-active"
+                [dropData]="{ event: event, draggedFrom: day }"
+                [dragAxis]="{ x: event.draggable, y: event.draggable }"
+                [validateDrag]="validateDrag"
+                [touchStartLongPress]="{ delay: 300, delta: 30 }"
+                (mwlClick)="
+                  eventClicked.emit({ event: event, sourceEvent: $event })
+                "
+                [attr.aria-hidden]="{} | calendarA11y : 'hideMonthCellEvents'">
+                {{ event.meta }}
+              </div>
+            </div>
+          </ng-template>
+  
+          <div [ngSwitch]="view">
+            <mwl-calendar-month-view
+              [viewDate]="viewDate"
+              [events]="(events | async) ?? []"
+              [weekStartsOn]="1"
+              [activeDayIsOpen]="activeDayIsOpen"
+              [cellTemplate]="customCellTemplate"
+              (dayClicked)="dayClicked($event.day)">
+            </mwl-calendar-month-view>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

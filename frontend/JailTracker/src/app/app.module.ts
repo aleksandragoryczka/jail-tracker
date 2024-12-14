@@ -22,6 +22,9 @@ import { ErrorInterceptor } from './interceptor/error.interceptor';
 import { MatNativeDateModule } from '@angular/material/core';
 import { SharedTableComponent } from './shared/ui/shared-table/shared-table.component';
 import { ToastrModule } from 'ngx-toastr';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { NewRequestComponent } from './jail/feature/new-request/new-request.component';
 
 
 @NgModule({
@@ -32,7 +35,8 @@ import { ToastrModule } from 'ngx-toastr';
     RequestsComponent,
     CalendarComponent,
     PopupWithInputsComponent,
-    SharedTableComponent],
+    SharedTableComponent,
+    NewRequestComponent],
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -75,6 +79,10 @@ import { ToastrModule } from 'ngx-toastr';
         allowedDomains: [environment.allowedDomains],
         disallowedRoutes: [],
       },
+    }),
+    CalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory,
     }),
   ],
   providers: [

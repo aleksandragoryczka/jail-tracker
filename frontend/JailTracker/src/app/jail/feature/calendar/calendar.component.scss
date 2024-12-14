@@ -1,0 +1,51 @@
+@import '../../../../_variables.scss';
+
+h2,
+mwl-calendar-month-view {
+  color: $dark-blue;
+}
+
+::ng-deep .cal-month-view .cal-day-number {
+  color: $black;
+  opacity: 1;
+}
+
+::ng-deep .cal-month-view .cal-open-day-events {
+  background-color: $light-grey;
+  box-shadow: none;
+  color: $dark-blue;
+}
+
+::ng-deep .cal-month-view .cal-day-badge {
+  background-color: $dark-blue;
+}
+
+.btn-group {
+  gap: 10px;
+}
+
+.custom-cal-event {
+  font-size: 12px;
+  height: 27px;
+  width: 27px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: $white;
+  font-weight: 500;
+  margin: 1px;
+  opacity: 0.3;
+  border-width: 2px;
+  border-style: solid;
+  border-color: orange;
+}
+
+.approved {
+  border-style: none;
+  opacity: 1;
+}
+
+.rejected {
+  border-color: red;
+}
