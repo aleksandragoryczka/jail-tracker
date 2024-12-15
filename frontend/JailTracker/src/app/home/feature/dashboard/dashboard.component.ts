@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { RequestsManagementService } from 'src/app/shared/service/requests-management.service';
 import { Request } from 'src/app/models/request.model';
 import { RequestType } from 'src/app/models/enums/request-type.enum';
+import { ApprovalState } from 'src/app/models/enums/approval-state.enum';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,7 +16,7 @@ export class DashboardComponent {
   todayPasses: Request[] | undefined;
   weekPasses: Request[] | undefined;
   visitsRequests: Request[] | undefined;
-
+  
   containers: {
     type: string;
     header: string;
@@ -29,6 +30,16 @@ export class DashboardComponent {
     private router: Router,
   ) {
     this.fetchData();
+  }
+
+  showRequestType: 0 | 1 = 0;
+
+  toggleRequestType() {
+    this.showRequestType = this.showRequestType === 0 ? 1 : 0;
+  }
+
+  filterItemsByRequestType(items: any[]) {
+    return items.filter(item => item.requestType === this.showRequestType);
   }
 
   fetchData(): void {
@@ -99,6 +110,41 @@ export class DashboardComponent {
           this.updateContainers();
         }
       });
+  }
+
+
+  getApprovalStateText(state: ApprovalState): string {
+    switch (state) {
+      case ApprovalState.Pending:
+        return 'Pending';
+      case ApprovalState.Approved:
+        return 'Approved';
+      case ApprovalState.Rejected:
+        return 'Rejected';
+      default:
+        return 'Unknown'; 
+    }
+  }
+
+  getRequestTypeText(type: RequestType): string {
+    switch (type) {
+      case RequestType.Visit:
+        return 'Visit';
+      case RequestType.Pass:
+        return 'Pass';
+      default:
+        return 'Unknown'; 
+    }
+  }
+
+  formatTime(date: Date): string {
+    const hours = date.getHours(); 
+    const minutes = date.getMinutes(); 
+    
+    const formattedHours = `${hours}`;
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
+    
+    return `${formattedHours}:${formattedMinutes}`;
   }
 
   updateContainers(): void {

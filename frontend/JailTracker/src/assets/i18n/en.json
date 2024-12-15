@@ -17,7 +17,9 @@
         "today-pass-part": "Today's passes",
         "week-pass-part": "This week's passes",
         "pending-requests": "Pending requests",
-        "show-all-button": "Show all"
+        "show-all-button": "Show all",
+        "show-passes": "Show passes",
+        "show-visits": "Show visits"
     },
     "login": {
         "header": "Log in",

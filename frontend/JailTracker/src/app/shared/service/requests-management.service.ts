@@ -160,42 +160,52 @@ export class RequestsManagementService {
     take = 10
   ): Observable<PaginatedResult<Request>> {
 
+    let mockData: PaginatedResult<Request>;
     // Create mock data to simulate the response
-    const mockData: PaginatedResult<Request> = {
-      data: [
-        {
-          id: '1',
-          from: new Date('2024-12-14T10:00:00.000Z'),
-          to: new Date('2024-12-14T11:00:00.000Z'),
-          requestType: RequestType.Pass,
-          userId: 'user1',
-          userFirstName: 'John',
-          userLastName: 'Doe',
-          approvalState: ApprovalState.Approved,
-          requestSupervisorId: 'supervisor1',
-          supervisorFirstName: 'Alice',
-          supervisorLastName: 'Smith',
-        },
-        {
-          id: '2',
-          from: new Date('2024-12-15T10:00:00.000Z'),
-          to: new Date('2024-12-15T11:00:00.000Z'),
-          requestType: RequestType.Visit,
-          userId: 'user2',
-          userFirstName: 'Jane',
-          userLastName: 'Doe',
-          approvalState: ApprovalState.Pending,
-          requestSupervisorId: 'supervisor2',
-          supervisorFirstName: 'Bob',
-          supervisorLastName: 'Johnson',
-        },
-      ],
-      count: 50,
-      page: 1,
-    };
-
+    if (type == RequestType.Pass) {
+      mockData = {
+        data: [
+          {
+            id: '1',
+            from: new Date('2024-12-14T10:00:00.000Z'),
+            to: new Date('2024-12-19T11:00:00.000Z'),
+            requestType: RequestType.Pass,
+            userId: 'user1',
+            userFirstName: 'John',
+            userLastName: 'Doe',
+            approvalState: ApprovalState.Approved,
+            requestSupervisorId: 'supervisor1',
+            supervisorFirstName: 'Alice',
+            supervisorLastName: 'Smith',
+          }
+        ],
+        count: 50,
+        page: 1,
+      };
+    }
+    else {
+      mockData = {
+        data: [
+          {
+            id: '2',
+            from: new Date('2024-12-15T10:00:00.000Z'),
+            to: new Date('2024-12-15T11:00:00.000Z'),
+            requestType: RequestType.Visit,
+            userId: 'user2',
+            userFirstName: 'Jane',
+            userLastName: 'Doe',
+            approvalState: ApprovalState.Pending,
+            requestSupervisorId: 'supervisor2',
+            supervisorFirstName: 'Bob',
+            supervisorLastName: 'Johnson',
+          },
+        ],
+        count: 50,
+        page: 1,
+      };
+    }
+    
     return of(mockData);
-
 
     // const fromDateFormatted = this.datePipe.transform(fromDate, 'yyyy-MM-dd');
     // const toDateFormatted = this.datePipe.transform(toDate, 'yyyy-MM-dd');
@@ -219,7 +229,7 @@ export class RequestsManagementService {
         {
           id: '1',
           from: new Date('2024-12-14T10:00:00.000Z'),
-          to: new Date('2024-12-14T11:00:00.000Z'),
+          to: new Date('2024-12-19T11:00:00.000Z'),
           requestType: RequestType.Pass,
           userId: 'user1',
           userFirstName: 'John',

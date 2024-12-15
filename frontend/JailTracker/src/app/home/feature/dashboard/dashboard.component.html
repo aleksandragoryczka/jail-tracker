@@ -4,7 +4,7 @@
       <div class="jail-tracker-default-content-heading dashboard-header">
         {{ container.header }}
       </div>
-      <div class="jail-tracker-default-content-data flex-column d-flex justify-content-around">
+      <div class="jail-tracker-default-content-data flex-column d-flex">
         <!-- Visits Section -->
         <div *ngIf="container.type === 'visits'" class="time-off">
           <div class="time-off-section">
@@ -13,7 +13,7 @@
             </div>
             <ng-container *ngIf="container.items.today?.length > 0; else noTimeOff">
               <ng-container
-                [ngTemplateOutlet]="timeOffUsersTemplate"
+                [ngTemplateOutlet]="visitsTemplate"
                 [ngTemplateOutletContext]="{ $implicit: container.items.today }">
               </ng-container>
             </ng-container>
@@ -24,7 +24,7 @@
             </div>
             <ng-container *ngIf="container.items.week?.length > 0; else noTimeOff">
               <ng-container
-                [ngTemplateOutlet]="timeOffUsersTemplate"
+                [ngTemplateOutlet]="visitsTemplate"
                 [ngTemplateOutletContext]="{ $implicit: container.items.week }">
               </ng-container>
             </ng-container>
@@ -39,7 +39,7 @@
             </div>
             <ng-container *ngIf="container.items.today?.length > 0; else noTimeOff">
               <ng-container
-                [ngTemplateOutlet]="timeOffUsersTemplate"
+                [ngTemplateOutlet]="passesTemplate"
                 [ngTemplateOutletContext]="{ $implicit: container.items.today }">
               </ng-container>
             </ng-container>
@@ -50,7 +50,7 @@
             </div>
             <ng-container *ngIf="container.items.week?.length > 0; else noTimeOff">
               <ng-container
-                [ngTemplateOutlet]="timeOffUsersTemplate"
+                [ngTemplateOutlet]="passesTemplate"
                 [ngTemplateOutletContext]="{ $implicit: container.items.week }">
               </ng-container>
             </ng-container>
@@ -66,17 +66,17 @@
             <ng-container *ngIf="container.items.today?.length > 0; else noTimeOff">
               <ng-container
                 [ngTemplateOutlet]="timeOffRequestsTemplate"
-                [ngTemplateOutletContext]="{ $implicit: container.items.today }">
+                [ngTemplateOutletContext]="{ $implicit: filterItemsByRequestType(container.items.today) }">
               </ng-container>
             </ng-container>
           </div>
-        </div>
-
-        <div class="btn-container">
-          <div (click)="container.buttonAction()" class="jail-tracker-btn jail-tracker-btn-primary show-all-btn">
-            {{ 'dashboard.show-all-button' | translate }}
+          <div class="btn-container">
+            <div (click)="toggleRequestType()" class="jail-tracker-btn jail-tracker-btn-primary show-all-btn">
+              {{ showRequestType === 0 ? ('dashboard.show-passes' | translate) : ('dashboard.show-visits' | translate) }}
+            </div>
           </div>
         </div>
+
       </div>
     </div>
   </div>
@@ -88,15 +88,58 @@
   </div>
 </ng-template>
 
-<ng-template #timeOffUsersTemplate let-items>
+<ng-template #visitsTemplate let-items>
   <div class="time-off-users d-flex flex-column m-2">
+    <div class="time-off-header d-flex justify-content-between m-2">
+      <div class="header-column" style="flex: 0 0 25%; font-weight: bold; font-size: 16px;">
+        Date
+      </div>
+      <div class="header-column" style="flex: 0 0 25%; font-weight: bold; font-size: 16px;">
+        Time
+      </div>
+      <div class="header-column" style="flex: 0 0 50%; font-weight: bold; font-size: 16px;">
+        Status
+      </div>
+    </div>
     <ng-container *ngFor="let item of items">
-      <div class="user-row d-flex">
-        <div class="user-info" style="flex: 0 0 75%; font-size: 14px;">
-          {{ item.userFirstName || 'Unknown' }} {{ item.userLastName || 'User' }}
+      <div class="user-row d-flex m-2">
+        <div class="user-info" style="flex: 0 0 25%; font-size: 14px; text-align: center;">
+          {{ item.from | date: 'shortDate' }}
         </div>
-        <div class="user-date" style="flex: 0 0 25%; font-size: 14px;">
-          {{ item.fromDate | date: 'shortDate' }}
+        <div class="user-date" style="flex: 0 0 25%; font-size: 14px; text-align: center;"> 
+          {{ formatTime(item.from) || 'Unknown' }}
+        </div>
+        <div class="user-date" style="flex: 0 0 50%; font-size: 14px; text-align: center;">
+          {{ getApprovalStateText(item.approvalState) }}
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</ng-template>
+
+<ng-template #passesTemplate let-items>
+  <div class="time-off-users d-flex flex-column m-2">
+    <div class="time-off-header d-flex justify-content-between m-2">
+      <div class="header-column" style="flex: 0 0 25%; font-weight: bold; font-size: 16px;">
+        Start
+      </div>
+      <div class="header-column" style="flex: 0 0 25%; font-weight: bold; font-size: 16px;">
+        End
+      </div>
+      <div class="header-column" style="flex: 0 0 50%; font-weight: bold; font-size: 16px;">
+        Status
+      </div>
+    </div>
+    <ng-container *ngFor="let item of items">
+      <div class="user-row d-flex m-2">
+        <div class="user-info" style="flex: 0 0 25%; font-size: 14px; text-align: center;">
+          {{ item.from | date: 'shortDate' }}
+        </div>
+        <div class="user-date" style="flex: 0 0 25%; font-size: 14px; text-align: center;"> 
+          {{ item.to | date: 'shortDate' }}
+        </div>
+        <div class="user-date" style="flex: 0 0 50%; font-size: 14px; text-align: center;">
+          {{ getApprovalStateText(item.approvalState) }}
         </div>
       </div>
     </ng-container>
@@ -105,10 +148,34 @@
 
 <ng-template #timeOffRequestsTemplate let-items>
   <div class="time-off-requests d-flex flex-column m-2">
+    <div class="time-off-header d-flex justify-content-between m-2">
+      <div class="header-column" style="flex: 0 0 25%; font-weight: bold; font-size: 16px;">
+        Prisoner
+      </div>
+      <div class="header-column" style="flex: 0 0 25%; font-weight: bold; font-size: 16px;">
+        {{ showRequestType === 0 ? 'Date' : 'Start Date' }}
+      </div>
+      <div class="header-column" style="flex: 0 0 25%; font-weight: bold; font-size: 16px;">
+        {{ showRequestType === 0 ? 'Time' : 'End Date' }}
+      </div>
+      <div class="header-column" style="flex: 0 0 25%; font-weight: bold; font-size: 16px;">
+        Status
+      </div>
+    </div>
+
     <ng-container *ngFor="let item of items">
-      <div class="user-row">
-        <div class="user-info" style="flex: 0 0 100%; font-size: 14px;">
-          {{ item.userFirstName || 'Unknown' }} {{ item.userLastName || 'User' }} - {{ item.fromDate | date: 'shortDate' }}
+      <div class="user-row d-flex m-2">
+        <div class="user-info" style="flex: 0 0 25%; font-size: 14px; text-align: center;">
+          {{ item.userFirstName || 'Unknown' }} {{ item.userLastName || 'User' }}
+        </div>
+        <div class="user-date" style="flex: 0 0 25%; font-size: 14px; text-align: center;">
+          {{ item.from | date: 'shortDate' }}
+        </div>
+        <div class="user-time" style="flex: 0 0 25%; font-size: 14px; text-align: center;">
+          {{ showRequestType === 0 ? (formatTime(item.from) || 'Unknown') : (item.to | date: 'shortDate') }}
+        </div>
+        <div class="user-status" style="flex: 0 0 25%; font-size: 14px; text-align: center;">
+          {{ getRequestTypeText(item.requestType) }}
         </div>
       </div>
     </ng-container>

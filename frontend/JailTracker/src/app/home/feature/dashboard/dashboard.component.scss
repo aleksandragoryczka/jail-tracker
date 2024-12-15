@@ -45,10 +45,8 @@
 }
 
 .user-row {
-  display: flex;
-  margin: 5px 0; 
+  display: none;
   justify-content: space-between;
-  padding: 10px 20px;
 }
 
 .user-info,
@@ -76,24 +74,9 @@
 .time-off-requests {
   display: flex; 
   flex-direction: column; 
-  gap: 10px; 
 }
 
-.time-off-requests .user-row {
-  display: flex;
-  justify-content: flex-start; 
-  padding: 15px;
-  border-radius: 10px; 
-  margin-bottom: 10px; 
-}
 
-.time-off-requests .user-info {
-  font-size: 14px;
-  font-family: 'Roboto', sans-serif;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-}
 
 
 @media (max-width: 768px) {
