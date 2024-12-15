@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { RequestsManagementService } from 'src/app/shared/service/requestsManagement.service';
+import { RequestsManagementService } from 'src/app/shared/service/requests-management.service';
 import { Request } from 'src/app/models/request.model';
 import { RequestType } from 'src/app/models/enums/request-type.enum';
 
@@ -56,7 +56,7 @@ export class DashboardComponent {
 
     // visits
     this.requestsManagementService
-      .getRequestsForUser(
+      .getRequestsByDateForUser(
         todayDate,
         weekDate,
         RequestType.Visit,
@@ -79,7 +79,7 @@ export class DashboardComponent {
 
     // passes
     this.requestsManagementService
-      .getRequestsForUser(
+      .getRequestsByDateForUser(
         todayDate,
         weekDate,
         RequestType.Pass,
@@ -139,10 +139,10 @@ export class DashboardComponent {
     const week: Request[] = [];
 
     absences.forEach(absence => {
-      if (new Date(absence.fromDate) === tomorrowDate) {
+      if (new Date(absence.from) === tomorrowDate) {
         today.push(absence);
       } else if (
-        new Date(absence.fromDate) <= weekDate &&
+        new Date(absence.from) <= weekDate &&
         !week.some(existingAbsence => existingAbsence.userId === absence.userId)
       ) {
         week.push(absence);

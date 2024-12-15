@@ -1,10 +1,10 @@
 <ng-template #containerTemplate let-container>
-  <div *ngIf="container && container.items.today" class="upwork-default-container">
-    <div class="upwork-default-content-container">
-      <div class="upwork-default-content-heading dashboard-header">
+  <div *ngIf="container && container.items.today" class="jail-tracker-default-container">
+    <div class="jail-tracker-default-content-container">
+      <div class="jail-tracker-default-content-heading dashboard-header">
         {{ container.header }}
       </div>
-      <div class="upwork-default-content-data flex-column d-flex justify-content-around">
+      <div class="jail-tracker-default-content-data flex-column d-flex justify-content-around">
         <!-- Visits Section -->
         <div *ngIf="container.type === 'visits'" class="time-off">
           <div class="time-off-section">
@@ -18,8 +18,8 @@
               </ng-container>
             </ng-container>
           </div>
-          <div class="d-flex time-off-section">
-            <div class="time-off-header centered-header m-4">
+          <div class="time-off-section">
+            <div class="time-off-header centered-header m-2">
               {{ 'dashboard.week-visit-part' | translate }}
             </div>
             <ng-container *ngIf="container.items.week?.length > 0; else noTimeOff">
@@ -44,8 +44,8 @@
               </ng-container>
             </ng-container>
           </div>
-          <div class="d-flex time-off-section">
-            <div class="time-off-header centered-header m-4">
+          <div class="time-off-section">
+            <div class="time-off-header centered-header m-2">
               {{ 'dashboard.week-pass-part' | translate }}
             </div>
             <ng-container *ngIf="container.items.week?.length > 0; else noTimeOff">
@@ -58,7 +58,7 @@
         </div>
 
         <!-- Requests Section -->
-        <div *ngIf="container.type === 'requests'" class="employee-time-off d-flex justify-content-center">
+        <div *ngIf="container.type === 'requests'" class="justify-content-center">
           <div class="time-off-requests-container">
             <div class="time-off-header m-2">
               {{ 'dashboard.pending-requests' | translate }}
@@ -73,7 +73,7 @@
         </div>
 
         <div class="btn-container">
-          <div (click)="container.buttonAction()" class="upwork-btn upwork-btn-primary show-all-btn">
+          <div (click)="container.buttonAction()" class="jail-tracker-btn jail-tracker-btn-primary show-all-btn">
             {{ 'dashboard.show-all-button' | translate }}
           </div>
         </div>

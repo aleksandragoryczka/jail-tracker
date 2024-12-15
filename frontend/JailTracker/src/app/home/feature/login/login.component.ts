@@ -25,6 +25,42 @@ export class LoginComponent implements OnInit {
     });
   }
 
+  // async ngOnInit() {
+  //   if (this.userService.isUserAuthenticated) {
+  //     this.organizationService.organization$.subscribe(res => async () => {
+  //       if (res?.urlName) {
+  //         const url = res.urlName;
+  //         await this.router.navigate([`/org/${url}/dashboard`]);
+  //       }
+  //     });
+  //   }
+  // }
+
+  // onSubmit(): void {
+  //   if (this.loginForm.invalid) return;
+  //   const credentials: LoginModel = {
+  //     email: this.loginForm.controls['email'].value,
+  //     password: this.loginForm.controls['password'].value,
+  //   };
+
+  //   this.userService.login(credentials).subscribe(loggedIn => {
+  //     (async () => {
+  //       if (loggedIn) {
+  //         this.organizationService.organization$.subscribe(res => {
+  //           (async () => {
+  //             if (res?.urlName) {
+  //               const url = res.urlName;
+  //               await this.router.navigate([`/org/${url}/dashboard`]);
+  //             }
+  //           })();
+  //         });
+  //       }
+  //     })();
+  //   });
+  // }
+
+  //for testing without login backend integration
+  
   async ngOnInit() {
     if (this.userService.isUserAuthenticated) {
       this.organizationService.organization$.subscribe(res => async () => {
@@ -36,46 +72,10 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  
   onSubmit(): void {
+    console.log('Form submitted!');
     if (this.loginForm.invalid) return;
-    const credentials: LoginModel = {
-      email: this.loginForm.controls['email'].value,
-      password: this.loginForm.controls['password'].value,
-    };
-
-    this.userService.login(credentials).subscribe(loggedIn => {
-      (async () => {
-        if (loggedIn) {
-          this.organizationService.organization$.subscribe(res => {
-            (async () => {
-              if (res?.urlName) {
-                const url = res.urlName;
-                await this.router.navigate([`/org/${url}/dashboard`]);
-              }
-            })();
-          });
-        }
-      })();
-    });
+    this.router.navigate([`/dashboard`]);
   }
-
-  //for testing without login backend integration
-  
-  //async ngOnInit() {
-    // if (this.userService.isUserAuthenticated) {
-    //   this.organizationService.organization$.subscribe(res => async () => {
-    //     if (res?.urlName) {
-    //       const url = res.urlName;
-    //       await this.router.navigate([`/org/${url}/dashboard`]);
-    //     }
-    //   });
-    // }
-  //}
-
-  
-  //onSubmit(): void {
-    //console.log('Form submitted!');
-    //if (this.loginForm.invalid) return;
-    //this.router.navigate([`/dashboard`]);
-  //}
 }
