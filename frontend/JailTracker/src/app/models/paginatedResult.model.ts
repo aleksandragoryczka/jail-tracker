@@ -3,3 +3,4 @@ export interface PaginatedResult<T> {
     count: number;
     page: number;
   }
+  

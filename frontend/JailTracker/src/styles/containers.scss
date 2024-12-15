@@ -1,11 +1,11 @@
-// <div class="upwork-default-container">
-//       <div class="upwork-default-content-container">
-//         <div class="upwork-default-content-heading">heading</div>
-//         <div class="upwork-default-content-data">content</div>
+// <div class="jail-tracker-default-container">
+//       <div class="jail-tracker-default-content-container">
+//         <div class="jail-tracker-default-content-heading">heading</div>
+//         <div class="jail-tracker-default-content-data">content</div>
 //       </div>
 // </div>
 
-.upwork-default-container {
+.jail-tracker-default-container {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
@@ -13,13 +13,13 @@
   gap: 30px;
 }
 
-.upwork-default-content-container {
+.jail-tracker-default-content-container {
   min-width: 800px;
   filter: drop-shadow(0 20px 20px rgba(0, 0, 0, 0.25));
   border-radius: 20px;
 }
 
-.upwork-default-content-heading {
+.jail-tracker-default-content-heading {
   background-color: $dark-blue;
   border-radius: 20px 20px 0 0;
   padding: 20px;
@@ -34,7 +34,7 @@
   font-weight: 700; 
 }
 
-.upwork-default-content-data {
+.jail-tracker-default-content-data {
   background-color: $white;
   border-radius: 0 0 20px 20px;
   padding: 20px;
@@ -56,7 +56,7 @@
   background-color: $dark-blue !important;
 }
 
-.upwork-popup-close-button {
+.jail-tracker-popup-close-button {
   position: absolute;
   right: -23px;
   top: -23px;
@@ -66,14 +66,14 @@
   color: #fff;
 }
 
-.upwork-popup-inputs-container {
+.jail-tracker-popup-inputs-container {
   width: 70%;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.upwork-popup-buttons-container {
+.jail-tracker-popup-buttons-container {
   width: 70%;
   display: flex;
   gap: 10px;
@@ -81,26 +81,26 @@
 }
 
 @media screen and (max-width: 1024px) {
-  .upwork-default-content-container {
+  .jail-tracker-default-content-container {
     min-width: 90%;
   }
 
-  .upwork-default-container {
+  .jail-tracker-default-container {
     align-items: unset;
     justify-content: unset;
   }
 
-  .upwork-default-content-container {
+  .jail-tracker-default-content-container {
     min-width: 300px;
     width: 100%;
     filter: drop-shadow(20px 20px 20px rgba(0, 0, 0, 0.25));
   }
 
-  .upwork-popup-inputs-container {
+  .jail-tracker-popup-inputs-container {
     width: 95%;
   }
 
-  .upwork-popup-buttons-container {
+  .jail-tracker-popup-buttons-container {
     width: 95%;
   }
 }

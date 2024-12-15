@@ -8,10 +8,11 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  title = 'upwork-client';
+  title = 'jail-tracker-client';
   env = environment;
 
   constructor(private translate: TranslateService) {
     translate.setDefaultLang('en');
+    translate.use('en');
   }
 }

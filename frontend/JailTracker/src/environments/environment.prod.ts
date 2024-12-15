@@ -1,5 +1,5 @@
 export const environment = {
-    production: true,
-    apiUrl: 'http://localhost:8080/api',
-    "secure": false,
-  };
+  production: false,
+  apiUrl: 'https://localhost:44386/api',
+  allowedDomains: 'localhost:44386',
+};

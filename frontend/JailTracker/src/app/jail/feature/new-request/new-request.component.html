@@ -1,0 +1,31 @@
+<div class="jail-tracker-default-container">
+    <div class="jail-tracker-default-content-container">
+      <div class="jail-tracker-default-content-heading">
+        {{ 'time-off.header' | translate }}
+      </div>
+      <div class="jail-tracker-default-content-data">
+        <div class="d-flex justify-content-around">
+          <h2>
+            {{ 'time-off.year-days-counter1' | translate }}
+            {{ requestsYearCountInHours$ | async }}
+            {{ 'time-off.year-days-counter2' | translate }}
+          </h2>
+          <button
+            class="jail-tracker-btn jail-tracker-btn-primary"
+            (click)="openNewRequestPopup()">
+            {{ 'time-off.new-request-button' | translate }}
+          </button>
+        </div>
+        <app-shared-table
+          [caption]="'List of your Time off requests'"
+          [headers]="header"
+          [data]="(listOfUserRequests$ | async) ?? []"
+          [currentPage]="(currentPage$ | async) ?? 1"
+          [totalNumberOfPages]="totalNumberOfPages"
+          (nextPageEvent)="setPage($event)"
+          (prevPageEvent)="setPage($event)">
+        </app-shared-table>
+      </div>
+    </div>
+  </div>
+  

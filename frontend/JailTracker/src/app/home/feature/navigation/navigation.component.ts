@@ -9,21 +9,20 @@ import { UserService } from 'src/app/shared/service/user.service';
 })
 export class NavigationComponent implements OnInit {
   public activeIndex = 0;
-  public url = '';
 
   constructor(
     public userService: UserService,
-    private router: Router,
-    private organizationService: OrganizationService
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.organizationService.organization$.subscribe(res => {
+    this.setActiveIndexFromActivePath();
+    /*this.organizationService.organization$.subscribe(res => {
       if (res?.urlName) {
         this.url = res?.urlName;
         this.setActiveIndexFromActivePath();
       }
-    });
+    });*/
   }
 
   public onItemClick(index: number) {
@@ -44,28 +43,28 @@ export class NavigationComponent implements OnInit {
       {
         icon: 'dashboard',
         text: 'Dashboard',
-        router_link: `/org/${this.url}/dashboard`,
+        router_link: `/dashboard`,
       },
       { icon: 'person_outline', text: 'Profile', router_link: `/profile` },
       {
-        icon: 'beach_access',
-        text: 'Time off',
-        router_link: `/org/${this.url}/time-off`,
+        icon: 'post_add',
+        text: 'Create new request',
+        router_link: `/new_request`,
       },
       {
         icon: 'calendar_today',
         text: 'Calendar',
-        router_link: `/org/${this.url}/calendar`,
+        router_link: `/calendar`,
       },
       {
         icon: 'event_note',
         text: 'Requests',
-        router_link: `/org/${this.url}/requests`,
+        router_link: `/requests`,
       },
       {
         icon: 'business',
         text: 'Organization',
-        router_link: `/org/${this.url}/organization-control`,
+        router_link: `/organization-control`,
       },
     ];
   }

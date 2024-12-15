@@ -1,51 +1,22 @@
-import {RouterModule, Routes} from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 
 import {LoginComponent} from './home/feature/login/login.component';
 import {NgModule} from '@angular/core';
 import { DashboardComponent } from './home/feature/dashboard/dashboard.component';
+import { LoginComponent } from './home/feature/login/login.component';
+import { NgModule } from '@angular/core';
+import { RequestsComponent } from './jail/feature/requests/requests.component';
+import { CalendarComponent } from './jail/feature/calendar/calendar.component';
+import { NewRequestComponent } from './jail/feature/new-request/new-request.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: '', component: LoginComponent },
+  { path: 'calendar', component: CalendarComponent },
+  { path: 'requests', component: RequestsComponent },
+  { path: 'new_request', component: NewRequestComponent },
   { path: 'dashboard', component: DashboardComponent },
 ];
-
-// const routes: Routes = [
-//   { path: 'login', component: LoginComponent },
-//   { path: '', component: LoginComponent },
-//   { path: 'dashboard', component: DashboardComponent },
-//   {
-//     path: '',
-//     //canActivate: [authGuard],
-//     children: [
-//       // {
-//       //   path: 'panel-control',
-//       //   component: AdminPanelComponent,
-//       //   canActivate: [adminGuard],
-//       // },
-//       // {
-//       //   path: 'profile',
-//       //   component: ProfileComponent,
-//       // },
-//       // {
-//       //   path: 'prisoners',
-//       //   component: PrisonersComponent,
-//       //   canActivate: [supervisorGuard],
-//       // },
-//       // {
-//       //   path: 'calendar',
-//       //   component: CalendarComponent,
-//       //   canActivate: [supervisorGuard],
-//       // },
-//       // {
-//       //   path: 'dashboard',
-//       //   component: DashboardComponent
-//       // }
-//     ],
-//   },
-
-//   //{ path: '**', component: PageNotFoundComponent },
-// ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

@@ -1,0 +1,39 @@
+<div class="jail-tracker-table-wrapper mt-2">
+    <table class="jail-tracker-table">
+      <caption>
+        {{
+          caption
+        }}
+      </caption>
+      <thead class="jail-tracker-table-header">
+        <tr>
+          <th>No.</th>
+          <th *ngFor="let header of headers">{{ header }}</th>
+        </tr>
+      </thead>
+      <tbody class="jail-tracker-table-body">
+        <tr *ngFor="let row of data; let i = index">
+          <td>{{ getStartRowIndex() + i }}.</td>
+          <td *ngFor="let col of row?.cols">{{ col }}</td>
+          <td>
+            <ng-container *ngFor="let action of row?.actions">
+              <mat-icon
+                class="jail-tracker-icon mx-1 tooltip-message"
+                [ngbTooltip]="action.tooltip"
+                (click)="action.func(action.arg)">
+                {{ action.icon }}
+              </mat-icon>
+            </ng-container>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="jail-tracker-table-foot">
+      <mat-icon class="jail-tracker-icon" (click)="prevPage()">chevron_left</mat-icon>
+      {{ currentPage + 1 }}
+      of
+      {{ totalNumberOfPages }}
+      <mat-icon class="jail-tracker-icon" (click)="nextPage()">chevron_right</mat-icon>
+    </div>
+  </div>
+  

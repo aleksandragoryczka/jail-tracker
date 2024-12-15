@@ -1,14 +1,17 @@
-import { ApprovalState } from './enums/approval-state.enum';
+import { ApprovalState } from "./enums/approval-state.enum";
+import { RequestType } from "./enums/request.enum";
 
 export interface Request {
-  id?: string;
-  fromDate: Date;
-  toDate: Date;
-  userId?: string;
-  userFirstName?: string;
-  userLastName?: string;
-  approvalState: ApprovalState;
-  timeOffSupervisorId?: string;
-  supervisorFirstName?: string;
-  supervisorLastName?: string;
-}
+    id?: string;
+    from: Date;
+    to: Date;
+    requestType: RequestType;
+    userId?: string;
+    userFirstName?: string;
+    userLastName?: string;
+    approvalState: ApprovalState;
+    requestSupervisorId?: string;
+    supervisorFirstName?: string;
+    supervisorLastName?: string;
+  }
+  

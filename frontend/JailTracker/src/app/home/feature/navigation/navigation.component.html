@@ -1,15 +1,16 @@
 <div class="navigation-container">
   <nav
-    class="navbar navbar-expand-lg navbar-light custom-navbar"
-    *ngIf="userService.isUserAuthenticated">
-    <a class="upwork-nav-brand" routerLink="">
+    class="navbar navbar-expand-lg navbar-light custom-navbar">
+    <!-- *ngIf="userService.isUserAuthenticated"> -->
+    <a class="jail-tracker-nav-brand" routerLink="">
       <img alt="logo" src="../../../assets/images/logo.svg" width="160px" />
     </a>
     <div class="nav-ng-container">
       <div class="nav-items-container">
         <div class="navbar-nav">
           <ul class="nav-item-div">
-            <ng-container *ngIf="url">
+            <!-- <ng-container *ngIf="url"> -->
+            <ng-container>
               <li
                 *ngFor="
                   let element of menuData;
@@ -27,7 +28,8 @@
               </li>
             </ng-container>
 
-            <ng-container *ngIf="userService.isAdmin$ | async">
+            <!-- <ng-container *ngIf="userService.isAdmin$ | async"> -->
+            <ng-container>
               <li
                 class="nav-item"
                 (click)="onItemClick(menuData.length)"
