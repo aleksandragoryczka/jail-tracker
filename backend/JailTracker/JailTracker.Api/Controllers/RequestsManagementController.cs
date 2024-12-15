@@ -23,13 +23,13 @@ public class RequestsManagementController : ControllerBase
 
     [HttpGet]
     //[Authorize(Policy = IdentityData.MatchOrganizationIdQueryPolicy)]
-    public ActionResult<PaginatedResult<RequestModelDto>> GetRequestsByPrisonId(int prisonId, DateTime from, DateTime to, int skip = 0, int take = 10)
+    public ActionResult<PaginatedResult<RequestModelDto>> GetRequestsByDateForUser(DateTime from, DateTime to, RequestType type, int skip = 0, int take = 10)
     {
         from = DateTime.SpecifyKind(from, DateTimeKind.Utc);
         to = DateTime.SpecifyKind(to, DateTimeKind.Utc);
 
         var userId = User.Identity.GetUserId();
-        var res = _requestsManagementService.GetRequestsByUserId(userId, from, to, type, skip, take);
+        var res = _requestsManagementService.GetRequestsByDateForUser(userId, from, to, type, skip, take);
         return Ok(res);
     }
 

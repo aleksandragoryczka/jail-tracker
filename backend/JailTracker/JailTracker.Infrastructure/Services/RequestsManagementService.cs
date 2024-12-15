@@ -16,7 +16,7 @@ public class RequestsManagementService : IRequestsManagementService
         _context = context;
     }
 
-    public PaginatedResult<RequestModelDto> GetRequestsByUserId(int userId, DateTime from, DateTime to, RequestType type, int skip, int take)
+    public PaginatedResult<RequestModelDto> GetRequestsByDateForUser(int userId, DateTime from, DateTime to, RequestType type, int skip, int take)
     {
         var requests = _context.Requests
             .Where(x => x.UserId == userId)
