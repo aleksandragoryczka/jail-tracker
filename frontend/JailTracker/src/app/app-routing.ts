@@ -5,6 +5,7 @@ import { NgModule } from '@angular/core';
 import { RequestsComponent } from './jail/feature/requests/requests.component';
 import { CalendarComponent } from './jail/feature/calendar/calendar.component';
 import { NewRequestComponent } from './jail/feature/new-request/new-request.component';
+import { AdminPanelComponent } from './home/feature/admin-panel/admin-panel.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -13,6 +14,7 @@ export const routes: Routes = [
   { path: 'requests', component: RequestsComponent },
   { path: 'new_request', component: NewRequestComponent },
   { path: 'dashboard', component: DashboardComponent },
+  { path: 'admin-panel', component: AdminPanelComponent },
 ];
 
 @NgModule({

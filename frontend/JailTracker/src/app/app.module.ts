@@ -8,14 +8,15 @@ import {
 import { AppComponent } from './app.component';
 import { LoginComponent } from './home/feature/login/login.component';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AppRoutingModule } from './app-routing';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import { FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {AppRoutingModule} from './app-routing';
 import { JwtModule } from '@auth0/angular-jwt';
 import { environment } from 'src/environments/environment';
 import { NgbModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { NavigationComponent } from './home/feature/navigation/navigation.component';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
 import { RequestsComponent } from './jail/feature/requests/requests.component';
 import { CalendarComponent } from './jail/feature/calendar/calendar.component';
 import { PopupWithInputsComponent } from './shared/ui/popup-with-inputs/popup-with-inputs.component';
@@ -32,9 +33,9 @@ import { NewRequestComponent } from './jail/feature/new-request/new-request.comp
 import { DashboardComponent } from './home/feature/dashboard/dashboard.component';
 import { MatInputModule } from '@angular/material/input';
 import { MatOptionModule } from '@angular/material/core';
-import { MatSelectModule } from '@angular/material/select';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
+import { AdminPanelComponent } from './home/feature/admin-panel/admin-panel.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,7 @@ import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
     SharedTableComponent,
     NewRequestComponent,
     DashboardComponent,
-  ],
+    AdminPanelComponent],
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -58,6 +59,7 @@ import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
     NgbTooltipModule,
     NgbModule,
     BrowserAnimationsModule,
+    MatIconModule,
     MatSelectModule,
     // MatCheckboxModule,
     MatOptionModule,
