@@ -1,0 +1,33 @@
+<div class="jail-tracker-default-container">
+    <div class="jail-tracker-default-content-container">
+        <div class="jail-tracker-default-content-heading">
+            {{ 'admin-panel.header' | translate }}
+        </div>
+        <div class="jail-tracker-default-content-data">
+            <div class="btn-container m-4">
+                <div class="jail-tracker-btn jail-tracker-btn-primary show-all-btn"
+                (click)="handleAction('add-user')">
+                  {{ 'admin-panel.add-user-button' | translate }}
+                </div>
+            </div>
+            <div class="btn-container m-4">
+                <div class="jail-tracker-btn jail-tracker-btn-primary show-all-btn"
+                (click)="handleAction('delete-user')">
+                  {{ 'admin-panel.delete-user-button' | translate }}
+                </div>
+            </div>
+            <div class="btn-container m-4">
+                <div class="jail-tracker-btn jail-tracker-btn-primary show-all-btn"
+                (click)="handleAction('reset-password')">
+                  {{ 'admin-panel.reset-user-password-button' | translate }}
+                </div>
+            </div>
+            <div class="btn-container m-4">
+                <div class="jail-tracker-btn jail-tracker-btn-primary show-all-btn"
+                (click)="handleAction('grant-permissions')">
+                  {{ 'admin-panel.grant-permissions-button' | translate }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -8,8 +8,12 @@
             "popup-header": "'s owners",
             "add-owner-button": "Add owner"
         },
-        "header": "Admin Panel",
-        "create-organization-button": "Create Organization"
+        "header": "Please, choose an option:",
+        "add-user-button": "Add user",
+        "delete-user-button": "Delete user",
+        "reset-user-password-button": "Reset user's password",
+        "grant-permissions-button": "Grant permissions",
+        "set-guard-button": "Set guard"
     },
     "dashboard": {
         "today-visit-part": "Today's visits",

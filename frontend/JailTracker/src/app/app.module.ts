@@ -5,13 +5,14 @@ import { AppComponent } from './app.component';
 import {LoginComponent} from './home/feature/login/login.component';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import {AppRoutingModule} from './app-routing';
 import { JwtModule } from '@auth0/angular-jwt';
 import { environment } from 'src/environments/environment';
 import {NgbModalModule, NgbModule, NgbTooltipModule,} from '@ng-bootstrap/ng-bootstrap';
 import { NavigationComponent } from './home/feature/navigation/navigation.component';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
 import { RequestsComponent } from './jail/feature/requests/requests.component';
 import { CalendarComponent } from './jail/feature/calendar/calendar.component';
 import { PopupWithInputsComponent } from './shared/ui/popup-with-inputs/popup-with-inputs.component';
@@ -26,7 +27,8 @@ import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { NewRequestComponent } from './jail/feature/new-request/new-request.component';
 import { DashboardComponent } from './home/feature/dashboard/dashboard.component';
-
+import { AdminPanelComponent } from './home/feature/admin-panel/admin-panel.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -38,7 +40,8 @@ import { DashboardComponent } from './home/feature/dashboard/dashboard.component
     PopupWithInputsComponent,
     SharedTableComponent,
     NewRequestComponent,
-    DashboardComponent],
+    DashboardComponent,
+    AdminPanelComponent],
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -48,9 +51,9 @@ import { DashboardComponent } from './home/feature/dashboard/dashboard.component
     MatIconModule,
     // NgbTooltipModule,
     NgbModule,
-    // BrowserAnimationsModule,
+    BrowserAnimationsModule,
     MatIconModule,
-    // MatSelectModule,
+    MatSelectModule,
     // MatCheckboxModule,
     // MatOptionModule,
     MatDialogModule,
