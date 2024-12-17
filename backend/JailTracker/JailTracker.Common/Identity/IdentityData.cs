@@ -5,7 +5,6 @@ public static class IdentityData
     public const string GuardUserClaimName = "guard";
     public const string OwnerUserClaimName = "owner";
     public const string UserIdClaimName = "userId";
-    public const string PrisonIdClaimName = "prisonId";
     public const string PermissionsClaimName = "permissions";
 
 
