@@ -11,4 +11,5 @@ public interface IUserService
     bool DeleteUser(int Id);
     UserModel UpdateUser(UserModel existingUser, UpdateUserDto updateUserDto);
     bool UpdateUserSupervisor(UpdateUserSupervisorDto updateUserSupervisor);
+    IEnumerable<UserModel> GetAllUsers();
 }

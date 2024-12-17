@@ -2,6 +2,9 @@
 using JailTracker.Database;
 using Microsoft.EntityFrameworkCore;
 
+using JailTracker.Common.Interfaces;
+using JailTracker.Infrastructure.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
 
@@ -9,6 +12,11 @@ var config = builder.Configuration;
 builder.Services.AddControllers();
 builder.Services.AddCustomDbContext(config);
 builder.Services.AddCustomServices(config);
+builder.Services.AddSingleton<ITokenService, TokenService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IPermissionsService, PermissionsService>();
+builder.Services.AddScoped<IPrisonService, PrisonService>();
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
