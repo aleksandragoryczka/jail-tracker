@@ -6,6 +6,8 @@ namespace JailTracker.Common.Interfaces;
 
 public interface IRequestsManagementService
 {
+    PaginatedResult<RequestModelDto> GetRequestsByPrisonId(int prisonId, DateTime from, DateTime to, int skip, int take);
+    PaginatedResult<RequestModelDto> GetRequestsByUserId(int userId, DateTime from, DateTime to, int skip, int take);
     PaginatedResult<RequestModelDto> GetRequestsByDateForUser(int userId, DateTime from, DateTime to, RequestType type, int skip, int take);
     PaginatedResult<RequestModelDto> GetPendingRequestsForSupervisor(int supervisorId, int skip, int take);
     PaginatedResult<RequestModelDto> GetSupervisedRequestsForSupervisor(int supervisorId, int skip, int take);

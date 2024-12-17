@@ -24,8 +24,16 @@ public class UserController : ControllerBase
         _permissionsService = permissionsService;
     }
 
+    [HttpGet]
+    [RequireClaim(IdentityData.PermissionsClaimName, PermissionType.BasicRead)]
+    public ActionResult<IEnumerable<UserModel>> GetUsers()
+    {
+        var users = _userService.GetAllUsers();
+        return Ok(users);
+    }
+
     [HttpPost]
-    [RequireClaim(IdentityData.PermissionsClaimName, PermissionType.CreateUser)]
+    // [RequireClaim(IdentityData.PermissionsClaimName, PermissionType.CreateUser)]
     //[Authorize(Policy = IdentityData.MatchPrisonIdBodyPolicy)]
     public ActionResult<UserModel> CreateUser([FromBody] RegisterDto registerDto)
     {
@@ -99,5 +107,12 @@ public class UserController : ControllerBase
         }
         UserModel updatedUser = _userService.UpdateUser(existingUser, updateUserDto);
         return Ok(updatedUser);
+    }
+
+    [HttpGet("Users")]
+    public ActionResult<IEnumerable<UserModel>> ListAllUsers()
+    {
+        var users = _userService.GetAllUsers();
+        return Ok(users);
     }
 }

@@ -3,6 +3,6 @@
 public enum Role
 {
     User = 0,
-    Guard,
-    PrisonOwner
+    Guard = 1,
+    PrisonOwner = 2
 }
