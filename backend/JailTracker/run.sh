@@ -1,1 +1,1 @@
-dotnet run --project JailTracker.Api/JailTracker.Api.csproj   
+dotnet run --project JailTracker.Api/JailTracker.Api.csproj
