@@ -3,6 +3,7 @@ using System;
 using JailTracker.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace JailTracker.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241217151110_update for supervisor id")]
+    partial class updateforsupervisorid
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -122,6 +125,7 @@ namespace JailTracker.Database.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("CurrentRequestsSupervisorId")
+                        .IsRequired()
                         .HasColumnType("integer");
 
                     b.Property<string>("Email")
@@ -143,6 +147,9 @@ namespace JailTracker.Database.Migrations
                         .IsRequired()
                         .HasColumnType("bytea");
 
+                    b.Property<int?>("PrisonId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("Role")
                         .HasColumnType("integer");
 
@@ -152,6 +159,8 @@ namespace JailTracker.Database.Migrations
 
                     b.HasIndex("Email")
                         .IsUnique();
+
+                    b.HasIndex("PrisonId");
 
                     b.ToTable("Users");
                 });
@@ -190,9 +199,22 @@ namespace JailTracker.Database.Migrations
                 {
                     b.HasOne("JailTracker.Common.Models.DatabaseModels.UserModel", "CurrentRequestsSupervisor")
                         .WithMany("SupervisedPrisoners")
-                        .HasForeignKey("CurrentRequestsSupervisorId");
+                        .HasForeignKey("CurrentRequestsSupervisorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JailTracker.Common.Models.DatabaseModels.PrisonModel", "Prison")
+                        .WithMany("Users")
+                        .HasForeignKey("PrisonId");
 
                     b.Navigation("CurrentRequestsSupervisor");
+
+                    b.Navigation("Prison");
+                });
+
+            modelBuilder.Entity("JailTracker.Common.Models.DatabaseModels.PrisonModel", b =>
+                {
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("JailTracker.Common.Models.DatabaseModels.UserModel", b =>

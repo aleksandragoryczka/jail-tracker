@@ -18,9 +18,9 @@ public class UserModel
     public byte[] Password { get; set; }
     public bool IsActive { get; set; }
     public Role Role { get; set; } = Role.User;
-    public int? PrisonId { get; set; }
-    [JsonIgnore]
-    public virtual PrisonModel Prison { get; set; }
+    //public int? PrisonId { get; set; }
+    //[JsonIgnore]
+    //public virtual PrisonModel Prison { get; set; }
     public int? CurrentRequestsSupervisorId { get; set; }
     [JsonIgnore]
     public virtual UserModel CurrentRequestsSupervisor { get; set; }

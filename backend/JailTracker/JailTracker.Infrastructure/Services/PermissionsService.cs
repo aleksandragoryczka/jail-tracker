@@ -20,7 +20,7 @@ public class PermissionsService : IPermissionsService
     {
         var user = _context.Users
             .Where(x => x.Id == updatePermissionsDto.UserId)
-            .Where(x => x.PrisonId == updatePermissionsDto.prisonId)
+            //.Where(x => x.PrisonId == updatePermissionsDto.prisonId)
             .Include(x => x.Permissions)
             .FirstOrDefault();
 

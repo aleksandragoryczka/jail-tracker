@@ -11,7 +11,8 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<UserModel>()
             .HasMany(x => x.SupervisedPrisoners)
             .WithOne(x => x.CurrentRequestsSupervisor)
-            .HasForeignKey(x => x.CurrentRequestsSupervisorId);
+            .HasForeignKey(x => x.CurrentRequestsSupervisorId)
+            .IsRequired(false);
 
         modelBuilder.Entity<RequestModel>()
             .HasOne(a => a.User)

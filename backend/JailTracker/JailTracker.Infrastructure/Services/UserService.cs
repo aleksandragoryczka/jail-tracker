@@ -28,7 +28,7 @@ namespace JailTracker.Infrastructure.Services
                 Role = role,
                 IsActive = true,
                 CurrentRequestsSupervisorId = registerDto.SupervisorId,
-                PrisonId = registerDto.prisonId
+               // PrisonId = registerDto.prisonId
             };
 
             _context.Users.Add(user);
