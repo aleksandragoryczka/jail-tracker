@@ -12,36 +12,102 @@ namespace JailTracker.Infrastructure.Services
     {
         private readonly ApplicationDbContext _context;
 
-        public UserService(ApplicationDbContext context)
+        private readonly IEncodeService _encodeService;
+
+        private readonly IEmailService _emailService;
+
+        public UserService(ApplicationDbContext context, IEncodeService encodeService, IEmailService emailService)
         {
             _context = context;
+            _encodeService = encodeService;
+            _emailService = emailService;
         }
 
-        public UserModel CreateUser(RegisterDto registerDto, Role role = Role.User)
+        public UserModel CreateUser(RegisterDto registerDto)
         {
-            var user = new UserModel
+            using var transaction = _context.Database.BeginTransaction();
+            try
             {
-                FirstName = registerDto.FirstName,
-                LastName = registerDto.LastName,
-                Email = registerDto.Email,
-                Password = HashPassword(registerDto.Password),
-                Role = role,
-                IsActive = true,
-                CurrentRequestsSupervisorId = registerDto.SupervisorId,
-               // PrisonId = registerDto.prisonId
-            };
+                string generatedPassword = registerDto.Password;
+                if (registerDto.Role != Role.PrisonAdmin)
+                {
+                    generatedPassword = _encodeService.GeneratePassword(16);
+                }
 
-            _context.Users.Add(user);
-            _context.SaveChanges();
+                var newUser = new UserModel
+                {
+                    FirstName = registerDto.FirstName,
+                    LastName = registerDto.LastName,
+                    Email = registerDto.Email,
+                    Password = HashPassword(generatedPassword),
+                    Role = registerDto.Role,
+                    IsActive = true,
+                    CurrentRequestsSupervisorId = registerDto.SupervisorId
+                };
 
-            return user;
-        }
+                newUser.Permissions = new List<PermissionModel>();
 
-        private byte[] HashPassword(string password)
-        {
-            using (var sha256 = SHA256.Create())
+                var perm = new PermissionModel()
+                {
+                    PermissionType = PermissionType.BasicRead,
+                    GrantDate = DateTime.UtcNow
+                };
+
+                newUser.Permissions.Add(perm);
+
+                if (newUser.Role == Role.Guard)
+                {
+                    var supervisePerm = new PermissionModel
+                    {
+                        PermissionType = PermissionType.CanSupervise,
+                        GrantDate = DateTime.UtcNow
+                    };
+                    newUser.Permissions.Add(supervisePerm);
+                }
+
+                if (newUser.Role == Role.PrisonAdmin)
+                {
+                    var adminPerm = new PermissionModel()
+                    {
+                        PermissionType = PermissionType.CreateUser, GrantDate = DateTime.UtcNow
+                    };
+                    newUser.Permissions.Add(adminPerm);
+                    adminPerm = new PermissionModel()
+                    {
+                        PermissionType = PermissionType.GrantPermissions, GrantDate = DateTime.UtcNow
+                    };
+                    newUser.Permissions.Add(adminPerm);
+                    adminPerm = new PermissionModel()
+                    {
+                        PermissionType = PermissionType.DeleteUser, GrantDate = DateTime.UtcNow
+                    };
+                    newUser.Permissions.Add(adminPerm);
+                    adminPerm = new PermissionModel()
+                    {
+                        PermissionType = PermissionType.ModifyUser, GrantDate = DateTime.UtcNow
+                    };
+                    newUser.Permissions.Add(adminPerm);
+                    adminPerm = new PermissionModel()
+                    {
+                        PermissionType = PermissionType.CanSupervise, GrantDate = DateTime.UtcNow
+                    };
+                    newUser.Permissions.Add(adminPerm);
+                }
+
+                _context.Users.Add(newUser);
+                _context.SaveChanges();
+
+                transaction.Commit();
+
+                _emailService.SendEmail(newUser.Email, "Account created",
+                    CreateBodyForPasswordMessage(generatedPassword));
+
+                return newUser;
+            }
+            catch
             {
-                return sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                transaction.Rollback();
+                throw;
             }
         }
 
@@ -66,17 +132,16 @@ namespace JailTracker.Infrastructure.Services
 
         public bool UpdateUserSupervisor(UpdateUserSupervisorDto updateUserSupervisorDto)
         {
-            return false;
-            // var user = _context.Users.Find(updateUserSupervisorDto.UserId);
-            // if (user == null)
-            // {
-            //     return false;
-            // }
+            var user = _context.Users.Find(updateUserSupervisorDto.UserId);
+            if (user == null)
+            {
+                return false;
+            }
 
-            // user.CurrentRequestsSupervisorId = updateUserSupervisorDto.NewSupervisorId;
-            // _context.SaveChanges();
+            user.CurrentRequestsSupervisorId = updateUserSupervisorDto.NewSupervisorId;
+            _context.SaveChanges();
 
-            // return true;
+            return true;
         }
 
         public UserModel UpdateUser(UserModel existingUser, UpdateUserDto updateUserDto)
@@ -84,16 +149,30 @@ namespace JailTracker.Infrastructure.Services
             existingUser.FirstName = updateUserDto.FirstName;
             existingUser.LastName = updateUserDto.LastName;
             existingUser.Password = HashPassword(updateUserDto.Password);
-            // Note: Update other fields as necessary
 
             _context.SaveChanges();
 
             return existingUser;
         }
-
-        public IEnumerable<UserModel> GetAllUsers()
+        
+        private byte[] HashPassword(string password)
         {
-            return _context.Users;
+            using (var sha256 = SHA256.Create())
+            {
+                return sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+            }
+        }
+
+        private string CreateBodyForPasswordMessage(string pass)
+        {
+            string res = @"
+<body>
+	<h1>New Password Created</h1>
+	<p>Your new password is: <strong>" + pass + @"</strong></p>
+	<p>Please make sure to keep this password safe and do not share it with anyone.</p>
+	<p>If this is a mistake please ignore this message.</p>
+</body>";
+            return res;
         }
     }
 }

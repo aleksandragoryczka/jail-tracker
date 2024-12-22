@@ -10,5 +10,4 @@ public class RegisterDto
     public string Password { get; set; }
     public Role Role { get; set; } = Role.User;
     public int? SupervisorId { get; set; }
-    public int? prisonId { get; set; }
 }

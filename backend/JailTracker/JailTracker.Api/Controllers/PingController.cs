@@ -12,10 +12,11 @@ public class PingController : ControllerBase
     {
         return Ok($"pong");
     }
-    /*[HttpGet("auth"), Authorize]
+    
+    [HttpGet("auth"), Authorize]
     public ActionResult PongAuth()
     {
         return Ok(User.Identity?.IsAuthenticated);
-    }*/
+    }
 }
 

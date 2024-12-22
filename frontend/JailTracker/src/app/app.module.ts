@@ -1,11 +1,11 @@
-import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
+import { forwardRef, NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from '@angular/common/http';
 import { AppComponent } from './app.component';
 import {LoginComponent} from './home/feature/login/login.component';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import {AppRoutingModule} from './app-routing';
 import { JwtModule } from '@auth0/angular-jwt';
 import { environment } from 'src/environments/environment';
@@ -26,6 +26,10 @@ import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { NewRequestComponent } from './jail/feature/new-request/new-request.component';
 import { DashboardComponent } from './home/feature/dashboard/dashboard.component';
+import {MatInputModule} from '@angular/material/input';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 @NgModule({
@@ -46,20 +50,19 @@ import { DashboardComponent } from './home/feature/dashboard/dashboard.component
     AppRoutingModule,
     FormsModule,
     MatIconModule,
-    // NgbTooltipModule,
+    NgbTooltipModule,
     NgbModule,
-    // BrowserAnimationsModule,
-    MatIconModule,
-    // MatSelectModule,
+    BrowserAnimationsModule,
+    MatSelectModule,
     // MatCheckboxModule,
-    // MatOptionModule,
+    MatOptionModule,
     MatDialogModule,
     // CommonModule,
     // NgbModalModule,
     MatDatepickerModule,
     // MatCommonModule,
     MatNativeDateModule,
-    // MatInputModule,
+    MatInputModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -87,10 +90,10 @@ import { DashboardComponent } from './home/feature/dashboard/dashboard.component
       useFactory: adapterFactory,
     }),
   ],
+  entryComponents: [PopupWithInputsComponent],
   providers: [
     DatePipe,
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-    DatePipe,
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
   ],
   
   bootstrap: [AppComponent],

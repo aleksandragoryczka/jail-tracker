@@ -60,12 +60,7 @@ export class NavigationComponent implements OnInit {
         icon: 'event_note',
         text: 'Requests',
         router_link: `/requests`,
-      },
-      {
-        icon: 'business',
-        text: 'Organization',
-        router_link: `/organization-control`,
-      },
+      }
     ];
   }
 

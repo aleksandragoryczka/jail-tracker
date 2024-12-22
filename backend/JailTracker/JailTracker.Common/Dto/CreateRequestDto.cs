@@ -8,6 +8,5 @@ namespace JailTracker.Common.Dto
         public DateTime ToDate { get; set; }
         public bool IsActive { get; set; }
         public RequestType RequestType { get; set; }
-        public Guid? TimeOffSupervisorId { get; set; }
     }
 }

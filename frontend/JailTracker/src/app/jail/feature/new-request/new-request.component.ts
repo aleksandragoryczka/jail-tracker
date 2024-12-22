@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { BehaviorSubject, map, Observable, switchMap, take } from 'rxjs';
 import { SharedTableData } from 'src/app/models/shard-table-data.model';
 import { User } from 'src/app/models/user.model';
@@ -21,13 +21,14 @@ import { RequestsManagementService } from '../../../shared/service/requests-mana
 import { PopupWithInputsComponent } from 'src/app/shared/ui/popup-with-inputs/popup-with-inputs.component';
 import { UpdateRequest } from 'src/app/models/update-request.model';
 import { TimeUtilities } from 'src/app/shared/web-utilities/time-utilities';
+import { RequestsService } from '../../../shared/service/requests.service';
 
 @Component({
   selector: 'app-new-request',
   templateUrl: './new-request.component.html',
   styleUrls: ['./new-request.component.scss'],
 })
-export class NewRequestComponent implements OnInit {
+export class NewRequestComponent {
   header = ['From date', 'To date', 'Type', 'Status', 'Supervisor', 'Actions'];
   currentPage$ = new BehaviorSubject<number>(0);
   listOfUserRequests$: Observable<SharedTableData[]> = this.loadUserRequests();
@@ -39,12 +40,11 @@ export class NewRequestComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private requestsManagementService: RequestsManagementService,
-    private tostr: ToastrService
+    private tostr: ToastrService,
+    private requestsService: RequestsService,
   ) {}
 
-  ngOnInit(): void {
-    throw new Error('Method not implemented.');
-  }
+  // TODO: Open date popup -> change from only date -> to date with time (from date/ to date)
 
   setPage(pageNumber: number): void {
     this.currentPage$.next(pageNumber);
@@ -73,16 +73,53 @@ export class NewRequestComponent implements OnInit {
             displayValue: key.replace(/([A-Z])/g, ' $1').trim(),
           })),
       },
-      ['SupervisorsOptions']: {
-        value: '',
-        type: 'select',
-        placeholder: 'Select approver',
-        selectOptions: this.listOfSupervisors.map((supervisor) => ({
-          value: supervisor.id ?? '',
-          displayValue: `${supervisor.firstName} ${supervisor.lastName}`,
-        })),
-      },
     };
+
+    const buttons: ButtonPopupModel[] = [
+      {
+        type: ButtonTypes.PRIMARY,
+        text: 'Submit',
+        onClick: () => this.createTimeOffRequest(inputs),
+      },
+    ];
+
+    const data: InputPopupDataModel = {
+      title: 'New request',
+      description: 'Fill basic data about your request:',
+      inputs: inputs,
+      buttons: buttons,
+    };
+
+    this.dialog.open(PopupWithInputsComponent, {
+      data: data,
+      panelClass: 'jail-tracker-popup',
+    });
+
+  }
+
+  private createTimeOffRequest(inputs: Dictionary<InputPopupModel>): void {
+    const userRequest: Request = {
+      from: TimeUtilities.createDateAsUTC(
+        new Date(String(inputs['TimeOffBeginningDate'].value))
+      ),
+      to: TimeUtilities.createDateAsUTC(
+        new Date(String(inputs['TimeOffEndDate'].value))
+      ),
+      requestType:
+        RequestType[inputs['TimeOffOptions'].value as keyof typeof RequestType],
+      approvalState: ApprovalState.Pending,
+    };
+
+    this.requestsService
+      .createRequest(userRequest)
+      .subscribe(isSuccess => {
+        if (isSuccess) {
+          this.tostr.success('New Request created successfully');
+        } else {
+          this.tostr.success('Something went wrong');
+        }
+        this.listOfUserRequests$ = this.loadUserRequests();
+      });
   }
 
   private loadUserRequests(): Observable<SharedTableData[]> {
@@ -133,8 +170,7 @@ export class NewRequestComponent implements OnInit {
           });
         }
         if (
-          ApprovalState[Number(userRequest.approvalState?.toString())] ==
-          'Pending'
+          ApprovalState[Number(userRequest.approvalState?.toString())] =='Pending'
         ) {
           result.actions?.push({
             icon: 'launch',
@@ -222,15 +258,6 @@ export class NewRequestComponent implements OnInit {
               value: key,
               displayValue: key.replace(/([A-Z])/g, ' $1').trim(),
             })),
-        },
-        ['SupervisorsOptions']: {
-          value: userRequest.requestSupervisorId,
-          type: 'select',
-          placeholder: `${userRequest.supervisorFirstName} ${userRequest.supervisorLastName}`,
-          selectOptions: this.listOfSupervisors.map((supervisor) => ({
-            value: supervisor.id ?? '',
-            displayValue: `${supervisor.firstName} ${supervisor.lastName}`,
-          })),
         },
       };
 

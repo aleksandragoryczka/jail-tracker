@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Reflection;
+using System.Text;
 using JailTracker.Common.Enums;
 using JailTracker.Common.Identity;
 using JailTracker.Common.Interfaces;
@@ -7,6 +8,7 @@ using JailTracker.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 namespace JailTracker.Api.Extensions;
 
@@ -42,18 +44,13 @@ public static class ServiceCollectionExtensions
                     };
                 });
 
-            /*services.AddAuthorization(options =>
+            services.AddAuthorization(options =>
             {
                 options.AddPolicy(IdentityData.AdminUserPolicy, policy => policy.RequireClaim(IdentityData.AdminUserClaimName, "true"));
 
                 options.AddPolicy(IdentityData.CreateUserPolicy,
-                    policy => policy
-                    .RequireClaim(IdentityData.OrganizationIdClaimName)
-                    .RequireClaim(IdentityData.PermissionsClaimName, PermissionType.CreateUser.ToString()));
-
-                options.AddPolicy(IdentityData.MatchOrganizationIdQueryPolicy, policy => policy.Requirements.Add(new MatchOrganizationQueryRequirement()));
-                options.AddPolicy(IdentityData.MatchOrganizationIdBodyPolicy, policy => policy.Requirements.Add(new MatchOrganizationBodyRequirement()));
-            });*/
+                    policy => policy.RequireClaim(IdentityData.PermissionsClaimName, PermissionType.CreateUser.ToString()));
+            });
         }
     
     public static void AddCustomDbContext(this IServiceCollection services, IConfiguration configuration)
@@ -69,10 +66,45 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IRequestsService, RequestsService>();
         services.AddScoped<IRequestsManagementService, RequestsManagementService>();
         services.AddScoped<IEncodeService, EncodeService>();
-        services.AddScoped<IPermissionsService, PermissionsService>();
-        services.AddScoped<IPrisonService, PrisonService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IEmailService, EmailService>();
 
+    }
+    
+    public static void AddCustomSwaggerGen(this IServiceCollection services)
+    {
+        services.AddSwaggerGen(c =>
+        {
+            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            
+            c.IncludeXmlComments(xmlPath);
+            
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "JailTracker", Version = "v1" });
+            
+            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Type = SecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT",
+                Description = "JWT Authorization header using the Bearer scheme. Enter 'Bearer' [space] and then your token in the text input below."
+            });
+
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
+                }
+            });
+        });
     }
 }

@@ -11,30 +11,25 @@ using JailTracker.Common.Models.DatabaseModels;
 namespace JailTracker.Api.Controllers;
 
 [Route("api/[controller]")]
-//[Authorize]
+[Authorize]
 [ApiController]
 public class UserController : ControllerBase
 {
     private readonly IUserService _userService;
-    private readonly IPermissionsService _permissionsService;
 
-    public UserController(IUserService userService, IPermissionsService permissionsService)
+    public UserController(IUserService userService)
     {
         _userService = userService;
-        _permissionsService = permissionsService;
     }
 
-    [HttpGet]
-    [RequireClaim(IdentityData.PermissionsClaimName, PermissionType.BasicRead)]
-    public ActionResult<IEnumerable<UserModel>> GetUsers()
-    {
-        var users = _userService.GetAllUsers();
-        return Ok(users);
-    }
-
+    /// <summary>
+    /// DONE
+    /// </summary>
+    /// <param name="registerDto"></param>
+    /// <returns></returns>
     [HttpPost]
-    // [RequireClaim(IdentityData.PermissionsClaimName, PermissionType.CreateUser)]
-    //[Authorize(Policy = IdentityData.MatchPrisonIdBodyPolicy)]
+    [RequireClaim(IdentityData.PermissionsClaimName, PermissionType.CreateUser)]
+    [Authorize(Policy =  IdentityData.AdminUserClaimName)]
     public ActionResult<UserModel> CreateUser([FromBody] RegisterDto registerDto)
     {
         UserModel res = _userService.CreateUser(registerDto);
@@ -42,60 +37,54 @@ public class UserController : ControllerBase
         return Ok(res);
     }
 
-    [HttpPost("CreateOwner")]
-    //[Authorize(Policy = IdentityData.GuardUserPolicy)]
-    public ActionResult<UserModel> CreateOwner([FromBody] RegisterDto registerDto)
+    /// <summary>
+    /// DONE - DISPLAY USER'S PROFILE DETAILS
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet]
+    public ActionResult<UserModel> GetCurrentUserProfile()
     {
-        UserModel res = _userService.CreateUser(registerDto, Role.PrisonOwner);
+        var userId = User.Identity.GetUserId();
+        var user = _userService.GetUser(userId);
 
-        return Ok(res);
-    }
-
-    [HttpGet("{id}")]
-    [RequireClaim(IdentityData.PermissionsClaimName, PermissionType.BasicRead)]
-    public ActionResult<UserModel> GetUser(int Id)
-    {
-        var res = _userService.GetUser(Id);
-
-        if (res == null)
+        if (user == null)
         {
             return NotFound();
         }
-
-        return Ok(res);
+        
+        return Ok(user);
     }
 
+    /// <summary>
+    /// DONE - Admin panel
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpDelete("{id}")]
-    //[Authorize(Policy = IdentityData.GuardUserPolicy)]
-    public ActionResult <bool> DeleteUser(int Id)
+    [Authorize(Policy = IdentityData.AdminUserPolicy)]
+    public ActionResult<bool> DeleteUser(int id)
     {
-        return Ok(_userService.DeleteUser(Id));
+        return Ok(_userService.DeleteUser(id));
     }
 
+    /// <summary>
+    /// DONE - Admin panel
+    /// </summary>
+    /// <param name="updateUserDto"></param>
+    /// <returns></returns>
     [HttpPost("UpdateUserSupervisor")]
     [RequireClaim(IdentityData.PermissionsClaimName, PermissionType.ModifyUser)]
-    //[Authorize(Policy = IdentityData.MatchPrisonIdBodyPolicy)]
     public ActionResult<bool> UpdateUserSupervisor([FromBody] UpdateUserSupervisorDto updateUserSupervisor)
     {
         bool res = _userService.UpdateUserSupervisor(updateUserSupervisor);
         return Ok(res);
     }
-
-    [HttpPut("{id}")]
-    [RequireClaim(IdentityData.PermissionsClaimName, PermissionType.ModifyUser)]
-    //[Authorize(Policy = IdentityData.MatchPrisonIdQueryPolicy)]
-    public ActionResult<UserModel> UpdateUser(int id, [FromBody] UpdateUserDto updateUserDto, [FromQuery] int PrisonId)
-    {
-        UserModel existingUser = _userService.GetUser(id);
-
-        if (existingUser == null)
-        {
-            return NotFound();
-        }
-        UserModel updatedUser = _userService.UpdateUser(existingUser, updateUserDto);
-        return Ok(updatedUser);
-    }
-
+    
+    /// <summary>
+    /// DONE - User's profoile - update name, surname, password
+    /// </summary>
+    /// <param name="updateUserDto"></param>
+    /// <returns></returns>
     [HttpPut("UpdateUserForUser")]
     public ActionResult<UserModel> UpdateUserForUser([FromBody] UpdateUserDto updateUserDto)
     {
@@ -108,11 +97,5 @@ public class UserController : ControllerBase
         UserModel updatedUser = _userService.UpdateUser(existingUser, updateUserDto);
         return Ok(updatedUser);
     }
-
-    [HttpGet("Users")]
-    public ActionResult<IEnumerable<UserModel>> ListAllUsers()
-    {
-        var users = _userService.GetAllUsers();
-        return Ok(users);
-    }
+    
 }

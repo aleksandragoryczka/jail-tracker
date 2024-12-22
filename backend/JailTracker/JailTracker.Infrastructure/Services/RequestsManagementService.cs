@@ -4,6 +4,7 @@ using JailTracker.Common.Interfaces;
 using JailTracker.Common.Models;
 using JailTracker.Database;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace JailTracker.Infrastructure.Services;
 
@@ -15,43 +16,59 @@ public class RequestsManagementService : IRequestsManagementService
     {
         _context = context;
     }
-
-    public PaginatedResult<RequestModelDto> GetRequestsByDateForUser(int userId, DateTime from, DateTime to, RequestType type, int skip, int take)
+    
+    public PaginatedResult<RequestModelDto> GetSupervisedPassesRequests(int userId, bool isGuard, int skip, int take)
     {
-        var requests = _context.Requests
-            .Where(x => x.UserId == userId)
-            .Where(x => x.IsActive)
-            .Where(x => x.RequestType == type)
-            .Include(x => x.User)
-            .Where(x => (x.FromDate >= from && x.FromDate <= to) || x.ToDate >= from && x.ToDate <= to)
-            .Select(x => new RequestModelDto(x));
+        IQueryable<RequestModelDto> requests;
+        if (isGuard)
+        {
+            requests = _context.Requests
+                .Where(x => x.RequestSupervisorId == userId)
+                .Where(x => x.IsActive)
+                .Where(x => x.RequestType == RequestType.Pass)
+                .Where(x => x.ApprovalState != ApprovalState.Pending)
+                .Include(x => x.User)
+                .Select(x => new RequestModelDto(x));
+        }
+        else
+        {
+            requests = _context.Requests
+                .Where(x => x.UserId == userId)
+                .Where(x => x.IsActive)
+                .Where(x => x.RequestType == RequestType.Pass)
+                .Where(x => x.ApprovalState != ApprovalState.Pending)
+                .Include(x => x.User)
+                .Select(x => new RequestModelDto(x));
+        }
 
         var res = new PaginatedResult<RequestModelDto>(requests.Skip(skip).Take(take), requests.Count(), take);
         return res;
     }
 
-    public PaginatedResult<RequestModelDto> GetPendingRequestsForSupervisor(int supervisorId, int skip, int take)
+    public PaginatedResult<RequestModelDto> GetSupervisedVisitsRequests(int userId, bool isGuard, int skip, int take)
     {
-        var requests = _context.Requests
-            .Where(x => x.RequestSupervisorId == supervisorId)
-            .Where(x => x.ApprovalState == ApprovalState.Pending)
-            .Where(x => x.IsActive)
-            .Include(x => x.User)
-            .Select(x => new RequestModelDto(x));
-
-        var res = new PaginatedResult<RequestModelDto>(requests.Skip(skip).Take(take), requests.Count(), take);
-        return res;   
-    }
-
-    public PaginatedResult<RequestModelDto> GetSupervisedRequestsForSupervisor(int supervisorId, int skip, int take)
-    {
-        var requests = _context.Requests
-            .Where(x => x.RequestSupervisorId == supervisorId)
-            .Where(x => x.IsActive)
-            .Where(x => x.ApprovalState != ApprovalState.Pending)
-            .Include(x => x.User)
-            .Select(x => new RequestModelDto(x));
-
+        IQueryable<RequestModelDto> requests;
+        if (isGuard)
+        {
+            requests = _context.Requests
+                .Where(x => x.RequestSupervisorId == userId)
+                .Where(x => x.IsActive)
+                .Where(x => x.RequestType == RequestType.Visit)
+                .Where(x => x.ApprovalState != ApprovalState.Pending)
+                .Include(x => x.User)
+                .Select(x => new RequestModelDto(x));
+        }
+        else
+        {
+            requests = _context.Requests
+                .Where(x => x.UserId == userId)
+                .Where(x => x.IsActive)
+                .Where(x => x.RequestType == RequestType.Visit)
+                .Where(x => x.ApprovalState != ApprovalState.Pending)
+                .Include(x => x.User)
+                .Select(x => new RequestModelDto(x));
+        }
+        
         var res = new PaginatedResult<RequestModelDto>(requests.Skip(skip).Take(take), requests.Count(), take);
         return res;
     }
@@ -73,7 +90,8 @@ public class RequestsManagementService : IRequestsManagementService
         {
             DateTime requestStartDate = (request.FromDate > currentYearStart) ? request.FromDate : currentYearStart;
             DateTime requestEndDate = (request.ToDate < nextYearStart) ? request.ToDate : nextYearStart.AddDays(-1);
-            requestedHours += (requestEndDate - requestStartDate).Hours + 1;
+
+            requestedHours += (int)(requestEndDate - requestStartDate).TotalHours;
         }
 
         return requestedHours;
@@ -87,5 +105,31 @@ public class RequestsManagementService : IRequestsManagementService
             .Where(x => x.UserId == userId)
             .Select(x => new RequestModelDto(x));
         return new PaginatedResult<RequestModelDto>(requests.Skip(skip).Take(take), requests.Count(), take); 
+    }
+
+    public PaginatedResult<RequestModelDto> GetPendingVisitsAndPassesRequestsForSupervisor(int supervisorId, int skip, int take)
+    {
+        var requests = _context.Requests
+            .Where(x => x.RequestSupervisorId == supervisorId)
+            .Where(x => x.ApprovalState == ApprovalState.Pending)
+            .Where(x => x.IsActive)
+            .Include(x => x.User)
+            .Select(x => new RequestModelDto(x));
+
+        var res = new PaginatedResult<RequestModelDto>(requests.Skip(skip).Take(take), requests.Count(), take);
+        return res;        
+    }
+
+    public PaginatedResult<RequestModelDto> GetSupervisedVisitsAndPassesRequestsForSupervisor(int supervisorId, int skip, int take)
+    {
+        var requests = _context.Requests
+            .Where(x => x.RequestSupervisorId == supervisorId)
+            .Where(x => x.ApprovalState != ApprovalState.Pending)
+            .Where(x => x.IsActive)
+            .Include(x => x.User)
+            .Select(x => new RequestModelDto(x));
+
+        var res = new PaginatedResult<RequestModelDto>(requests.Skip(skip).Take(take), requests.Count(), take);
+        return res;    
     }
 }

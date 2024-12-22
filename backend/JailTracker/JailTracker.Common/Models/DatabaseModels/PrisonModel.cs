@@ -1,7 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
-
 
 namespace JailTracker.Common.Models.DatabaseModels;
 
@@ -13,6 +11,4 @@ public class PrisonModel
     public bool IsActive { get; set; }
     [Required]
     public string UrlName { get; set; }
-    //[JsonIgnore]
-    //public virtual ICollection<UserModel> Users { get; set; }
 }

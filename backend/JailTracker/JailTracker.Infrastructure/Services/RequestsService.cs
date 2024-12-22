@@ -40,8 +40,7 @@ namespace JailTracker.Infrastructure.Services
 
         public RequestModel CreateRequest(int userId, CreateRequestDto requestDto)
         {
-            var user = _context.Users
-                .Include(x => x.CurrentRequestsSupervisor).Where(x => x.Id == userId).First();
+            var user = _context.Users.Include(x => x.CurrentRequestsSupervisor).Where(x => x.Id == userId).First();
             if (user == null)
             {
                 throw new ArgumentException("User not found");
@@ -51,6 +50,7 @@ namespace JailTracker.Infrastructure.Services
             {
                 throw new ArgumentException("CurrentRequestsSupervisor is not assigned to the user");
             }
+
             var fromDateUtc = requestDto.FromDate.ToUniversalTime();
             var toDateUtc = requestDto.ToDate.ToUniversalTime();
 
@@ -69,6 +69,43 @@ namespace JailTracker.Infrastructure.Services
             _context.Add(newRequest);
             _context.SaveChanges();
             return newRequest;
+        }
+
+        public RequestModelDto UpdateRequest(int userId, UpdateRequestDto updatedRequestDto)
+        {
+            var request = _context.Requests
+                .Where(x => x.UserId == userId && x.Id == updatedRequestDto.RequestId)
+                .Include(x => x.User)
+                .First();
+
+            if (updatedRequestDto.NewFromDate.HasValue && updatedRequestDto.NewFromDate.Value >= DateTime.Today)
+                request.FromDate = updatedRequestDto.NewFromDate.Value;
+
+            if (updatedRequestDto.NewToDate.HasValue && updatedRequestDto.NewToDate.Value >= request.FromDate)
+                request.ToDate = updatedRequestDto.NewToDate.Value;
+            
+            request.RequestType = updatedRequestDto.NewRequestType;
+
+            _context.SaveChanges();
+
+            return new RequestModelDto(request);
+        }
+
+        public bool CancelRequestForUser(Guid requestId, int userId)
+        {
+            RequestModel request = _context.Requests
+                .Where(x => x.UserId == userId)
+                .Where(x => x.Id == requestId)
+                .Where(x => x.FromDate > DateTime.Now)
+                .FirstOrDefault();
+
+            if (request != null)
+            {
+                request.IsActive = false;
+                _context.SaveChanges();
+                return true;
+            }
+            return false;
         }
     }
 }

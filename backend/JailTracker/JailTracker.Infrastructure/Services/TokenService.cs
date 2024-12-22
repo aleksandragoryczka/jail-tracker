@@ -59,11 +59,7 @@ namespace JailTracker.Infrastructure.Services
                 issuer: _configuration["JwtSettings:Issuer"],
                 audience: _configuration["JwtSettings:Audience"],
                 claims: GetUserClaims(userModel),
-#if DEBUG
                 expires: DateTime.UtcNow.AddHours(3),
-#else
-                expires: DateTime.UtcNow.AddHours(1),
-#endif
                 signingCredentials: signinCredentials
             );
             var tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
@@ -77,8 +73,8 @@ namespace JailTracker.Infrastructure.Services
                 new Claim(IdentityData.UserIdClaimName, user.Id.ToString())
             };
 
-            if (user.Role == Role.PrisonOwner)
-                claims.Add(new Claim(IdentityData.OwnerUserClaimName, "true"));
+            if (user.Role == Role.PrisonAdmin)
+                claims.Add(new Claim(IdentityData.AdminUserClaimName, "true"));
             else if (user.Role == Role.Guard)
                 claims.Add(new Claim(IdentityData.GuardUserClaimName, "true"));
 
@@ -88,10 +84,6 @@ namespace JailTracker.Infrastructure.Services
 
         private static void AddPermissionClaims(List<Claim> claims, UserModel user)
         {
-            /*if (!user.OrganizationId.HasValue) return;
-            
-            claims.Add(new Claim(IdentityData.OrganizationIdClaimName, user.OrganizationId.ToString()));*/
-
             if (user.Permissions == null) return;
             
             var userPerms = user.Permissions.Where(x => x.IsActive());

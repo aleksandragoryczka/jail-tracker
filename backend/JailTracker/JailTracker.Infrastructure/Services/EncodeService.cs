@@ -1,5 +1,6 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
+using BCrypt.Net;
 using JailTracker.Common.Interfaces;
 
 namespace JailTracker.Infrastructure.Services;
@@ -14,10 +15,20 @@ public class EncodeService : IEncodeService
 
     public bool VerifyUser(byte[] userPassword, string loginPassword)
     {
-#if DEBUG
-        return true;
-#endif
-        return BCrypt.Net.BCrypt.Verify(loginPassword, Encoding.UTF8.GetString(userPassword));
+        if (userPassword.SequenceEqual(HashPassword(loginPassword)))
+        {
+            return true;
+        }
+        return false;
+        
+    }
+    
+    private byte[] HashPassword(string password)
+    {
+        using (var sha256 = SHA256.Create())
+        {
+            return sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+        }
     }
 
     public string GeneratePassword(int length)

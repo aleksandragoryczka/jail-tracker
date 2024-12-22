@@ -4,5 +4,5 @@ public enum Role
 {
     User = 0,
     Guard = 1,
-    PrisonOwner = 2
+    PrisonAdmin = 2
 }

@@ -120,4 +120,11 @@ export class RequestsService {
       }&take=${take}`
     );*/
   }
+
+  public createRequest(request: Request): Observable<Request> {
+    return this.http.post<Request>(
+      `${environment.apiUrl}/Requests/CreateRequest`, request
+    );
+  }
+
 }

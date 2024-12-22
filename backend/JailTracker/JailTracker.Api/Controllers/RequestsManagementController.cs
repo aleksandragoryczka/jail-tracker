@@ -1,16 +1,17 @@
 ﻿using JailTracker.Api.Extensions;
+using JailTracker.Attributes;
 using JailTracker.Common.Dto;
 using JailTracker.Common.Enums;
+using JailTracker.Common.Identity;
 using JailTracker.Common.Interfaces;
 using JailTracker.Common.Models;
-using JailTracker.Common.Models.DatabaseModels;
-using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JailTracker.Api.Controllers;
 
 [Route("api/[controller]/[action]")]
-//[Authorize]
+[Authorize]
 [ApiController]
 public class RequestsManagementController : ControllerBase
 {
@@ -20,20 +21,14 @@ public class RequestsManagementController : ControllerBase
     {
         _requestsManagementService = requestsManagementService;
     }
-
-    [HttpGet]
-    //[Authorize(Policy = IdentityData.MatchOrganizationIdQueryPolicy)]
-    public ActionResult<PaginatedResult<RequestModelDto>> GetRequestsByDateForUser(DateTime from, DateTime to, RequestType type, int skip = 0, int take = 10)
-    {
-        from = DateTime.SpecifyKind(from, DateTimeKind.Utc);
-        to = DateTime.SpecifyKind(to, DateTimeKind.Utc);
-
-        var userId = User.Identity.GetUserId();
-        var res = _requestsManagementService.GetRequestsByDateForUser(userId, from, to, type, skip, take);
-        return Ok(res);
-    }
-
-
+    
+    // For Create New Request tab
+    /// <summary>
+    /// DONE - USER'S "CREATE NEW REQUEST" PAGE
+    /// </summary>
+    /// <param name="skip"></param>
+    /// <param name="take"></param>
+    /// <returns></returns>
     [HttpGet]
     public ActionResult<PaginatedResult<RequestModelDto>> GetRequestsForUser(int skip = 0, int take = 10)
     {
@@ -42,25 +37,42 @@ public class RequestsManagementController : ControllerBase
         var res = _requestsManagementService.GetRequestsForUser(userId, skip, take);
         return res;
     }
-    
+
+    /// <summary>
+    /// DONE - DASHBOARD FOR SUPERVISOR AND DASHBOARD FOR USER
+    /// </summary>
+    /// <param name="skip"></param>
+    /// <param name="take"></param>
+    /// <returns></returns>
     [HttpGet]
-    //[RequireClaim(IdentityData.PermissionsClaimName, PermissionType.CanSupervise)]
-    public ActionResult<PaginatedResult<RequestModelDto>> GetPendingRequestsForSupervisor(int skip = 0, int take = 10)
+    public ActionResult<PaginatedResult<RequestModelDto>> GetSupervisedPassesRequests(int skip = 0, int take = 10)
     {
-        var supervisorId = User.Identity.GetUserId();
-        var res = _requestsManagementService.GetPendingRequestsForSupervisor(supervisorId, skip, take);
+        var userId = User.Identity.GetUserId();
+        var isGuard = User.Identity.IsGuard();
+        var res = _requestsManagementService.GetSupervisedPassesRequests(userId, isGuard, skip, take);
+        return Ok(res);
+    }
+    
+    /// <summary>
+    /// DONE - DASHBOARD FOR SUPERVISOR AND DASHBOARD FOR USER
+    /// </summary>
+    /// <param name="skip"></param>
+    /// <param name="take"></param>
+    /// <returns></returns>
+    [HttpGet]
+    public ActionResult<PaginatedResult<RequestModelDto>> GetSupervisedVisitsRequests(int skip = 0, int take = 10)
+    {
+        var userId = User.Identity.GetUserId();
+        var isGuard = User.Identity.IsGuard();
+        var res = _requestsManagementService.GetSupervisedVisitsRequests(userId, isGuard, skip, take);
         return Ok(res);
     }
 
-    [HttpGet]
-    //[RequireClaim(IdentityData.PermissionsClaimName, PermissionType.CanSupervise)]
-    public ActionResult<PaginatedResult<RequestModelDto>> GetSupervisedAbsencesRequestsForSupervisor(int skip = 0, int take = 10)
-    {
-        var supervisorId = User.Identity.GetUserId();
-        var res = _requestsManagementService.GetSupervisedRequestsForSupervisor(supervisorId, skip, take);
-        return Ok(res);
-    }
     
+    /// <summary>
+    /// DONE
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     public ActionResult<int> GetYearAbsenceCountForUserInHours()
     {
@@ -68,6 +80,36 @@ public class RequestsManagementController : ControllerBase
         
         var res = _requestsManagementService.GetYearRequestsCountForUserInHours(userId);
         return res;
+    }
+    
+    /// <summary>
+    /// DONE - DASHBOARD FOR SUPERVISOR, "REQUESTS" FOR SUPERVISOR, 1st tab
+    /// </summary>
+    /// <param name="skip"></param>
+    /// <param name="take"></param>
+    /// <returns></returns>
+    [HttpGet]
+    [RequireClaim(IdentityData.PermissionsClaimName, PermissionType.CanSupervise)]
+    public ActionResult<PaginatedResult<RequestModelDto>> GetPendingVisitsAndPassesRequestsForSupervisor(int skip = 0, int take = 10)
+    {
+        var supervisorId = User.Identity.GetUserId();
+        var res = _requestsManagementService.GetPendingVisitsAndPassesRequestsForSupervisor(supervisorId, skip, take);
+        return Ok(res);
+    }
+    
+    /// <summary>
+    /// DONE - "REQUESTS" FOR SUPERVISOR, 2nd tab
+    /// </summary>
+    /// <param name="skip"></param>
+    /// <param name="take"></param>
+    /// <returns></returns>
+    [HttpGet]
+    [RequireClaim(IdentityData.PermissionsClaimName, PermissionType.CanSupervise)]
+    public ActionResult<PaginatedResult<RequestModelDto>> GetSupervisedVisitsAndPassesRequestsForSupervisor(int skip = 0, int take = 10)
+    {
+        var supervisorId = User.Identity.GetUserId();
+        var res = _requestsManagementService.GetSupervisedVisitsAndPassesRequestsForSupervisor(supervisorId, skip, take);
+        return Ok(res);
     }
 
 

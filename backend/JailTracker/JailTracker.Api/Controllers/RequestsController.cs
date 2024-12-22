@@ -5,11 +5,13 @@ using JailTracker.Common.Enums;
 using JailTracker.Common.Identity;
 using JailTracker.Common.Interfaces;
 using JailTracker.Common.Models.DatabaseModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JailTracker.Api.Controllers
 {
     [Route("api/[controller]/[action]")]
+    [Authorize]
     [ApiController]
     public class RequestsController : ControllerBase
     {
@@ -19,7 +21,12 @@ namespace JailTracker.Api.Controllers
         {
             _requestsService = requestsService;
         }
-
+        
+        /// <summary>
+        /// DONE
+        /// </summary>
+        /// <param name="requestApprovalState"></param>
+        /// <returns></returns>
         [HttpPut]
         [RequireClaim(IdentityData.PermissionsClaimName, PermissionType.CanSupervise)]
         public ActionResult<RequestModel> SetApprovalStateForRequest([FromBody] RequestApprovalStateDto requestApprovalState)
@@ -30,6 +37,11 @@ namespace JailTracker.Api.Controllers
             return Ok(res);
         }
 
+        /// <summary>
+        /// DONE
+        /// </summary>
+        /// <param name="requestDto"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult<RequestModel> CreateRequest([FromBody] CreateRequestDto requestDto)
         {
@@ -45,5 +57,39 @@ namespace JailTracker.Api.Controllers
                 return StatusCode(500, new { message = "An error occurred while processing your request.", details = ex.Message });
             }
         }
+        
+        /// <summary>
+        /// DONE
+        /// </summary>
+        /// <param name="updateRequestDto"></param>
+        /// <returns></returns>
+        [HttpPut]
+        public ActionResult<RequestModelDto> UpdateAbsenceForUser([FromBody] UpdateRequestDto updateRequestDto)
+        {
+            var userId = User.Identity.GetUserId();
+            var absence = _requestsService.UpdateRequest(userId, updateRequestDto);
+
+            return Ok(absence);
+        }
+        
+        /// <summary>
+        /// DONE
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("{id}")]
+        public ActionResult<bool> CancelRequestForUser(Guid id)
+        {
+            var userId = User.Identity.GetUserId();
+
+            bool isCancelled = _requestsService.CancelRequestForUser(id, userId);
+
+            if (isCancelled)
+                return Ok(true);
+            else
+                return NotFound();
+        }
+        
     }
+    
 }

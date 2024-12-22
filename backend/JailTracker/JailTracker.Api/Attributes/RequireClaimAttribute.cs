@@ -21,7 +21,7 @@ public class RequireClaimAttribute : Attribute, IAuthorizationFilter
     {
         if (!context.HttpContext.User.HasClaim(_claimName, _claimValue.ToString())
             && !context.HttpContext.User.HasClaim(IdentityData.GuardUserClaimName, "true")
-            && !context.HttpContext.User.HasClaim(IdentityData.OwnerUserClaimName, "true"))
+            && !context.HttpContext.User.HasClaim(IdentityData.AdminUserClaimName, "true"))
             context.Result = new ForbidResult();
     }
 }
