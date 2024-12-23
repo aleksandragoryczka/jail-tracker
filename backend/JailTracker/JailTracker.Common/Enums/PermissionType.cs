@@ -8,5 +8,4 @@ public enum PermissionType
     ModifyUser = 3,
     DeleteUser = 4,
     CanSupervise = 5,
-    GrantPermissions = 6,
 }

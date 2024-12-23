@@ -74,22 +74,12 @@ namespace JailTracker.Infrastructure.Services
                     newUser.Permissions.Add(adminPerm);
                     adminPerm = new PermissionModel()
                     {
-                        PermissionType = PermissionType.GrantPermissions, GrantDate = DateTime.UtcNow
-                    };
-                    newUser.Permissions.Add(adminPerm);
-                    adminPerm = new PermissionModel()
-                    {
                         PermissionType = PermissionType.DeleteUser, GrantDate = DateTime.UtcNow
                     };
                     newUser.Permissions.Add(adminPerm);
                     adminPerm = new PermissionModel()
                     {
                         PermissionType = PermissionType.ModifyUser, GrantDate = DateTime.UtcNow
-                    };
-                    newUser.Permissions.Add(adminPerm);
-                    adminPerm = new PermissionModel()
-                    {
-                        PermissionType = PermissionType.CanSupervise, GrantDate = DateTime.UtcNow
                     };
                     newUser.Permissions.Add(adminPerm);
                 }

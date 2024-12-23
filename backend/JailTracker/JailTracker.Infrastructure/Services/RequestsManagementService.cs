@@ -17,7 +17,7 @@ public class RequestsManagementService : IRequestsManagementService
         _context = context;
     }
     
-    public PaginatedResult<RequestModelDto> GetSupervisedPassesRequests(int userId, bool isGuard, int skip, int take)
+    /*public PaginatedResult<RequestModelDto> GetSupervisedPassesRequests(int userId, bool isGuard, int skip, int take)
     {
         IQueryable<RequestModelDto> requests;
         if (isGuard)
@@ -71,7 +71,7 @@ public class RequestsManagementService : IRequestsManagementService
         
         var res = new PaginatedResult<RequestModelDto>(requests.Skip(skip).Take(take), requests.Count(), take);
         return res;
-    }
+    }*/
 
     public int GetYearRequestsCountForUserInHours(int userId)
     {
@@ -131,5 +131,35 @@ public class RequestsManagementService : IRequestsManagementService
 
         var res = new PaginatedResult<RequestModelDto>(requests.Skip(skip).Take(take), requests.Count(), take);
         return res;    
+    }
+
+    public PaginatedResult<RequestModelDto> GetRequestsByDateForUser(int userId, DateTime from, DateTime to, RequestType type, bool isGuard, int skip, int take)
+    {
+        IQueryable<RequestModelDto> requests;
+        if (isGuard)
+        {
+            requests = _context.Requests
+                .Where(x => x.RequestSupervisorId == userId)
+                .Where(x => x.IsActive)
+                .Where(x => x.RequestType == type)
+                .Where(x => x.ApprovalState != ApprovalState.Pending)
+                .Include(x => x.User)
+                .Where(x => (x.FromDate >= from && x.FromDate <= to) || x.ToDate >= from && x.ToDate <= to)
+                .Select(x => new RequestModelDto(x));
+        }
+        else
+        {
+            requests = _context.Requests
+                .Where(x => x.UserId == userId)
+                .Where(x => x.IsActive)
+                .Where(x => x.RequestType == type)
+                .Where(x => x.ApprovalState != ApprovalState.Pending)
+                .Include(x => x.User)
+                .Where(x => (x.FromDate >= from && x.FromDate <= to) || x.ToDate >= from && x.ToDate <= to)
+                .Select(x => new RequestModelDto(x));
+        }
+        
+        var res = new PaginatedResult<RequestModelDto>(requests.Skip(skip).Take(take), requests.Count(), take);
+        return res;
     }
 }

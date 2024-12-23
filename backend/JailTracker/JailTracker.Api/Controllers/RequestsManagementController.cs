@@ -37,7 +37,31 @@ public class RequestsManagementController : ControllerBase
         var res = _requestsManagementService.GetRequestsForUser(userId, skip, take);
         return res;
     }
+    
+    /// <summary>
+    /// DONE - DASHBOARD FOR SUPERVISOR AND DASHBOARD FOR USER - two first tabs
+    /// </summary>
+    /// <param name="from"></param>
+    /// <param name="to"></param>
+    /// <param name="type"></param>
+    /// <param name="skip"></param>
+    /// <param name="take"></param>
+    /// <returns></returns>
+    [HttpGet]
+    public ActionResult<PaginatedResult<RequestModelDto>> GetRequestsByDateForUser(DateTime from, DateTime to, RequestType type, int skip = 0, int take = 10)
+    {
+        var userId = User.Identity.GetUserId();
+        var isGuard = User.Identity.IsGuard();
+        
+        from = DateTime.SpecifyKind(from, DateTimeKind.Utc);
+        to = DateTime.SpecifyKind(to, DateTimeKind.Utc);
+        
+        var res = _requestsManagementService.GetRequestsByDateForUser(userId, from, to, type, isGuard, skip, take);
+        return Ok(res);
+    }
 
+    
+    /*
     /// <summary>
     /// DONE - DASHBOARD FOR SUPERVISOR AND DASHBOARD FOR USER
     /// </summary>
@@ -66,7 +90,7 @@ public class RequestsManagementController : ControllerBase
         var isGuard = User.Identity.IsGuard();
         var res = _requestsManagementService.GetSupervisedVisitsRequests(userId, isGuard, skip, take);
         return Ok(res);
-    }
+    }*/
 
     
     /// <summary>
@@ -111,6 +135,5 @@ public class RequestsManagementController : ControllerBase
         var res = _requestsManagementService.GetSupervisedVisitsAndPassesRequestsForSupervisor(supervisorId, skip, take);
         return Ok(res);
     }
-
-
+    
 }
