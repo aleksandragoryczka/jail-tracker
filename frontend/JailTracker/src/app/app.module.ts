@@ -1,22 +1,26 @@
-import { forwardRef, NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
+import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from '@angular/common/http';
+import {
+  HTTP_INTERCEPTORS,
+  HttpClient,
+  HttpClientModule,
+} from '@angular/common/http';
 import { AppComponent } from './app.component';
-import {LoginComponent} from './home/feature/login/login.component';
+import { LoginComponent } from './home/feature/login/login.component';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import {TranslateHttpLoader} from '@ngx-translate/http-loader';
-import { FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
-import {AppRoutingModule} from './app-routing';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AppRoutingModule } from './app-routing';
 import { JwtModule } from '@auth0/angular-jwt';
 import { environment } from 'src/environments/environment';
-import {NgbModalModule, NgbModule, NgbTooltipModule,} from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { NavigationComponent } from './home/feature/navigation/navigation.component';
 import { MatIconModule } from '@angular/material/icon';
 import { RequestsComponent } from './jail/feature/requests/requests.component';
 import { CalendarComponent } from './jail/feature/calendar/calendar.component';
 import { PopupWithInputsComponent } from './shared/ui/popup-with-inputs/popup-with-inputs.component';
 import { MatDialogModule } from '@angular/material/dialog';
-import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { DatePipe } from '@angular/common';
 import { ErrorInterceptor } from './interceptor/error.interceptor';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -26,11 +30,11 @@ import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { NewRequestComponent } from './jail/feature/new-request/new-request.component';
 import { DashboardComponent } from './home/feature/dashboard/dashboard.component';
-import {MatInputModule} from '@angular/material/input';
+import { MatInputModule } from '@angular/material/input';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
 
 @NgModule({
   declarations: [
@@ -42,7 +46,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     PopupWithInputsComponent,
     SharedTableComponent,
     NewRequestComponent,
-    DashboardComponent],
+    DashboardComponent,
+  ],
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -60,6 +65,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     // CommonModule,
     // NgbModalModule,
     MatDatepickerModule,
+    NgxMatTimepickerModule.setLocale('en-GB'),
     // MatCommonModule,
     MatNativeDateModule,
     MatInputModule,
@@ -93,7 +99,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
   entryComponents: [PopupWithInputsComponent],
   providers: [
     DatePipe,
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
   ],
   
   bootstrap: [AppComponent],

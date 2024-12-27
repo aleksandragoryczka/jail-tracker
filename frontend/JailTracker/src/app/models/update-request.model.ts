@@ -5,5 +5,4 @@ export interface UpdateRequest {
     newFromDate?: Date;
     newToDate?: Date;
     newRequestType?: RequestType;
-    newRequestSupervisorId?: string;
 }

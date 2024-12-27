@@ -26,18 +26,34 @@
                 [(ngModel)]="input[1].value" />
               <mat-form-field
                 *ngSwitchCase="'date'"
+                  appearance="fill"
+                  class="jail-tracker-date-input">
+                  <mat-label>{{ input[1].placeholder ?? '' }}</mat-label>
+                <input matInput [(ngModel)]="input[1].value"
+                [matDatepicker]="picker"
+                placeholder="DD/MM/YYYY"/>
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+              <mat-form-field
+                *ngSwitchCase="'time'"
                 appearance="fill"
                 class="jail-tracker-date-input">
                 <mat-label>{{ input[1].placeholder ?? '' }}</mat-label>
                 <input
                   matInput
                   [(ngModel)]="input[1].value"
-                  [matDatepicker]="picker"
-                  placeholder="DD/MM/YYYY" />
-                <mat-datepicker-toggle
-                  matSuffix
-                  [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
+                  [ngxMatTimepicker]="picker"
+                  min="8:00 am"
+                  max="5:00 pm"
+                  [format]="24" />
+                  <ngx-mat-timepicker-toggle [for]="picker" matSuffix/>
+                  <ngx-mat-timepicker 
+                    #picker 
+                    [minutesGap]="10">
+                  </ngx-mat-timepicker>  
               </mat-form-field>
               <mat-form-field
                 *ngSwitchCase="'select'"

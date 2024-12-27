@@ -11,7 +11,7 @@ import {
 @Component({
   selector: 'app-popup-with-inputs',
   templateUrl: './popup-with-inputs.component.html',
-  styleUrls: ['./popup-with-inputs.component.scss'],
+  styleUrls: ['./popup-with-inputs.component.scss']
 })
 export class PopupWithInputsComponent {
   public primary = ButtonTypes.PRIMARY;
@@ -28,6 +28,7 @@ export class PopupWithInputsComponent {
   getDict(dict: Dictionary<InputPopupModel>) {
     return Object.entries(dict);
   }
+
   trackByFn(index: number, item: [key: string, val: InputPopupModel]) {
     return item[0];
   }

@@ -41,7 +41,7 @@ export class NewRequestComponent {
     private dialog: MatDialog,
     private requestsManagementService: RequestsManagementService,
     private tostr: ToastrService,
-    private requestsService: RequestsService,
+    private requestsService: RequestsService
   ) {}
 
   // TODO: Open date popup -> change from only date -> to date with time (from date/ to date)
@@ -50,18 +50,8 @@ export class NewRequestComponent {
     this.currentPage$.next(pageNumber);
   }
 
-  openNewRequestPopup(): void {
+  openNewRequestPopupSelectRequestType(): void {
     const inputs: Dictionary<InputPopupModel> = {
-      ['RequestBeginningDate']: {
-        value: '',
-        type: 'date',
-        placeholder: 'Enter beginning date',
-      },
-      ['RequestEndDate']: {
-        value: '',
-        type: 'date',
-        placeholder: 'Enter end date',
-      },
       ['RequestOptions']: {
         value: '',
         type: 'select',
@@ -77,9 +67,18 @@ export class NewRequestComponent {
 
     const buttons: ButtonPopupModel[] = [
       {
+        type: ButtonTypes.SECONDARY,
+        text: 'Cancel',
+      },
+      {
         type: ButtonTypes.PRIMARY,
-        text: 'Submit',
-        onClick: () => this.createTimeOffRequest(inputs),
+        text: 'Continue',
+        onClick: () =>
+          this.openNewRequestPopupSelectDatesRange(
+            RequestType[
+              inputs['RequestOptions'].value as keyof typeof RequestType
+            ]
+          ),
       },
     ];
 
@@ -94,32 +93,98 @@ export class NewRequestComponent {
       data: data,
       panelClass: 'jail-tracker-popup',
     });
-
   }
 
-  private createTimeOffRequest(inputs: Dictionary<InputPopupModel>): void {
-    const userRequest: Request = {
-      from: TimeUtilities.createDateAsUTC(
-        new Date(String(inputs['TimeOffBeginningDate'].value))
-      ),
-      to: TimeUtilities.createDateAsUTC(
-        new Date(String(inputs['TimeOffEndDate'].value))
-      ),
-      requestType:
-        RequestType[inputs['TimeOffOptions'].value as keyof typeof RequestType],
-      approvalState: ApprovalState.Pending,
+  private openNewRequestPopupSelectDatesRange(requestType: RequestType): void {
+    const inputs: Dictionary<InputPopupModel> = {};
+    if (requestType == RequestType.Pass) {
+      inputs['RequestBeginningDate'] = {
+        value: '',
+        type: 'date',
+        placeholder: 'Enter beginning date:',
+      };
+      inputs['RequestEndDate'] = {
+        value: '',
+        type: 'date',
+        placeholder: 'Enter end date:',
+      };
+    } else if (requestType == RequestType.Visit) {
+      inputs['RequestDate'] = {
+        value: '',
+        type: 'date',
+        placeholder: 'Enter visit date:',
+      };
+      inputs['RequestBeginningTime'] = {
+        value: '',
+        type: 'time',
+        placeholder: 'Enter beginning time:',
+      };
+      inputs['RequestEndTime'] = {
+        value: '',
+        type: 'time',
+        placeholder: 'Enter end time:',
+      };
+    }
+
+    const buttons: ButtonPopupModel[] = [
+      {
+        type: ButtonTypes.SECONDARY,
+        text: 'Cancel',
+      },
+      {
+        type: ButtonTypes.PRIMARY,
+        text: 'Submit',
+        onClick: () => this.createTimeOffRequest(requestType, inputs),
+      },
+    ];
+
+    const data: InputPopupDataModel = {
+      title: 'New request',
+      description: 'Fill basic data about your request:',
+      inputs: inputs,
+      buttons: buttons,
     };
 
-    this.requestsService
-      .createRequest(userRequest)
-      .subscribe(isSuccess => {
-        if (isSuccess) {
-          this.tostr.success('New Request created successfully');
-        } else {
-          this.tostr.success('Something went wrong');
-        }
-        this.listOfUserRequests$ = this.loadUserRequests();
-      });
+    this.dialog.open(PopupWithInputsComponent, {
+      data: data,
+      panelClass: 'jail-tracker-popup',
+    });
+  }
+
+  private createTimeOffRequest(
+    requestType: RequestType,
+    inputs: Dictionary<InputPopupModel>
+  ): void {
+    const userRequest: Request = {
+      requestType: requestType,
+      approvalState: ApprovalState.Pending,
+      from: new Date(),
+      to: new Date(),
+    };
+    if (requestType == RequestType.Pass) {
+      userRequest.from = new Date(String(inputs['RequestBeginningDate'].value));
+      userRequest.to = TimeUtilities.createDateAsUTC(
+        new Date(String(inputs['RequestEndDate'].value))
+      );
+    } else if (requestType == RequestType.Visit) {
+      userRequest.from = TimeUtilities.combineDateAndTime(
+        String(inputs['RequestDate'].value),
+        String(inputs['RequestBeginningTime'].value)
+      );
+      userRequest.to = TimeUtilities.combineDateAndTime(
+        String(inputs['RequestDate'].value),
+        String(inputs['RequestEndTime'].value)
+      );
+    }
+
+    this.requestsService.createRequest(userRequest).subscribe((isSuccess) => {
+      if (isSuccess) {
+        this.tostr.success('New Request created successfully');
+      } else {
+        this.tostr.success('Something went wrong');
+      }
+      this.listOfUserRequests$ = this.loadUserRequests();
+    });
   }
 
   private loadUserRequests(): Observable<SharedTableData[]> {
@@ -170,7 +235,8 @@ export class NewRequestComponent {
           });
         }
         if (
-          ApprovalState[Number(userRequest.approvalState?.toString())] =='Pending'
+          ApprovalState[Number(userRequest.approvalState?.toString())] ==
+          'Pending'
         ) {
           result.actions?.push({
             icon: 'launch',
@@ -235,31 +301,36 @@ export class NewRequestComponent {
 
   private openUpdateRequestPopup(userRequest: Request): void {
     if (typeof userRequest.requestType !== 'undefined') {
-      const inputs: Dictionary<InputPopupModel> = {
-        ['RequestfBeginningDate']: {
+      const inputs: Dictionary<InputPopupModel> = {};
+      if (userRequest.requestType == RequestType.Pass) {
+        inputs['RequestfBeginningDate'] = {
           value: userRequest.from,
           type: 'date',
           placeholder: 'Current beginning date:',
-        },
-        ['RequestEndDate']: {
+        };
+        inputs['RequestEndDate'] = {
           value: userRequest.to,
           type: 'date',
           placeholder: 'Current end date:',
-        },
-        ['RequestOptions']: {
-          value: RequestType[userRequest.requestType],
-          type: 'select',
-          placeholder: RequestType[userRequest.requestType]
-            .replace(/([A-Z])/g, ' $1')
-            .trim(),
-          selectOptions: Object.keys(RequestType)
-            .filter((key) => isNaN(Number(key)))
-            .map((key) => ({
-              value: key,
-              displayValue: key.replace(/([A-Z])/g, ' $1').trim(),
-            })),
-        },
-      };
+        };
+      } else if (userRequest.requestType == RequestType.Visit) {
+        console.log(userRequest.from);
+        inputs['RequestDate'] = {
+          value: userRequest.from,
+          type: 'date',
+          placeholder: 'Current visit date:',
+        };
+        inputs['RequestBeginningTime'] = {
+          value: TimeUtilities.getTimeFromDate(userRequest.from),
+          type: 'time',
+          placeholder: 'Current beginning time:',
+        };
+        inputs['RequestEndTime'] = {
+          value: TimeUtilities.getTimeFromDate(userRequest.to),
+          type: 'time',
+          placeholder: 'Current end time:',
+        };
+      }
 
       const buttons: ButtonPopupModel[] = [
         {
@@ -272,7 +343,7 @@ export class NewRequestComponent {
       const data: InputPopupDataModel = {
         title: 'Update your Pending Request details',
         description:
-          "Update fields if you want to change your request's details: ",
+          "Update fields if you want to change your request's details. If you want to change type of request, please cancel it and create new one.",
         inputs: inputs,
         buttons: buttons,
       };
@@ -292,18 +363,24 @@ export class NewRequestComponent {
         map((request) => request?.id),
         switchMap((id) => {
           updatedRequest.requestId = request.id;
-          updatedRequest.newFromDate = TimeUtilities.createDateAsUTC(
-            new Date(String(inputs['TimeOffBeginningDate'].value))
-          );
-          updatedRequest.newToDate = TimeUtilities.createDateAsUTC(
-            new Date(String(inputs['TimeOffEndDate'].value))
-          );
-          updatedRequest.newRequestType =
-            RequestType[
-              inputs['RequestOptions'].value as keyof typeof RequestType
-            ];
-          updatedRequest.newRequestSupervisorId =
-            inputs['SupervisorsOptions'].value?.toString();
+          if (request.requestType == RequestType.Pass) {
+            updatedRequest.newFromDate = TimeUtilities.createDateAsUTC(
+              new Date(String(inputs['RequestBeginningDate'].value))
+            );
+            updatedRequest.newToDate = TimeUtilities.createDateAsUTC(
+              new Date(String(inputs['RequestEndDate'].value))
+            );
+          } else if (request.requestType == RequestType.Visit) {
+            updatedRequest.newFromDate = TimeUtilities.combineDateAndTime(
+              String(inputs['RequestDate'].value),
+              String(inputs['RequestBeginningTime'].value)
+            );
+            updatedRequest.newToDate = TimeUtilities.combineDateAndTime(
+              String(inputs['RequestDate'].value),
+              String(inputs['RequestEndTime'].value)
+            );
+          }
+          updatedRequest.newRequestType = request.requestType;
           return this.requestsManagementService.updateRequest(updatedRequest);
         }),
         take(1)
