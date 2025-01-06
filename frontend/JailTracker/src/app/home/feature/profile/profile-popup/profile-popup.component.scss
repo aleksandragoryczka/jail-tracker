@@ -1,0 +1,38 @@
+.change-password-input {
+  margin-top: 10px;
+}
+
+.profile-inputs-container {
+  max-height: 220px;
+  width: 50%;
+}
+.jail-tracker-default-content-container {
+  min-width: 450px;
+}
+.change-password-btn {
+  margin-top: 50px;
+}
+
+.jail-tracker-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.jail-tracker-btn:disabled:hover {
+  border: 2px solid #f8c48c;
+  color: inherit;
+}
+
+.password-error {
+  color: red;
+  max-width: 230px;
+  max-height: 70px;
+}
+
+@media (max-width: 768px) {
+  .profile-inputs-container {
+    width: inherit;
+  }
+  .jail-tracker-default-content-container {
+    min-width: 0;
+  }
+}

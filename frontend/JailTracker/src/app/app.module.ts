@@ -7,6 +7,8 @@ import {
 } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './home/feature/login/login.component';
+import { ProfileComponent } from './home/feature/profile/profile.component';
+import { ProfilePopupComponent } from './home/feature/profile/profile-popup/profile-popup.component';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -47,6 +49,8 @@ import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
     SharedTableComponent,
     NewRequestComponent,
     DashboardComponent,
+    ProfileComponent,
+    ProfilePopupComponent,
   ],
   imports: [
     BrowserModule,

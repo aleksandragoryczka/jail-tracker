@@ -1,0 +1,47 @@
+<mat-dialog-content class="jail-tracker-default-container profile-popup-container">
+  <div class="jail-tracker-default-content-container">
+    <div class="jail-tracker-popup-close-button" (click)="closePopup()">
+      <mat-icon>close</mat-icon>
+    </div>
+    <div class="jail-tracker-default-content-heading">Change password</div>
+    <div class="jail-tracker-default-content-data" style="color: black">
+      <form [formGroup]="passwordForm">
+        <div class="d-flex justify-content-center">
+          <div
+            class="d-flex justify-content-center flex-column profile-inputs-container">
+            <input
+              class="jail-tracker-input change-password-input"
+              type="password"
+              id="password"
+              placeholder="New password"
+              formControlName="password" />
+            <input
+              class="jail-tracker-input change-password-input"
+              type="password"
+              id="confirmPassword"
+              placeholder="Confirm password"
+              formControlName="confirmPassword" />
+            <div
+              class="password-error"
+              *ngIf="passwordForm.hasError('passwordMismatch')">
+              Passwords do not match.
+            </div>
+            <div
+              class="password-error"
+              *ngIf="passwordForm.hasError('invalidPassword')">
+              Password must be at least 7 characters long and contain one
+              number.
+            </div>
+            <button
+              class="jail-tracker-btn jail-tracker-btn-primary change-password-btn"
+              type="submit"
+              (click)="updateUser()"
+              [disabled]="passwordForm.invalid">
+              Edit
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</mat-dialog-content>
