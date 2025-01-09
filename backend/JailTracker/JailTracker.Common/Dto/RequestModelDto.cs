@@ -17,7 +17,6 @@ public class RequestModelDto
         SupervisorFirstName = requestModel.RequestSupervisor?.FirstName;
         SupervisorLastName = requestModel.RequestSupervisor?.LastName;
         ApprovalState = requestModel.ApprovalState;
-        TimeOffSupervisorId = requestModel.RequestSupervisorId;
     }
     public Guid Id { get; set; }
     public DateTime FromDate { get; set; }
@@ -29,5 +28,4 @@ public class RequestModelDto
     public string SupervisorFirstName { get; set; }
     public string SupervisorLastName { get; set; }
     public ApprovalState ApprovalState { get; set; }
-    public int? TimeOffSupervisorId { get; set; }
 }

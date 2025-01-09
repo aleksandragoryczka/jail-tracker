@@ -13,4 +13,5 @@ public interface IRequestsManagementService
     PaginatedResult<RequestModelDto> GetPendingVisitsAndPassesRequestsForSupervisor(int supervisorId, int skip, int take);
     PaginatedResult<RequestModelDto> GetSupervisedVisitsAndPassesRequestsForSupervisor(int supervisorId, int skip, int take);
     PaginatedResult<RequestModelDto> GetRequestsByDateForUser(int userId, DateTime from, DateTime to, RequestType type, bool isGuard, int skip, int take);
+    List<RequestModelDto> GetAllAcceptedRequests();
 }

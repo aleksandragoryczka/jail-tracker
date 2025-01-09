@@ -97,5 +97,29 @@ public class UserController : ControllerBase
         UserModel updatedUser = _userService.UpdateUser(existingUser, updateUserDto);
         return Ok(updatedUser);
     }
+
+    /// <summary>
+    /// DONE - Admin's Panel - udpating User's supervisor - to list all available supervisors
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("GetAllSupervisors")]
+    [RequireClaim(IdentityData.PermissionsClaimName, PermissionType.ModifyUser)]
+    public ActionResult<List<UserModel>> GetAllSupervisors()
+    {
+        List<UserModel> allSupervisors = _userService.GetActiveUsersByRole(Role.Guard);
+        return Ok(allSupervisors);
+    }
+    
+    /// <summary>
+    /// DONE - Admin's Panel - udpating User's supervisor - to list all available priosners
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("GetAllPrisoners")]
+    [RequireClaim(IdentityData.PermissionsClaimName, PermissionType.ModifyUser)]
+    public ActionResult<List<UserModel>> GetAllPrisoners()
+    {
+        List<UserModel> allPrisoners = _userService.GetActiveUsersByRole(Role.User);
+        return Ok(allPrisoners);
+    }
     
 }

@@ -162,4 +162,16 @@ public class RequestsManagementService : IRequestsManagementService
         var res = new PaginatedResult<RequestModelDto>(requests.Skip(skip).Take(take), requests.Count(), take);
         return res;
     }
+
+    public List<RequestModelDto> GetAllAcceptedRequests()
+    {
+        var requsts = _context.Requests
+            .Where(x => x.IsActive)
+            .Where(x => x.ApprovalState == ApprovalState.Approved)
+            .Include(x => x.User)
+            .Select(x => new RequestModelDto(x));
+        
+        return requsts.ToList();
+
+    }
 }

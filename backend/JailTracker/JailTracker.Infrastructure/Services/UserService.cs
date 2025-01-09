@@ -134,6 +134,14 @@ namespace JailTracker.Infrastructure.Services
             return true;
         }
 
+        public List<UserModel> GetActiveUsersByRole(Role role)
+        {
+            var users = _context.Users
+                .Where(u => u.Role == role)
+                .Where(u => u.IsActive);
+            return users.ToList();
+        }
+
         public UserModel UpdateUser(UserModel existingUser, UpdateUserDto updateUserDto)
         {
             existingUser.FirstName = updateUserDto.FirstName;

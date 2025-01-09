@@ -135,5 +135,15 @@ public class RequestsManagementController : ControllerBase
         var res = _requestsManagementService.GetSupervisedVisitsAndPassesRequestsForSupervisor(supervisorId, skip, take);
         return Ok(res);
     }
+
+    /// <summary>
+    /// DONE - Calendar Component
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet]
+    public ActionResult<List<RequestModelDto>> getAllAcceptedRequests()
+    {
+        return Ok(_requestsManagementService.GetAllAcceptedRequests());
+    }
     
 }
