@@ -1,0 +1,59 @@
+<div class="jail-tracker-default-container">
+  <div class="jail-tracker-default-content-container profile-content-container">
+    <div class="jail-tracker-default-content-heading">Profile</div>
+    <div class="jail-tracker-default-content-data">
+      <div class="d-flex profile-layout">
+        <div class="profile-avatar-container">
+          <div class="profile-avatar">
+            <img [src]="photoPath" alt="User Avatar" />
+          </div>
+          <div class="profile-name">{{
+            user?.firstName || user?.lastName
+              ? user?.firstName + ' ' + user?.lastName
+              : 'No data'
+          }}</div>
+        </div>
+        <div
+          class="d-flex justify-content-center p-3 flex-column data-container">
+          <div class="profile-detail">
+            <div class="info-container">
+              <div class="d-flex justify-content-center flex-column">
+                <mat-icon class="icon-display">email</mat-icon>
+              </div>
+              <div
+                class="info"
+                (mouseenter)="showHover = true"
+                (mouseleave)="showHover = true">
+                {{ user?.email ? user?.email : 'No email' }}
+              </div>
+              <div *ngIf="showHover" class="info-popup">E-mail address</div>
+            </div>
+          </div>
+          <div class="profile-detail">
+            <div class="info-container">
+              <div class="d-flex justify-content-center flex-column">
+                <mat-icon class="icon-display">supervisor_account</mat-icon>
+              </div>
+              <div class="info">
+                {{ supervisor ? 'Guard: ' + supervisor : 'No Guard ID' }}
+              </div>
+              <div *ngIf="showHover" class="info-popup">Supervisor name</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="profile-edit-button">
+        <div
+          class="jail-tracker-btn jail-tracker-btn-primary"
+          (click)="openChangeNamePopup()">
+          Edit data
+        </div>
+        <div
+          class="jail-tracker-btn jail-tracker-btn-primary"
+          (click)="openChangePasswordPopup()">
+          Change password
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

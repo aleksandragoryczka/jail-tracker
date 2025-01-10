@@ -8,7 +8,6 @@ import {
   SharedTableDataFunc,
 } from 'src/app/models/shard-table-data.model';
 import { RequestsService } from 'src/app/shared/service/requests.service';
-import { UserService } from 'src/app/shared/service/user.service';
 import { Request } from 'src/app/models/request.model';
 import { TooltipTexts } from 'src/app/models/enums/tooltips-types.enum';
 import {
@@ -20,6 +19,9 @@ import {
 import { Dictionary } from 'src/app/models/dictionary.model';
 import { ApprovalState } from 'src/app/models/enums/approval-state.enum';
 import { PopupWithInputsComponent } from 'src/app/shared/ui/popup-with-inputs/popup-with-inputs.component';
+import { RequestsManagementService } from '../../../shared/service/requests-management.service';
+import { formatDate } from '@angular/common';
+import { RequestType } from 'src/app/models/enums/request-type.enum';
 
 @Component({
   selector: 'app-requests',
@@ -49,8 +51,8 @@ export class RequestsComponent {
   permissionTypes = PermissionTypes;
 
   constructor(
-    private userService: UserService,
     private requestsService: RequestsService,
+    private requestsManagementService: RequestsManagementService,
     private dialog: MatDialog
   ) {}
 
@@ -65,7 +67,7 @@ export class RequestsComponent {
   private loadRequests() {
     return this.currentPage$.pipe(
       switchMap((currentPage) =>
-        this.requestsService.getListOfRequests(currentPage)
+        this.requestsManagementService.getListOfRequests(currentPage)
       ),
       map((res) => {
         this.totalNumberOfPages = res?.page ?? 1;
@@ -83,24 +85,16 @@ export class RequestsComponent {
     const requests = data.data;
     const results: SharedTableData[] = [];
     requests.forEach((request) => {
-      const fromDate = new Date(request.from);
-      const toDate = new Date(request.to);
+      const fromDate = new Date(request.fromDate);
+      const toDate = new Date(request.toDate);
       const result: SharedTableData = {
         cols: [
           request?.userFirstName?.toString() +
             ' ' +
             request?.userLastName?.toString(),
           this.requestTypeString[request.requestType],
-          fromDate.getDay() +
-            '/' +
-            fromDate.getMonth() +
-            '/' +
-            fromDate.getFullYear(),
-          toDate.getDay() +
-            '/' +
-            toDate.getMonth() +
-            '/' +
-            toDate.getFullYear(),
+          this.formatDateBasedOnRequestType(request.requestType, fromDate),
+          this.formatDateBasedOnRequestType(request.requestType, toDate),
         ],
         actions: [
           {
@@ -127,7 +121,6 @@ export class RequestsComponent {
   }
 
   private openRequestApprovalPopup(guid: string | undefined) {
-    console.log(guid);
     if (typeof guid === 'undefined') return;
     const inputs: Dictionary<InputPopupModel> = {};
     const buttons: ButtonPopupModel[] = [
@@ -166,7 +159,7 @@ export class RequestsComponent {
   private loadRequestsHistory() {
     return this.currentPageHistory$.pipe(
       switchMap((currentPage) =>
-        this.requestsService.getListOfRequestsHistory(currentPage)
+        this.requestsManagementService.getListOfRequestsHistory(currentPage)
       ),
       map((res) => {
         this.totalNumberOfPagesHistory = res?.page ?? 1;
@@ -184,24 +177,16 @@ export class RequestsComponent {
     const requests = data.data;
     const results: SharedTableData[] = [];
     requests.forEach((request) => {
-      const fromDate = new Date(request.from);
-      const toDate = new Date(request.to);
+      const fromDate = new Date(request.fromDate);
+      const toDate = new Date(request.toDate);
       const result: SharedTableData = {
         cols: [
           request?.userFirstName?.toString() +
             ' ' +
             request?.userLastName?.toString(),
           this.requestTypeString[request.requestType],
-          fromDate.getDay() +
-            '/' +
-            fromDate.getMonth() +
-            '/' +
-            fromDate.getFullYear(),
-          toDate.getDay() +
-            '/' +
-            toDate.getMonth() +
-            '/' +
-            toDate.getFullYear(),
+          this.formatDateBasedOnRequestType(request.requestType, fromDate),
+          this.formatDateBasedOnRequestType(request.requestType, toDate),
           this.requestStateString[request.approvalState],
         ],
         actions: this.getActionChangeRequestState(request),
@@ -271,4 +256,11 @@ export class RequestsComponent {
         this.listOfRequestsHistory$ = this.loadRequestsHistory();
       });
   }
+
+  private formatDateBasedOnRequestType(userRequestType: RequestType, date: Date){
+      if(userRequestType == RequestType.Pass){
+        return formatDate(date, 'dd/MM/yyyy', 'en-US');
+      }
+      return formatDate(date, 'dd/MM/yyyy, h:mm a', 'en-US');
+    }
 }

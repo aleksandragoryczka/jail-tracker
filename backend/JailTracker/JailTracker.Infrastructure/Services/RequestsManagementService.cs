@@ -16,64 +16,8 @@ public class RequestsManagementService : IRequestsManagementService
     {
         _context = context;
     }
-    
-    /*public PaginatedResult<RequestModelDto> GetSupervisedPassesRequests(int userId, bool isGuard, int skip, int take)
-    {
-        IQueryable<RequestModelDto> requests;
-        if (isGuard)
-        {
-            requests = _context.Requests
-                .Where(x => x.RequestSupervisorId == userId)
-                .Where(x => x.IsActive)
-                .Where(x => x.RequestType == RequestType.Pass)
-                .Where(x => x.ApprovalState != ApprovalState.Pending)
-                .Include(x => x.User)
-                .Select(x => new RequestModelDto(x));
-        }
-        else
-        {
-            requests = _context.Requests
-                .Where(x => x.UserId == userId)
-                .Where(x => x.IsActive)
-                .Where(x => x.RequestType == RequestType.Pass)
-                .Where(x => x.ApprovalState != ApprovalState.Pending)
-                .Include(x => x.User)
-                .Select(x => new RequestModelDto(x));
-        }
 
-        var res = new PaginatedResult<RequestModelDto>(requests.Skip(skip).Take(take), requests.Count(), take);
-        return res;
-    }
-
-    public PaginatedResult<RequestModelDto> GetSupervisedVisitsRequests(int userId, bool isGuard, int skip, int take)
-    {
-        IQueryable<RequestModelDto> requests;
-        if (isGuard)
-        {
-            requests = _context.Requests
-                .Where(x => x.RequestSupervisorId == userId)
-                .Where(x => x.IsActive)
-                .Where(x => x.RequestType == RequestType.Visit)
-                .Where(x => x.ApprovalState != ApprovalState.Pending)
-                .Include(x => x.User)
-                .Select(x => new RequestModelDto(x));
-        }
-        else
-        {
-            requests = _context.Requests
-                .Where(x => x.UserId == userId)
-                .Where(x => x.IsActive)
-                .Where(x => x.RequestType == RequestType.Visit)
-                .Where(x => x.ApprovalState != ApprovalState.Pending)
-                .Include(x => x.User)
-                .Select(x => new RequestModelDto(x));
-        }
-        
-        var res = new PaginatedResult<RequestModelDto>(requests.Skip(skip).Take(take), requests.Count(), take);
-        return res;
-    }*/
-
-    public int GetYearRequestsCountForUserInHours(int userId)
+    public int GetYearRequestsCountForUserInHoursByRequestType(int userId, RequestType requestType)
     {
         DateTime currentDate = DateTime.Now;
         DateTime currentYearStart = new DateTime(currentDate.Year, 1, 1);
@@ -81,6 +25,7 @@ public class RequestsManagementService : IRequestsManagementService
 
         var requests = _context.Requests
             .Where(x => x.IsActive  && x.ApprovalState != ApprovalState.Rejected)
+            .Where(x => x.RequestType == requestType)
             .Where(a => a.UserId == userId && a.IsActive &&
                         ((a.FromDate >= currentYearStart && a.FromDate < nextYearStart) ||
                          (a.FromDate < currentYearStart && a.ToDate >= currentYearStart)));
@@ -144,7 +89,7 @@ public class RequestsManagementService : IRequestsManagementService
                 .Where(x => x.RequestType == type)
                 .Where(x => x.ApprovalState != ApprovalState.Pending)
                 .Include(x => x.User)
-                .Where(x => (x.FromDate >= from && x.FromDate <= to) || x.ToDate >= from && x.ToDate <= to)
+                .Where(x => (x.FromDate >= from && x.FromDate <= to))// || x.ToDate >= from && x.ToDate <= to)
                 .Select(x => new RequestModelDto(x));
         }
         else
@@ -155,11 +100,24 @@ public class RequestsManagementService : IRequestsManagementService
                 .Where(x => x.RequestType == type)
                 .Where(x => x.ApprovalState != ApprovalState.Pending)
                 .Include(x => x.User)
-                .Where(x => (x.FromDate >= from && x.FromDate <= to) || x.ToDate >= from && x.ToDate <= to)
+                .Where(x => (x.FromDate >= from && x.FromDate <= to))// || x.ToDate >= from && x.ToDate <= to)
                 .Select(x => new RequestModelDto(x));
         }
         
         var res = new PaginatedResult<RequestModelDto>(requests.Skip(skip).Take(take), requests.Count(), take);
         return res;
+    }
+
+    public List<RequestModelDto> GetAllAcceptedRequestsMonthly(DateTime from, DateTime to)
+    {
+        var requsts = _context.Requests
+            .Where(x => x.IsActive)
+            .Where(x => x.ApprovalState == ApprovalState.Approved)
+            .Include(x => x.User)
+            .Where(x => (x.FromDate >= from && x.FromDate <= to))
+            .Select(x => new RequestModelDto(x));
+        
+        return requsts.ToList();
+
     }
 }

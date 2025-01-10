@@ -1,4 +1,5 @@
-import { RequestType } from "./enums/request.enum";
+import { RequestType } from "./enums/request-type.enum";
+
 
 export interface UpdateRequest { 
     requestId?: string;

@@ -12,7 +12,6 @@ import {
   InputPopupDataModel,
   InputPopupModel,
 } from 'src/app/models/input-popup-data.model';
-import { RequestType } from 'src/app/models/enums/request.enum';
 import { PaginatedResult } from 'src/app/models/paginatedResult.model';
 import { formatDate } from '@angular/common';
 import { ApprovalState } from 'src/app/models/enums/approval-state.enum';
@@ -22,6 +21,7 @@ import { PopupWithInputsComponent } from 'src/app/shared/ui/popup-with-inputs/po
 import { UpdateRequest } from 'src/app/models/update-request.model';
 import { TimeUtilities } from 'src/app/shared/web-utilities/time-utilities';
 import { RequestsService } from '../../../shared/service/requests.service';
+import { RequestType } from 'src/app/models/enums/request-type.enum';
 
 @Component({
   selector: 'app-new-request',
@@ -33,7 +33,8 @@ export class NewRequestComponent {
   currentPage$ = new BehaviorSubject<number>(0);
   listOfUserRequests$: Observable<SharedTableData[]> = this.loadUserRequests();
   totalNumberOfPages = 1;
-  requestsYearCountInHours$ = this.getRequestsYearCountInHours();
+  visitsRequestsYearCountInHours$ = this.getRequestsYearCountInHours(RequestType.Visit);
+  passesRequestsYearCountInHours$ = this.getRequestsYearCountInHours(RequestType.Pass);
   listOfSupervisors: User[] = [];
   Request: Request | undefined;
 
@@ -43,8 +44,6 @@ export class NewRequestComponent {
     private tostr: ToastrService,
     private requestsService: RequestsService
   ) {}
-
-  // TODO: Open date popup -> change from only date -> to date with time (from date/ to date)
 
   setPage(pageNumber: number): void {
     this.currentPage$.next(pageNumber);
@@ -158,20 +157,20 @@ export class NewRequestComponent {
     const userRequest: Request = {
       requestType: requestType,
       approvalState: ApprovalState.Pending,
-      from: new Date(),
-      to: new Date(),
+      fromDate: new Date(),
+      toDate: new Date(),
     };
     if (requestType == RequestType.Pass) {
-      userRequest.from = new Date(String(inputs['RequestBeginningDate'].value));
-      userRequest.to = TimeUtilities.createDateAsUTC(
+      userRequest.fromDate = new Date(String(inputs['RequestBeginningDate'].value));
+      userRequest.toDate = TimeUtilities.createDateAsUTC(
         new Date(String(inputs['RequestEndDate'].value))
       );
     } else if (requestType == RequestType.Visit) {
-      userRequest.from = TimeUtilities.combineDateAndTime(
+      userRequest.fromDate = TimeUtilities.combineDateAndTime(
         String(inputs['RequestDate'].value),
         String(inputs['RequestBeginningTime'].value)
       );
-      userRequest.to = TimeUtilities.combineDateAndTime(
+      userRequest.toDate = TimeUtilities.combineDateAndTime(
         String(inputs['RequestDate'].value),
         String(inputs['RequestEndTime'].value)
       );
@@ -206,14 +205,14 @@ export class NewRequestComponent {
     const results: SharedTableData[] = [];
     userRequests.forEach((userRequest) => {
       if (
-        typeof userRequest.from !== 'undefined' &&
-        typeof userRequest.to !== 'undefined' &&
+        typeof userRequest.fromDate !== 'undefined' &&
+        typeof userRequest.toDate !== 'undefined' &&
         typeof userRequest.requestType !== 'undefined'
       ) {
         const result: SharedTableData = {
           cols: [
-            formatDate(userRequest.from, 'dd/MM/yyyy', 'en-US'),
-            formatDate(userRequest.to, 'dd/MM/yyyy', 'en-US'),
+            this.formatDateBasedOnRequestType(userRequest.requestType, userRequest.fromDate),
+            this.formatDateBasedOnRequestType(userRequest.requestType, userRequest.toDate),
             RequestType[Number(userRequest.requestType.toString())].replace(
               /([A-Z])/g,
               ' $1'
@@ -224,7 +223,7 @@ export class NewRequestComponent {
           actions: [],
         };
 
-        if (new Date(userRequest.from) > new Date()) {
+        if (new Date(userRequest.fromDate) > new Date()) {
           result.actions?.push({
             icon: 'delete',
             func: (arg: string) => {
@@ -251,6 +250,13 @@ export class NewRequestComponent {
       }
     });
     return results;
+  }
+
+  private formatDateBasedOnRequestType(userRequestType: RequestType, date: Date){
+    if(userRequestType == RequestType.Pass){
+      return formatDate(date, 'dd/MM/yyyy', 'en-US');
+    }
+    return formatDate(date, 'dd/MM/yyyy, h:mm a', 'en-US');
   }
 
   private getSupervisorName(userRequest: Request): string {
@@ -304,29 +310,28 @@ export class NewRequestComponent {
       const inputs: Dictionary<InputPopupModel> = {};
       if (userRequest.requestType == RequestType.Pass) {
         inputs['RequestfBeginningDate'] = {
-          value: userRequest.from,
+          value: userRequest.fromDate,
           type: 'date',
           placeholder: 'Current beginning date:',
         };
         inputs['RequestEndDate'] = {
-          value: userRequest.to,
+          value: userRequest.toDate,
           type: 'date',
           placeholder: 'Current end date:',
         };
       } else if (userRequest.requestType == RequestType.Visit) {
-        console.log(userRequest.from);
         inputs['RequestDate'] = {
-          value: userRequest.from,
+          value: userRequest.fromDate,
           type: 'date',
           placeholder: 'Current visit date:',
         };
         inputs['RequestBeginningTime'] = {
-          value: TimeUtilities.getTimeFromDate(userRequest.from),
+          value: TimeUtilities.getTimeFromDate(userRequest.fromDate),
           type: 'time',
           placeholder: 'Current beginning time:',
         };
         inputs['RequestEndTime'] = {
-          value: TimeUtilities.getTimeFromDate(userRequest.to),
+          value: TimeUtilities.getTimeFromDate(userRequest.toDate),
           type: 'time',
           placeholder: 'Current end time:',
         };
@@ -395,7 +400,7 @@ export class NewRequestComponent {
       });
   }
 
-  private getRequestsYearCountInHours(): Observable<number> {
-    return this.requestsManagementService.getYearAbsenceCountForUserInHours();
+  private getRequestsYearCountInHours(requestType: RequestType): Observable<number> {
+    return this.requestsManagementService.getYearAbsenceCountForUserInHours(requestType);
   }
 }

@@ -61,7 +61,8 @@
     "time-off": {
         "header": "Your requests",
         "year-days-counter1": "You have used ",
-        "year-days-counter2": "hours this year",
+        "year-days-counter2": "hours of visits this year",
+        "year-days-counter3": "hours of passes this year",
         "new-request-button": "New request"
     }
 }

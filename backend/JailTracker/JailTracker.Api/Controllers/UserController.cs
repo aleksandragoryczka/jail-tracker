@@ -38,14 +38,14 @@ public class UserController : ControllerBase
     }
 
     /// <summary>
-    /// DONE - DISPLAY USER'S PROFILE DETAILS
+    /// DONE - DISPLAY USER'S PROFILE DETAILS and Guard's details
     /// </summary>
+    /// <param name="id"></param>
     /// <returns></returns>
-    [HttpGet]
-    public ActionResult<UserModel> GetCurrentUserProfile()
+    [HttpGet("{id}")]
+    public ActionResult<UserModel> GetUserProfile(int id)
     {
-        var userId = User.Identity.GetUserId();
-        var user = _userService.GetUser(userId);
+        var user = _userService.GetUser(id);
 
         if (user == null)
         {
@@ -95,7 +95,35 @@ public class UserController : ControllerBase
             return NotFound();
         }
         UserModel updatedUser = _userService.UpdateUser(existingUser, updateUserDto);
+        if (updatedUser == null)
+        {
+            return BadRequest("Provided current password is incorrect.");
+        }
         return Ok(updatedUser);
+    }
+
+    /// <summary>
+    /// DONE - Admin's Panel - udpating User's supervisor - to list all available supervisors
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("GetAllSupervisors")]
+    [RequireClaim(IdentityData.PermissionsClaimName, PermissionType.ModifyUser)]
+    public ActionResult<List<UserModel>> GetAllSupervisors()
+    {
+        List<UserModel> allSupervisors = _userService.GetActiveUsersByRole(Role.Guard);
+        return Ok(allSupervisors);
+    }
+    
+    /// <summary>
+    /// DONE - Admin's Panel - udpating User's supervisor - to list all available priosners
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("GetAllPrisoners")]
+    [RequireClaim(IdentityData.PermissionsClaimName, PermissionType.ModifyUser)]
+    public ActionResult<List<UserModel>> GetAllPrisoners()
+    {
+        List<UserModel> allPrisoners = _userService.GetActiveUsersByRole(Role.User);
+        return Ok(allPrisoners);
     }
     
 }

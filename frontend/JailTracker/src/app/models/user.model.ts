@@ -9,8 +9,7 @@ export interface User {
   avatar?: Blob;
   isActive?: string;
   role?: Roles;
-  organizationId?: string;
-  currentTimeOffSupervisorId?: string;
+  currentRequestsSupervisorId?: string;
   roles?: string[];
   permissions?: PermissionTypes[];
 }

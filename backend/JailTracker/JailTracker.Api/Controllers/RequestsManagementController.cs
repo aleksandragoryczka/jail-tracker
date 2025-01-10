@@ -59,50 +59,18 @@ public class RequestsManagementController : ControllerBase
         var res = _requestsManagementService.GetRequestsByDateForUser(userId, from, to, type, isGuard, skip, take);
         return Ok(res);
     }
-
-    
-    /*
-    /// <summary>
-    /// DONE - DASHBOARD FOR SUPERVISOR AND DASHBOARD FOR USER
-    /// </summary>
-    /// <param name="skip"></param>
-    /// <param name="take"></param>
-    /// <returns></returns>
-    [HttpGet]
-    public ActionResult<PaginatedResult<RequestModelDto>> GetSupervisedPassesRequests(int skip = 0, int take = 10)
-    {
-        var userId = User.Identity.GetUserId();
-        var isGuard = User.Identity.IsGuard();
-        var res = _requestsManagementService.GetSupervisedPassesRequests(userId, isGuard, skip, take);
-        return Ok(res);
-    }
-    
-    /// <summary>
-    /// DONE - DASHBOARD FOR SUPERVISOR AND DASHBOARD FOR USER
-    /// </summary>
-    /// <param name="skip"></param>
-    /// <param name="take"></param>
-    /// <returns></returns>
-    [HttpGet]
-    public ActionResult<PaginatedResult<RequestModelDto>> GetSupervisedVisitsRequests(int skip = 0, int take = 10)
-    {
-        var userId = User.Identity.GetUserId();
-        var isGuard = User.Identity.IsGuard();
-        var res = _requestsManagementService.GetSupervisedVisitsRequests(userId, isGuard, skip, take);
-        return Ok(res);
-    }*/
-
     
     /// <summary>
     /// DONE
     /// </summary>
+    /// <param name="requestType"></param>
     /// <returns></returns>
-    [HttpGet]
-    public ActionResult<int> GetYearAbsenceCountForUserInHours()
+    [HttpGet("{requestType}")]
+    public ActionResult<int> GetYearAbsenceCountForUserInHoursByRequestType(RequestType requestType)
     {
         var userId = User.Identity.GetUserId();
         
-        var res = _requestsManagementService.GetYearRequestsCountForUserInHours(userId);
+        var res = _requestsManagementService.GetYearRequestsCountForUserInHoursByRequestType(userId, requestType);
         return res;
     }
     
@@ -134,6 +102,18 @@ public class RequestsManagementController : ControllerBase
         var supervisorId = User.Identity.GetUserId();
         var res = _requestsManagementService.GetSupervisedVisitsAndPassesRequestsForSupervisor(supervisorId, skip, take);
         return Ok(res);
+    }
+
+    /// <summary>
+    /// DONE - Calendar Component
+    /// </summary>
+    /// <param name="from"></param>
+    /// <param name="to"></param>
+    /// <returns></returns>
+    [HttpGet]
+    public ActionResult<List<RequestModelDto>> getAllAcceptedRequestsMonthly(DateTime from, DateTime to)
+    {
+        return Ok(_requestsManagementService.GetAllAcceptedRequestsMonthly(from, to));
     }
     
 }

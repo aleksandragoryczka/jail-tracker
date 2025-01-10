@@ -1,6 +1,6 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
-import { OrganizationService } from 'src/app/shared/service/organization.service';
+import { PermissionTypes } from 'src/app/models/enums/permission-types.enum';
 import { UserService } from 'src/app/shared/service/user.service';
 @Component({
   selector: 'app-navigation',
@@ -10,19 +10,10 @@ import { UserService } from 'src/app/shared/service/user.service';
 export class NavigationComponent implements OnInit {
   public activeIndex = 0;
 
-  constructor(
-    public userService: UserService,
-    private router: Router
-  ) {}
+  constructor(public userService: UserService, private router: Router) {}
 
   ngOnInit(): void {
     this.setActiveIndexFromActivePath();
-    /*this.organizationService.organization$.subscribe(res => {
-      if (res?.urlName) {
-        this.url = res?.urlName;
-        this.setActiveIndexFromActivePath();
-      }
-    });*/
   }
 
   public onItemClick(index: number) {
@@ -39,29 +30,55 @@ export class NavigationComponent implements OnInit {
   }
 
   public get menuData() {
-    return [
+    var menuData = [
       {
         icon: 'dashboard',
         text: 'Dashboard',
         router_link: `/dashboard`,
-      },
-      { icon: 'person_outline', text: 'Profile', router_link: `/profile` },
-      {
-        icon: 'post_add',
-        text: 'Create new request',
-        router_link: `/new_request`,
       },
       {
         icon: 'calendar_today',
         text: 'Calendar',
         router_link: `/calendar`,
       },
-      {
-        icon: 'event_note',
-        text: 'Requests',
-        router_link: `/requests`,
-      }
+      { icon: 'person_outline', text: 'Profile', router_link: `/profile` },
     ];
+
+    this.userService.isAdmin$.subscribe((isAdmin) => {
+      if (isAdmin) {
+        return [
+          {
+            icon: 'calendar_today',
+            text: 'Calendar',
+            router_link: `/calendar`,
+          },
+          { icon: 'person_outline', text: 'Profile', router_link: `/profile` },
+          {
+            icon: 'settings',
+            text: 'Admin panel',
+            router_link: `/admmin-panel`,
+          },
+        ];
+      } else {
+        if (this.userService.hasPermission(PermissionTypes.CanSupervise)) {
+          menuData.push({
+            icon: 'event_note',
+            text: 'Requests',
+            router_link: `/requests`,
+          });
+        }
+        if (this.userService.isUser()) {
+          menuData.push({
+            icon: 'post_add',
+            text: 'Create new request',
+            router_link: `/new_request`,
+          });
+        }
+      }
+      return menuData;
+    });
+
+    return menuData;
   }
 
   trackByFn(
@@ -71,19 +88,11 @@ export class NavigationComponent implements OnInit {
     return item.router_link;
   }
 
-  @HostListener('window:popstate', ['$event'])
-  onPopState() {
-    const acvitePath = window.location.pathname;
-    if (acvitePath == '/admin-panel') this.activeIndex = this.menuData.length;
-    else
-      this.activeIndex = this.menuData.findIndex(
-        x => x.router_link == acvitePath
-      );
-  }
-
   private setActiveIndexFromActivePath() {
     const acvitePath = window.location.pathname;
-    const newIndex = this.menuData.findIndex(x => x.router_link == acvitePath);
+    const newIndex = this.menuData.findIndex(
+      (x) => x.router_link == acvitePath
+    );
     if (newIndex >= 0) this.activeIndex = newIndex;
     this.activeIndex = 0;
   }

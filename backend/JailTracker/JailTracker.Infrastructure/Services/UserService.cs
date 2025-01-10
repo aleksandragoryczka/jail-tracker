@@ -134,11 +134,30 @@ namespace JailTracker.Infrastructure.Services
             return true;
         }
 
+        public List<UserModel> GetActiveUsersByRole(Role role)
+        {
+            var users = _context.Users
+                .Where(u => u.Role == role)
+                .Where(u => u.IsActive);
+            return users.ToList();
+        }
+
         public UserModel UpdateUser(UserModel existingUser, UpdateUserDto updateUserDto)
         {
-            existingUser.FirstName = updateUserDto.FirstName;
-            existingUser.LastName = updateUserDto.LastName;
-            existingUser.Password = HashPassword(updateUserDto.Password);
+            if (!String.IsNullOrEmpty(updateUserDto.FirstName) && !String.IsNullOrEmpty(updateUserDto.LastName))
+            {
+                existingUser.FirstName = updateUserDto.FirstName;
+                existingUser.LastName = updateUserDto.LastName;
+            }
+
+            if (!String.IsNullOrEmpty(updateUserDto.Password) && !String.IsNullOrEmpty(updateUserDto.CurrentPassword))
+            {
+                if(!_encodeService.VerifyUser(existingUser.Password, updateUserDto.CurrentPassword))
+                {
+                    return null;
+                }
+                existingUser.Password = HashPassword(updateUserDto.Password);
+            }
 
             _context.SaveChanges();
 
@@ -160,6 +179,7 @@ namespace JailTracker.Infrastructure.Services
 	<h1>New Password Created</h1>
 	<p>Your new password is: <strong>" + pass + @"</strong></p>
 	<p>Please make sure to keep this password safe and do not share it with anyone.</p>
+    <p>You can later update your password under `Profile` tab after you log in.</p>
 	<p>If this is a mistake please ignore this message.</p>
 </body>";
             return res;

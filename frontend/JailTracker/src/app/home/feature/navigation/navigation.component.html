@@ -1,7 +1,7 @@
 <div class="navigation-container">
   <nav
-    class="navbar navbar-expand-lg navbar-light custom-navbar">
-    <!-- *ngIf="userService.isUserAuthenticated"> -->
+    class="navbar navbar-expand-lg navbar-light custom-navbar"
+    *ngIf="userService.isUserAuthenticated">
     <a class="jail-tracker-nav-brand" routerLink="">
       <img alt="logo" src="../../../assets/images/logo.svg" width="160px" />
     </a>
@@ -9,7 +9,6 @@
       <div class="nav-items-container">
         <div class="navbar-nav">
           <ul class="nav-item-div">
-            <!-- <ng-container *ngIf="url"> -->
             <ng-container>
               <li
                 *ngFor="
@@ -25,25 +24,6 @@
                   ><mat-icon>{{ element.icon }}</mat-icon
                   ><span class="nav-text-link">{{ element.text }}</span></a
                 >
-              </li>
-            </ng-container>
-
-            <!-- <ng-container *ngIf="userService.isAdmin$ | async"> -->
-            <ng-container>
-              <li
-                class="nav-item"
-                (click)="onItemClick(menuData.length)"
-                [class.active]="isMenuActive(menuData.length)">
-                <p *ngIf="isMenuActive(menuData.length)"></p>
-                <a class="nav-link" routerLink="admin-panel"
-                  ><mat-icon>settings</mat-icon
-                  ><span class="nav-text-link">{{
-                    'navigation.admin-panel' | translate
-                  }}</span></a
-                >
-                <p
-                  class="rounding-bottom"
-                  *ngIf="isMenuActive(menuData.length)"></p>
               </li>
             </ng-container>
           </ul>

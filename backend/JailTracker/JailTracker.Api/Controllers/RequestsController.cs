@@ -64,7 +64,7 @@ namespace JailTracker.Api.Controllers
         /// <param name="updateRequestDto"></param>
         /// <returns></returns>
         [HttpPut]
-        public ActionResult<RequestModelDto> UpdateAbsenceForUser([FromBody] UpdateRequestDto updateRequestDto)
+        public ActionResult<RequestModelDto> UpdateRequestForUser([FromBody] UpdateRequestDto updateRequestDto)
         {
             var userId = User.Identity.GetUserId();
             var absence = _requestsService.UpdateRequest(userId, updateRequestDto);

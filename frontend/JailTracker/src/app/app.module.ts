@@ -7,6 +7,8 @@ import {
 } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './home/feature/login/login.component';
+import { ProfileComponent } from './home/feature/profile/profile.component';
+import { ProfilePopupComponent } from './home/feature/profile/profile-popup/profile-popup.component';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import { FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -35,6 +37,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatOptionModule } from '@angular/material/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
+import { PermissionRestrictDirective } from './shared/directive/permission-restrict.directive';
 import { AdminPanelComponent } from './home/feature/admin-panel/admin-panel.component';
 
 @NgModule({
@@ -48,7 +51,11 @@ import { AdminPanelComponent } from './home/feature/admin-panel/admin-panel.comp
     SharedTableComponent,
     NewRequestComponent,
     DashboardComponent,
-    AdminPanelComponent],
+    ProfileComponent,
+    ProfilePopupComponent,
+    PermissionRestrictDirective,
+    AdminPanelComponent
+  ],
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -61,14 +68,10 @@ import { AdminPanelComponent } from './home/feature/admin-panel/admin-panel.comp
     BrowserAnimationsModule,
     MatIconModule,
     MatSelectModule,
-    // MatCheckboxModule,
     MatOptionModule,
     MatDialogModule,
-    // CommonModule,
-    // NgbModalModule,
     MatDatepickerModule,
     NgxMatTimepickerModule.setLocale('en-GB'),
-    // MatCommonModule,
     MatNativeDateModule,
     MatInputModule,
     TranslateModule.forRoot({

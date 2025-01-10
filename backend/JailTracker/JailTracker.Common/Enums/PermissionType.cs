@@ -2,7 +2,6 @@
 
 public enum PermissionType
 {
-    None = 0,
     BasicRead = 1,
     CreateUser = 2,
     ModifyUser = 3,
