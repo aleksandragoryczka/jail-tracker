@@ -44,39 +44,36 @@ export class NavigationComponent implements OnInit {
       { icon: 'person_outline', text: 'Profile', router_link: `/profile` },
     ];
 
-    this.userService.isAdmin$.subscribe((isAdmin) => {
-      if (isAdmin) {
-        return [
-          {
-            icon: 'calendar_today',
-            text: 'Calendar',
-            router_link: `/calendar`,
-          },
-          { icon: 'person_outline', text: 'Profile', router_link: `/profile` },
-          {
-            icon: 'settings',
-            text: 'Admin panel',
-            router_link: `/admmin-panel`,
-          },
-        ];
-      } else {
-        if (this.userService.hasPermission(PermissionTypes.CanSupervise)) {
-          menuData.push({
-            icon: 'event_note',
-            text: 'Requests',
-            router_link: `/requests`,
-          });
-        }
-        if (this.userService.isUser()) {
-          menuData.push({
-            icon: 'post_add',
-            text: 'Create new request',
-            router_link: `/new_request`,
-          });
-        }
+    if(this.userService.isPrisonAdmin()){
+      return [
+        {
+          icon: 'calendar_today',
+          text: 'Calendar',
+          router_link: `/calendar`,
+        },
+        { icon: 'person_outline', text: 'Profile', router_link: `/profile` },
+        {
+          icon: 'settings',
+          text: 'Admin panel',
+          router_link: `/admin-panel`,
+        },
+      ];
+    }else{
+      if (this.userService.hasPermission(PermissionTypes.CanSupervise)) {
+        menuData.push({
+          icon: 'event_note',
+          text: 'Requests',
+          router_link: `/requests`,
+        });
       }
-      return menuData;
-    });
+      if (this.userService.isUser()) {
+        menuData.push({
+          icon: 'post_add',
+          text: 'Create new request',
+          router_link: `/new_request`,
+        });
+      }
+    }
 
     return menuData;
   }

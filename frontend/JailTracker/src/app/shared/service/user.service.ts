@@ -75,6 +75,11 @@ export class UserService {
     return this.user.value?.role == Roles.User;
   }
 
+  public isPrisonAdmin(): boolean {
+    if (!this.isUserAuthenticated) return false;
+    return this.user.value?.role == Roles.PrisonAdmin;
+  }
+
   public logout(): void {
     this.tokenService.clearToken();
     this.clearUser();
