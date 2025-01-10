@@ -16,7 +16,6 @@ public class EmailService : IEmailService
     
     public void SendEmail(string recipient, string subject, string body)
     {
-#if RELEASE
         using var mailMessage = new MailMessage(_configuration["EmailSettings:Login"], recipient);
         mailMessage.Subject = subject;
         mailMessage.Body = body;
@@ -24,15 +23,14 @@ public class EmailService : IEmailService
 
         mailMessage.From = new MailAddress(_configuration["EmailSettings:Login"], _configuration["EmailSettings:DisplayName"]);
 
-        int port = int.Parse(_configuration["EmailSettings:StmpPort"]);
+        int port = int.Parse(_configuration["EmailSettings:Port"]);
 
-        using var client = new SmtpClient(_configuration["EmailSettings:StmpHost"], port);
+        using var client = new SmtpClient(_configuration["EmailSettings:Host"], port);
         client.EnableSsl = true;
         client.UseDefaultCredentials = false;
         client.Credentials = new NetworkCredential(_configuration["EmailSettings:Login"], _configuration["EmailSettings:Password"]);
 
         client.Send(mailMessage);
         client.Dispose();
-#endif
     }
 }

@@ -1,9 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ApprovalState } from 'src/app/models/enums/approval-state.enum';
-import { RequestType } from 'src/app/models/enums/request.enum';
-import { PaginatedResult } from 'src/app/models/paginatedResult.model';
 import { RequestApprovalState } from 'src/app/models/request-approval.state.model';
 import { Request } from 'src/app/models/request.model';
 import { environment } from 'src/environments/environment';
@@ -14,6 +12,7 @@ import { environment } from 'src/environments/environment';
 export class RequestsService {
   constructor(private http: HttpClient) {}
 
+  // USED
   public approveRequest(requestId: string, approvalState: ApprovalState) {
     const data: RequestApprovalState = {
       requestId: requestId,
@@ -25,6 +24,7 @@ export class RequestsService {
     );
   }
 
+  // USED
   public createRequest(request: Request): Observable<Request> {
     return this.http.post<Request>(
       `${environment.apiUrl}/Requests/CreateRequest`, request

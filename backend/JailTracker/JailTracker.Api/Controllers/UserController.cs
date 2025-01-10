@@ -95,6 +95,10 @@ public class UserController : ControllerBase
             return NotFound();
         }
         UserModel updatedUser = _userService.UpdateUser(existingUser, updateUserDto);
+        if (updatedUser == null)
+        {
+            return BadRequest("Provided current password is incorrect.");
+        }
         return Ok(updatedUser);
     }
 

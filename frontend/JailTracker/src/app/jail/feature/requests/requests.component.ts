@@ -8,7 +8,6 @@ import {
   SharedTableDataFunc,
 } from 'src/app/models/shard-table-data.model';
 import { RequestsService } from 'src/app/shared/service/requests.service';
-import { UserService } from 'src/app/shared/service/user.service';
 import { Request } from 'src/app/models/request.model';
 import { TooltipTexts } from 'src/app/models/enums/tooltips-types.enum';
 import {
@@ -21,8 +20,8 @@ import { Dictionary } from 'src/app/models/dictionary.model';
 import { ApprovalState } from 'src/app/models/enums/approval-state.enum';
 import { PopupWithInputsComponent } from 'src/app/shared/ui/popup-with-inputs/popup-with-inputs.component';
 import { RequestsManagementService } from '../../../shared/service/requests-management.service';
-import { RequestType } from 'src/app/models/enums/request.enum';
 import { formatDate } from '@angular/common';
+import { RequestType } from 'src/app/models/enums/request-type.enum';
 
 @Component({
   selector: 'app-requests',
@@ -122,7 +121,6 @@ export class RequestsComponent {
   }
 
   private openRequestApprovalPopup(guid: string | undefined) {
-    console.log(guid);
     if (typeof guid === 'undefined') return;
     const inputs: Dictionary<InputPopupModel> = {};
     const buttons: ButtonPopupModel[] = [
@@ -150,7 +148,6 @@ export class RequestsComponent {
   }
 
   private requestApproval(requestId: string) {
-    console.log(requestId);
     this.requestsService
       .approveRequest(requestId, ApprovalState.Approved)
       .subscribe(() => {

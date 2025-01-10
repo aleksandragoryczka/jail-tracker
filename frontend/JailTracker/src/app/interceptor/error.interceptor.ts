@@ -19,7 +19,6 @@ export class ErrorInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
-        console.log(error);
         if (error.status === 401) {
           console.log('Unauthorized login attempt');
           this.toastr.error(
@@ -33,7 +32,7 @@ export class ErrorInterceptor implements HttpInterceptor {
             'You do not have permission to perform this action',
             'Forbidden');
         } else {
-          this.toastr.error(error.statusText, error.name);
+          this.toastr.error(error.error, 'Error');
         }
         return throwError(() => error);
       })

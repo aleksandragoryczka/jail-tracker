@@ -14,6 +14,7 @@ import {
 import { ProfilePopupComponent } from './profile-popup/profile-popup.component';
 import { UpdateUserDto } from 'src/app/models/update-user.model';
 import { UserService } from 'src/app/shared/service/user.service';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
@@ -25,12 +26,11 @@ export class ProfileComponent {
   public showHover = true;
   user: User | undefined;
   userID: string | undefined;
-  organizationId: string | undefined;
   supervisor: string | undefined;
-  companyName: string | undefined;
   constructor(
     private formBuilder: FormBuilder,
     private userService: UserService,
+    private toastrService: ToastrService,
     private dialog: MatDialog
   ) {
     this.profileForm = this.formBuilder.group({
@@ -45,12 +45,10 @@ export class ProfileComponent {
     if (this.userID) {
       this.userService.getUser(this.userID).subscribe((res) => {
         this.user = res;
-        console.log(this.user);
         if (this.user?.currentRequestsSupervisorId) {
           this.userService
             .getUser(this.user.currentRequestsSupervisorId)
             .subscribe((res) => {
-              console.log(res);
               this.supervisor = res.firstName + ' ' + res.lastName;
             });
         }
@@ -107,11 +105,17 @@ export class ProfileComponent {
       firstName: String(inputs['firstName'].value),
       lastName: String(inputs['lastName'].value),
       password: '',
+      currentPassword: '',
     };
 
     if (this.userID) {
-      this.userService.updateUser(updateUserDto).subscribe(() => {
-        location.reload();
+      this.userService.updateUser(updateUserDto).subscribe({
+        next: () => {
+          this.toastrService.success('Successfully updated profile.');
+          setTimeout(() => {
+            location.reload();
+          }, 4500);
+        },
       });
     }
   }

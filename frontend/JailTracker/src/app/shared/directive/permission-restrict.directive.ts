@@ -23,7 +23,6 @@ export class PermissionRestrictDirective implements OnChanges {
   ngOnChanges(): void {
     this.viewContainer.clear();
     this.userService.user$.subscribe((user) => {
-      //console.log(user);
       if (
         user?.permissions?.includes(this.appPermission) 
       ) {

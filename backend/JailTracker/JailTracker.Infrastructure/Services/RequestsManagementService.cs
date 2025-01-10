@@ -16,62 +16,6 @@ public class RequestsManagementService : IRequestsManagementService
     {
         _context = context;
     }
-    
-    /*public PaginatedResult<RequestModelDto> GetSupervisedPassesRequests(int userId, bool isGuard, int skip, int take)
-    {
-        IQueryable<RequestModelDto> requests;
-        if (isGuard)
-        {
-            requests = _context.Requests
-                .Where(x => x.RequestSupervisorId == userId)
-                .Where(x => x.IsActive)
-                .Where(x => x.RequestType == RequestType.Pass)
-                .Where(x => x.ApprovalState != ApprovalState.Pending)
-                .Include(x => x.User)
-                .Select(x => new RequestModelDto(x));
-        }
-        else
-        {
-            requests = _context.Requests
-                .Where(x => x.UserId == userId)
-                .Where(x => x.IsActive)
-                .Where(x => x.RequestType == RequestType.Pass)
-                .Where(x => x.ApprovalState != ApprovalState.Pending)
-                .Include(x => x.User)
-                .Select(x => new RequestModelDto(x));
-        }
-
-        var res = new PaginatedResult<RequestModelDto>(requests.Skip(skip).Take(take), requests.Count(), take);
-        return res;
-    }
-
-    public PaginatedResult<RequestModelDto> GetSupervisedVisitsRequests(int userId, bool isGuard, int skip, int take)
-    {
-        IQueryable<RequestModelDto> requests;
-        if (isGuard)
-        {
-            requests = _context.Requests
-                .Where(x => x.RequestSupervisorId == userId)
-                .Where(x => x.IsActive)
-                .Where(x => x.RequestType == RequestType.Visit)
-                .Where(x => x.ApprovalState != ApprovalState.Pending)
-                .Include(x => x.User)
-                .Select(x => new RequestModelDto(x));
-        }
-        else
-        {
-            requests = _context.Requests
-                .Where(x => x.UserId == userId)
-                .Where(x => x.IsActive)
-                .Where(x => x.RequestType == RequestType.Visit)
-                .Where(x => x.ApprovalState != ApprovalState.Pending)
-                .Include(x => x.User)
-                .Select(x => new RequestModelDto(x));
-        }
-        
-        var res = new PaginatedResult<RequestModelDto>(requests.Skip(skip).Take(take), requests.Count(), take);
-        return res;
-    }*/
 
     public int GetYearRequestsCountForUserInHoursByRequestType(int userId, RequestType requestType)
     {

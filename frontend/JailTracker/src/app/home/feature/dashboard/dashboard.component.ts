@@ -1,12 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
 import { RequestsManagementService } from 'src/app/shared/service/requests-management.service';
 import { Request } from 'src/app/models/request.model';
 import { RequestType } from 'src/app/models/enums/request-type.enum';
 import { ApprovalState } from 'src/app/models/enums/approval-state.enum';
 import { TimeUtilities } from 'src/app/shared/web-utilities/time-utilities';
 import { PermissionTypes } from 'src/app/models/enums/permission-types.enum';
-import { PermissionRestrictDirective } from 'src/app/shared/directive/permission-restrict.directive';
 import { UserService } from 'src/app/shared/service/user.service';
 
 @Component({
@@ -40,7 +38,6 @@ export class DashboardComponent {
   showRequestType: 0 | 1 = 0;
 
   toggleRequestType() {
-    console.log(this.showRequestType);
     this.showRequestType = this.showRequestType === 0 ? 1 : 0;
   }
 
@@ -60,7 +57,6 @@ export class DashboardComponent {
       this.requestsManagementService.getListOfRequests(0, 10).subscribe(
         (res: { data: Request[] | undefined }) => {
           if (res) {
-            //console.log(res);
             this.visitsRequests = res.data;
             this.updateContainers();
           }
@@ -78,7 +74,6 @@ export class DashboardComponent {
       .getRequestsByDateForUser(todayDate, weekDate, RequestType.Visit, 0, 10)
       .subscribe(async (res) => {
         if (res) {
-          console.log(res);
           const { today, week } = this.categorizeAbsencesByDate(
             res.data,
             todayDate,

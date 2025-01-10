@@ -9,11 +9,10 @@ import { EventColor } from 'calendar-utils';
 import { map, Observable } from 'rxjs';
 import { TimeUtilities } from 'src/app/shared/web-utilities/time-utilities';
 import { RequestsManagementService } from '../../../shared/service/requests-management.service';
-import { RequestType } from 'src/app/models/enums/request.enum';
 import { colors } from 'src/app/models/colors/color';
 import { Request } from 'src/app/models/request.model';
-import { ApprovalState } from 'src/app/models/enums/approval-state.enum';
 import { isSameDay, isSameMonth } from 'date-fns';
+import { RequestType } from 'src/app/models/enums/request-type.enum';
 
 @Component({
   selector: 'app-calendar',

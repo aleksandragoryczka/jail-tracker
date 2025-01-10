@@ -1,9 +1,8 @@
 import { DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of, map } from 'rxjs';
-import { ApprovalState } from 'src/app/models/enums/approval-state.enum';
-import { RequestType } from 'src/app/models/enums/request.enum';
+import { BehaviorSubject, Observable, map } from 'rxjs';
+import { RequestType } from 'src/app/models/enums/request-type.enum';
 import { PaginatedResult } from 'src/app/models/paginatedResult.model';
 import { Request } from 'src/app/models/request.model';
 import { UpdateRequest } from 'src/app/models/update-request.model';
@@ -19,6 +18,7 @@ export class RequestsManagementService {
 
   constructor(private http: HttpClient, private datePipe: DatePipe) {}
 
+  // USED
   public getRequestsMonthly(from: Date, to: Date): Observable<Request[]> {
     return this.http.get<Request[]>(
       `${
@@ -30,6 +30,7 @@ export class RequestsManagementService {
     );
   }
 
+  // USED
   public getRequestsForUser(
     pageNumber = 0,
     pageSize = 10
@@ -53,6 +54,7 @@ export class RequestsManagementService {
       );
   }
 
+  // USED
   public updateRequest(updateAbsence: UpdateRequest): Observable<Request> {
     return this.http.put<Request>(
       `${this.env.apiUrl}/Requests/updateRequestForUser`,
@@ -60,6 +62,7 @@ export class RequestsManagementService {
     );
   }
 
+  // USED
   public getYearAbsenceCountForUserInHours(
     requestType: RequestType
   ): Observable<number> {
@@ -68,6 +71,7 @@ export class RequestsManagementService {
     );
   }
 
+  // USED
   public getRequestsByDateForUser(
     fromDate: Date,
     toDate: Date,
@@ -77,7 +81,6 @@ export class RequestsManagementService {
   ): Observable<PaginatedResult<Request>> {
     const fromDateFormatted = this.datePipe.transform(fromDate, 'yyyy-MM-dd');
     const toDateFormatted = this.datePipe.transform(toDate, 'yyyy-MM-dd');
-    //console.log(fromDateFormatted, toDateFormatted);
     return this.http
       .get<PaginatedResult<Request>>(
         `${
@@ -99,16 +102,7 @@ export class RequestsManagementService {
       );
   }
 
-  // const fromDateFormatted = this.datePipe.transform(fromDate, 'yyyy-MM-dd');
-  // const toDateFormatted = this.datePipe.transform(toDate, 'yyyy-MM-dd');
-  // return this.http.get<PaginatedResult<Request>>(
-  //   `${
-  //     this.env.apiUrl
-  //   }/RequestsManagement/GetRequestsByDateForUser?from=${fromDateFormatted}&to=${toDateFormatted}&type=${type}&skip=${
-  //     skip * take
-  //   }&take=${take}`
-  // );
-
+  // USED
   public getListOfRequests(
     skip = 0,
     take = 10
@@ -134,13 +128,14 @@ export class RequestsManagementService {
       );
   }
 
+  // USED
   public cancelRequest(id: string): Observable<boolean> {
     return this.http.delete<boolean>(
       `${this.env.apiUrl}/Requests/CancelRequestForUser/${id}`
     );
   }
 
-
+  // USED
   public getListOfRequestsHistory(
     skip = 0,
     take = 10

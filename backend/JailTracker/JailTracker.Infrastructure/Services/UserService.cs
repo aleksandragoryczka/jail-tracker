@@ -29,10 +29,10 @@ namespace JailTracker.Infrastructure.Services
             try
             {
                 string generatedPassword = registerDto.Password;
-                /*if (registerDto.Role != Role.PrisonAdmin)
+                if (registerDto.Role != Role.PrisonAdmin)
                 {
                     generatedPassword = _encodeService.GeneratePassword(16);
-                }*/
+                }
 
                 var newUser = new UserModel
                 {
@@ -150,8 +150,12 @@ namespace JailTracker.Infrastructure.Services
                 existingUser.LastName = updateUserDto.LastName;
             }
 
-            if (!String.IsNullOrEmpty(updateUserDto.Password))
+            if (!String.IsNullOrEmpty(updateUserDto.Password) && !String.IsNullOrEmpty(updateUserDto.CurrentPassword))
             {
+                if(!_encodeService.VerifyUser(existingUser.Password, updateUserDto.CurrentPassword))
+                {
+                    return null;
+                }
                 existingUser.Password = HashPassword(updateUserDto.Password);
             }
 
@@ -175,6 +179,7 @@ namespace JailTracker.Infrastructure.Services
 	<h1>New Password Created</h1>
 	<p>Your new password is: <strong>" + pass + @"</strong></p>
 	<p>Please make sure to keep this password safe and do not share it with anyone.</p>
+    <p>You can later update your password under `Profile` tab after you log in.</p>
 	<p>If this is a mistake please ignore this message.</p>
 </body>";
             return res;

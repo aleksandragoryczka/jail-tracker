@@ -8,6 +8,7 @@ import { CalendarComponent } from './jail/feature/calendar/calendar.component';
 import { NewRequestComponent } from './jail/feature/new-request/new-request.component';
 
 export const routes: Routes = [
+  { path: '', component: LoginComponent },
   { path: 'login', component: LoginComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'calendar', component: CalendarComponent },

@@ -23,6 +23,7 @@ export class ProfilePopupComponent {
   ) {
     this.passwordForm = this.formBuilder.group(
       {
+        currentPassword: [''],
         password: ['', Validators.required],
         confirmPassword: ['', Validators.required],
       },
@@ -39,13 +40,18 @@ export class ProfilePopupComponent {
     const updateUserDto: UpdateUserDto = {
       firstName: '',
       lastName: '',
+      currentPassword: String(this.passwordForm.get('currentPassword')?.value),
       password: String(this.passwordForm.get('password')?.value),
     };
 
     if (this.userId) {
       this.userService.updateUser(updateUserDto).subscribe((res: any) => {
         if (res) {
-          location.reload();
+          this.dialogRef.close('primary');
+          this.toastrService.success('Successfully updated password.');
+          setTimeout(() => {
+            location.reload();
+          }, 4500);
         }
       });
     }

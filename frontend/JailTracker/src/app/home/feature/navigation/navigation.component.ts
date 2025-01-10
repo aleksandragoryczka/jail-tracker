@@ -36,28 +36,47 @@ export class NavigationComponent implements OnInit {
         text: 'Dashboard',
         router_link: `/dashboard`,
       },
-      { icon: 'person_outline', text: 'Profile', router_link: `/profile` },
       {
         icon: 'calendar_today',
         text: 'Calendar',
         router_link: `/calendar`,
       },
+      { icon: 'person_outline', text: 'Profile', router_link: `/profile` },
     ];
 
-    if (this.userService.hasPermission(PermissionTypes.CanSupervise)) {
-      menuData.push({
-        icon: 'event_note',
-        text: 'Requests',
-        router_link: `/requests`,
-      });
-    }
-    if (this.userService.isUser()) {
-      menuData.push({
-        icon: 'post_add',
-        text: 'Create new request',
-        router_link: `/new_request`,
-      });
-    }
+    this.userService.isAdmin$.subscribe((isAdmin) => {
+      if (isAdmin) {
+        return [
+          {
+            icon: 'calendar_today',
+            text: 'Calendar',
+            router_link: `/calendar`,
+          },
+          { icon: 'person_outline', text: 'Profile', router_link: `/profile` },
+          {
+            icon: 'settings',
+            text: 'Admin panel',
+            router_link: `/admmin-panel`,
+          },
+        ];
+      } else {
+        if (this.userService.hasPermission(PermissionTypes.CanSupervise)) {
+          menuData.push({
+            icon: 'event_note',
+            text: 'Requests',
+            router_link: `/requests`,
+          });
+        }
+        if (this.userService.isUser()) {
+          menuData.push({
+            icon: 'post_add',
+            text: 'Create new request',
+            router_link: `/new_request`,
+          });
+        }
+      }
+      return menuData;
+    });
 
     return menuData;
   }
@@ -67,16 +86,6 @@ export class NavigationComponent implements OnInit {
     item: { icon: string; text: string; router_link: string }
   ) {
     return item.router_link;
-  }
-
-  @HostListener('window:popstate', ['$event'])
-  onPopState() {
-    const acvitePath = window.location.pathname;
-    if (acvitePath == '/admin-panel') this.activeIndex = this.menuData.length;
-    else
-      this.activeIndex = this.menuData.findIndex(
-        (x) => x.router_link == acvitePath
-      );
   }
 
   private setActiveIndexFromActivePath() {

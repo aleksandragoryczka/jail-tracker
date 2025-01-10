@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, catchError, map, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, map } from 'rxjs';
 import { User } from '../../models/user.model';
 import { TokenService } from './token.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
@@ -9,8 +9,7 @@ import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { PermissionTypes } from 'src/app/models/enums/permission-types.enum';
 import { Roles } from 'src/app/models/enums/roles.enum';
-import { of, throwError as _throwError } from 'rxjs';
-import { ToastrService } from 'ngx-toastr';
+import { throwError as _throwError } from 'rxjs';
 import { UpdateUserDto } from 'src/app/models/update-user.model';
 
 @Injectable({
@@ -26,7 +25,6 @@ export class UserService {
     private http: HttpClient,
     private tokenService: TokenService,
     private jwtHelper: JwtHelperService,
-    private tostr: ToastrService
   ) {
     const token = this.tokenService.getToken();
     if (!!token && !this.jwtHelper.isTokenExpired(token))
@@ -40,13 +38,13 @@ export class UserService {
     return false;
   }
 
+  // USED
   public getUser(id: string): Observable<User> {
     return this.http.get<User>(`${environment.apiUrl}/User/${id}`);
   }
 
+  // USED
   public login(loginModel: LoginModel): Observable<boolean> {
-    console.log(`${loginModel.email} :: ${loginModel.password}`);
-
     return this.http
       .post<AuthenticatedResponse>(`${environment.apiUrl}/token`, loginModel)
       .pipe(
@@ -59,6 +57,7 @@ export class UserService {
       );
   }
 
+  // USED
   public updateUser(updateUserDto: UpdateUserDto) {
     console.log(updateUserDto);
     return this.http.put<boolean>(
@@ -91,7 +90,9 @@ export class UserService {
       role: this.getRole(decodeToken),
     };
     this.user.next(user);
-    if (decodeToken['prisonAdmin']) this.isAdmin.next(true);
+    if (decodeToken['admin'] == 'true') {
+      this.isAdmin.next(true);
+    }
   }
 
   private getPermissions(
@@ -105,7 +106,7 @@ export class UserService {
 
   private getRole(decodeToken: any): Roles {
     if (decodeToken['guard'] == 'true') return Roles.Guard;
-    if (decodeToken['prisonAdmin'] == 'true') return Roles.PrisonAdmin;
+    if (decodeToken['admin'] == 'true') return Roles.PrisonAdmin;
     return Roles.User;
   }
 

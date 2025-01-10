@@ -26,24 +26,6 @@
                 >
               </li>
             </ng-container>
-
-            <ng-container>
-              <li
-                class="nav-item"
-                (click)="onItemClick(menuData.length)"
-                [class.active]="isMenuActive(menuData.length)">
-                <p *ngIf="isMenuActive(menuData.length)"></p>
-                <a class="nav-link" routerLink="admin-panel"
-                  ><mat-icon>settings</mat-icon
-                  ><span class="nav-text-link">{{
-                    'navigation.admin-panel' | translate
-                  }}</span></a
-                >
-                <p
-                  class="rounding-bottom"
-                  *ngIf="isMenuActive(menuData.length)"></p>
-              </li>
-            </ng-container>
           </ul>
         </div>
       </div>

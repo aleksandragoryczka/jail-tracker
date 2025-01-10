@@ -1,4 +1,6 @@
-<mat-dialog-content class="jail-tracker-default-container profile-popup-container">
+<mat-dialog-content
+  class="jail-tracker-default-container profile-popup-container"
+>
   <div class="jail-tracker-default-content-container">
     <div class="jail-tracker-popup-close-button" (click)="closePopup()">
       <mat-icon>close</mat-icon>
@@ -8,27 +10,40 @@
       <form [formGroup]="passwordForm">
         <div class="d-flex justify-content-center">
           <div
-            class="d-flex justify-content-center flex-column profile-inputs-container">
+            class="d-flex justify-content-center flex-column profile-inputs-container"
+          >
+            <input
+              class="jail-tracker-input change-password-input"
+              type="password"
+              id="currentPassword"
+              placeholder="Current password"
+              formControlName="currentPassword"
+            />
             <input
               class="jail-tracker-input change-password-input"
               type="password"
               id="password"
               placeholder="New password"
-              formControlName="password" />
+              label="New password:"
+              formControlName="password"
+            />
             <input
               class="jail-tracker-input change-password-input"
               type="password"
               id="confirmPassword"
-              placeholder="Confirm password"
-              formControlName="confirmPassword" />
+              placeholder="Confirm new password"
+              formControlName="confirmPassword"
+            />
             <div
               class="password-error"
-              *ngIf="passwordForm.hasError('passwordMismatch')">
+              *ngIf="passwordForm.hasError('passwordMismatch')"
+            >
               Passwords do not match.
             </div>
             <div
               class="password-error"
-              *ngIf="passwordForm.hasError('invalidPassword')">
+              *ngIf="passwordForm.hasError('invalidPassword')"
+            >
               Password must be at least 7 characters long and contain one
               number.
             </div>
@@ -36,7 +51,8 @@
               class="jail-tracker-btn jail-tracker-btn-primary change-password-btn"
               type="submit"
               (click)="updateUser()"
-              [disabled]="passwordForm.invalid">
+              [disabled]="passwordForm.invalid"
+            >
               Edit
             </button>
           </div>

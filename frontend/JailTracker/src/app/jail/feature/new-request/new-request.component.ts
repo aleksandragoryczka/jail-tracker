@@ -12,7 +12,6 @@ import {
   InputPopupDataModel,
   InputPopupModel,
 } from 'src/app/models/input-popup-data.model';
-import { RequestType } from 'src/app/models/enums/request.enum';
 import { PaginatedResult } from 'src/app/models/paginatedResult.model';
 import { formatDate } from '@angular/common';
 import { ApprovalState } from 'src/app/models/enums/approval-state.enum';
@@ -22,6 +21,7 @@ import { PopupWithInputsComponent } from 'src/app/shared/ui/popup-with-inputs/po
 import { UpdateRequest } from 'src/app/models/update-request.model';
 import { TimeUtilities } from 'src/app/shared/web-utilities/time-utilities';
 import { RequestsService } from '../../../shared/service/requests.service';
+import { RequestType } from 'src/app/models/enums/request-type.enum';
 
 @Component({
   selector: 'app-new-request',
@@ -44,8 +44,6 @@ export class NewRequestComponent {
     private tostr: ToastrService,
     private requestsService: RequestsService
   ) {}
-
-  // TODO: Open date popup -> change from only date -> to date with time (from date/ to date)
 
   setPage(pageNumber: number): void {
     this.currentPage$.next(pageNumber);
@@ -322,7 +320,6 @@ export class NewRequestComponent {
           placeholder: 'Current end date:',
         };
       } else if (userRequest.requestType == RequestType.Visit) {
-        console.log(userRequest.fromDate);
         inputs['RequestDate'] = {
           value: userRequest.fromDate,
           type: 'date',

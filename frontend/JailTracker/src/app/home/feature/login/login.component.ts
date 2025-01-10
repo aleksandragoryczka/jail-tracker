@@ -25,7 +25,13 @@ export class LoginComponent implements OnInit {
 
   async ngOnInit() {
     if (this.userService.isUserAuthenticated) {
-      await this.router.navigate([`dashboard`]);
+      this.userService.isAdmin$.pipe().subscribe(async (isAdmin) => {
+        if (isAdmin) {
+          await this.router.navigate([`calendar`]);
+        } else {
+          await this.router.navigate([`dashboard`]);
+        }
+      });
     }
   }
 
@@ -40,7 +46,13 @@ export class LoginComponent implements OnInit {
     this.userService.login(credentials).subscribe((loggedIn) => {
       (async () => {
         if (loggedIn) {
-          this.router.navigate([`dashboard`]);
+          this.userService.isAdmin$.pipe().subscribe(async (isAdmin) => {
+            if (isAdmin) {
+              await this.router.navigate([`calendar`]);
+            } else {
+              await this.router.navigate([`dashboard`]);
+            }
+          });
         }
       })();
     });
