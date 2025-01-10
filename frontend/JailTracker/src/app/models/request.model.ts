@@ -3,8 +3,8 @@ import { RequestType } from "./enums/request.enum";
 
 export interface Request {
     id?: string;
-    from: Date;
-    to: Date;
+    fromDate: Date;
+    toDate: Date;
     requestType: RequestType;
     userId?: string;
     userFirstName?: string;

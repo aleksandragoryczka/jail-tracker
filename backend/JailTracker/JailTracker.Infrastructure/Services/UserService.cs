@@ -29,10 +29,10 @@ namespace JailTracker.Infrastructure.Services
             try
             {
                 string generatedPassword = registerDto.Password;
-                if (registerDto.Role != Role.PrisonAdmin)
+                /*if (registerDto.Role != Role.PrisonAdmin)
                 {
                     generatedPassword = _encodeService.GeneratePassword(16);
-                }
+                }*/
 
                 var newUser = new UserModel
                 {
@@ -144,9 +144,16 @@ namespace JailTracker.Infrastructure.Services
 
         public UserModel UpdateUser(UserModel existingUser, UpdateUserDto updateUserDto)
         {
-            existingUser.FirstName = updateUserDto.FirstName;
-            existingUser.LastName = updateUserDto.LastName;
-            existingUser.Password = HashPassword(updateUserDto.Password);
+            if (!String.IsNullOrEmpty(updateUserDto.FirstName) && !String.IsNullOrEmpty(updateUserDto.LastName))
+            {
+                existingUser.FirstName = updateUserDto.FirstName;
+                existingUser.LastName = updateUserDto.LastName;
+            }
+
+            if (!String.IsNullOrEmpty(updateUserDto.Password))
+            {
+                existingUser.Password = HashPassword(updateUserDto.Password);
+            }
 
             _context.SaveChanges();
 

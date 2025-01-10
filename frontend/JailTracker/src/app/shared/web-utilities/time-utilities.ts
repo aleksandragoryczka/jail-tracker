@@ -58,4 +58,14 @@ export class TimeUtilities {
     const minutes = date.getMinutes();
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
   }
+
+  static getDayMonthYearFromDate(date: Date): Date{
+    return new Date(
+      Date.UTC(
+      date.getUTCFullYear(),
+      date.getUTCMonth(),
+      date.getUTCDate(),
+      )
+    )
+  }
 }

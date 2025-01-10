@@ -1,8 +1,9 @@
 import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { ToastrService } from 'ngx-toastr';
 import { UpdateUserDto } from 'src/app/models/update-user.model';
-import { UserService } from 'src/app/shared/data-access/service/user.service';
+import { UserService } from 'src/app/shared/service/user.service';
 
 @Component({
   selector: 'app-profile-popup',
@@ -12,12 +13,12 @@ import { UserService } from 'src/app/shared/data-access/service/user.service';
 export class ProfilePopupComponent {
   passwordForm: FormGroup;
   userId: string;
-  organizationId: string;
 
   constructor(
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<ProfilePopupComponent>,
     private userService: UserService,
+    private toastrService: ToastrService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.passwordForm = this.formBuilder.group(
@@ -28,7 +29,6 @@ export class ProfilePopupComponent {
       { validators: this.passwordMatchValidator }
     );
     this.userId = data.userId;
-    this.organizationId = data.organizationId;
   }
 
   closePopup() {
@@ -37,10 +37,12 @@ export class ProfilePopupComponent {
 
   updateUser(): void {
     const updateUserDto: UpdateUserDto = {
+      firstName: '',
+      lastName: '',
       password: String(this.passwordForm.get('password')?.value),
     };
 
-    if (this.userId && this.organizationId) {
+    if (this.userId) {
       this.userService.updateUser(updateUserDto).subscribe((res: any) => {
         if (res) {
           location.reload();

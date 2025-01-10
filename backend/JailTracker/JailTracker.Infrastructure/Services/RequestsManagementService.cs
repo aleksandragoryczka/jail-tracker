@@ -73,7 +73,7 @@ public class RequestsManagementService : IRequestsManagementService
         return res;
     }*/
 
-    public int GetYearRequestsCountForUserInHours(int userId)
+    public int GetYearRequestsCountForUserInHoursByRequestType(int userId, RequestType requestType)
     {
         DateTime currentDate = DateTime.Now;
         DateTime currentYearStart = new DateTime(currentDate.Year, 1, 1);
@@ -81,6 +81,7 @@ public class RequestsManagementService : IRequestsManagementService
 
         var requests = _context.Requests
             .Where(x => x.IsActive  && x.ApprovalState != ApprovalState.Rejected)
+            .Where(x => x.RequestType == requestType)
             .Where(a => a.UserId == userId && a.IsActive &&
                         ((a.FromDate >= currentYearStart && a.FromDate < nextYearStart) ||
                          (a.FromDate < currentYearStart && a.ToDate >= currentYearStart)));
@@ -144,7 +145,7 @@ public class RequestsManagementService : IRequestsManagementService
                 .Where(x => x.RequestType == type)
                 .Where(x => x.ApprovalState != ApprovalState.Pending)
                 .Include(x => x.User)
-                .Where(x => (x.FromDate >= from && x.FromDate <= to) || x.ToDate >= from && x.ToDate <= to)
+                .Where(x => (x.FromDate >= from && x.FromDate <= to))// || x.ToDate >= from && x.ToDate <= to)
                 .Select(x => new RequestModelDto(x));
         }
         else
@@ -155,7 +156,7 @@ public class RequestsManagementService : IRequestsManagementService
                 .Where(x => x.RequestType == type)
                 .Where(x => x.ApprovalState != ApprovalState.Pending)
                 .Include(x => x.User)
-                .Where(x => (x.FromDate >= from && x.FromDate <= to) || x.ToDate >= from && x.ToDate <= to)
+                .Where(x => (x.FromDate >= from && x.FromDate <= to))// || x.ToDate >= from && x.ToDate <= to)
                 .Select(x => new RequestModelDto(x));
         }
         
@@ -163,12 +164,13 @@ public class RequestsManagementService : IRequestsManagementService
         return res;
     }
 
-    public List<RequestModelDto> GetAllAcceptedRequests()
+    public List<RequestModelDto> GetAllAcceptedRequestsMonthly(DateTime from, DateTime to)
     {
         var requsts = _context.Requests
             .Where(x => x.IsActive)
             .Where(x => x.ApprovalState == ApprovalState.Approved)
             .Include(x => x.User)
+            .Where(x => (x.FromDate >= from && x.FromDate <= to))
             .Select(x => new RequestModelDto(x));
         
         return requsts.ToList();

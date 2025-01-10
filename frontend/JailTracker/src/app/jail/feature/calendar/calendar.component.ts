@@ -82,7 +82,7 @@ export class CalendarComponent {
 
   private loadEvents(): Observable<CalendarEvent[]> {
     return this.requestManagementService
-      .getEventsMonthly(this.from, this.to)
+      .getRequestsMonthly(this.from, this.to)
       .pipe(map((res) => this.mapData(res)));
   }
 
@@ -90,20 +90,32 @@ export class CalendarComponent {
     const events: CalendarEvent[] = [];
     data.forEach((request) => {
       const event: CalendarEvent = {
-        start: new Date(request.from),
-        end: new Date(request.to),
-        title: `${request.userFirstName} ${
-          request.userLastName
-        } - ${this.getAbsenceTypeTitle(
-          request.requestType
-        )} - ${this.getApprovalStateString(request)}`,
+        start: new Date(request.fromDate),
+        end: new Date(request.toDate),
+        title: this.formatEventTitle(request),
         color: this.getAbsenceTypeColor(request.requestType),
-        meta: this.getInitials(request),
-        cssClass: this.getCssStyle(request),
+        meta: this.getInitials(request)
       };
       events.push(event);
     });
     return events;
+  }
+
+  private formatEventTitle(request: Request): string {
+    if (request.requestType == RequestType.Visit) {
+      return `${request.userFirstName} ${
+        request.userLastName
+      } - ${this.getAbsenceTypeTitle(
+        request.requestType
+      )} - ${TimeUtilities.getTimeFromDate(
+        new Date(request.fromDate)
+      )}-${TimeUtilities.getTimeFromDate(new Date(request.toDate))}`;
+    }
+    return `${request.userFirstName} ${
+      request.userLastName
+    } - ${this.getAbsenceTypeTitle(
+      request.requestType
+    )}`;
   }
 
   private getAbsenceTypeTitle(requestType: RequestType): string {
@@ -124,17 +136,5 @@ export class CalendarComponent {
       res += request.userLastName[0];
 
     return res;
-  }
-
-  private getApprovalStateString(request: Request): string {
-    const requestStateString = ['Pending', 'Approved', 'Rejected'];
-    return requestStateString[request.approvalState];
-  }
-
-  private getCssStyle(request: Request): string | undefined {
-    if (request.approvalState === ApprovalState.Approved) return 'approved';
-    else if (request.approvalState === ApprovalState.Rejected)
-      return 'rejected';
-    return undefined;
   }
 }

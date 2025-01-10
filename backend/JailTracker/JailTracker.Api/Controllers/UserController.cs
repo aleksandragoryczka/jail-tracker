@@ -38,14 +38,14 @@ public class UserController : ControllerBase
     }
 
     /// <summary>
-    /// DONE - DISPLAY USER'S PROFILE DETAILS
+    /// DONE - DISPLAY USER'S PROFILE DETAILS and Guard's details
     /// </summary>
+    /// <param name="id"></param>
     /// <returns></returns>
-    [HttpGet]
-    public ActionResult<UserModel> GetCurrentUserProfile()
+    [HttpGet("{id}")]
+    public ActionResult<UserModel> GetUserProfile(int id)
     {
-        var userId = User.Identity.GetUserId();
-        var user = _userService.GetUser(userId);
+        var user = _userService.GetUser(id);
 
         if (user == null)
         {

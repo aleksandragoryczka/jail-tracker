@@ -2,15 +2,11 @@ import { EventColor } from 'calendar-utils';
 
 export const colors: Record<string, EventColor> = {
   blue: {
-    primary: '#92a7ff',
+    primary: '#2ab4d0',
     secondary: '#d6dcff',
   },
   orange: {
-    primary: '#f8c48c',
+    primary: '#130d7e',
     secondary: '#fcebd9',
-  },
-  beige: {
-    primary: '#a39999',
-    secondary: '#dedcdc',
-  },
+  }
 };

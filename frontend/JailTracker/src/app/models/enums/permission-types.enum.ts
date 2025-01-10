@@ -4,5 +4,4 @@ export enum PermissionTypes {
   ModifyUser = 3,
   DeleteUser = 4,
   CanSupervise = 5,
-  GrantPermissions = 6,
 }

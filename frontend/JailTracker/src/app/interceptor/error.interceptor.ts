@@ -19,11 +19,19 @@ export class ErrorInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
+        console.log(error);
         if (error.status === 401) {
-          this.toastr.error('Wrong credentials');
-        }
-        if (error.status === 403) {
-          console.log('error.statusText, error.name');
+          console.log('Unauthorized login attempt');
+          this.toastr.error(
+            'You provided wrong e-mail or password',
+            'Wrong credentials'
+          );
+          return throwError(() => error);
+        } else if (error.status === 403) {
+          console.log('Forbidden action');
+          this.toastr.error(
+            'You do not have permission to perform this action',
+            'Forbidden');
         } else {
           this.toastr.error(error.statusText, error.name);
         }

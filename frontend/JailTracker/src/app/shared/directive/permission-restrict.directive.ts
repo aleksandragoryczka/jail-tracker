@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import { PermissionTypes } from 'src/app/models/enums/permission-types.enum';
 import { UserService } from '../service/user.service';
-import { Roles } from 'src/app/models/enums/roles.enum';
 
 @Directive({
   selector: '[appPermission]',
@@ -23,12 +22,10 @@ export class PermissionRestrictDirective implements OnChanges {
 
   ngOnChanges(): void {
     this.viewContainer.clear();
-
     this.userService.user$.subscribe((user) => {
+      //console.log(user);
       if (
-        user?.permissions?.includes(this.appPermission) ||
-        user?.role == Roles.PageAdmin ||
-        user?.role == Roles.OrganizationOwner
+        user?.permissions?.includes(this.appPermission) 
       ) {
         this.viewContainer.createEmbeddedView(this.templateRef);
       }

@@ -96,13 +96,14 @@ public class RequestsManagementController : ControllerBase
     /// <summary>
     /// DONE
     /// </summary>
+    /// <param name="requestType"></param>
     /// <returns></returns>
-    [HttpGet]
-    public ActionResult<int> GetYearAbsenceCountForUserInHours()
+    [HttpGet("{requestType}")]
+    public ActionResult<int> GetYearAbsenceCountForUserInHoursByRequestType(RequestType requestType)
     {
         var userId = User.Identity.GetUserId();
         
-        var res = _requestsManagementService.GetYearRequestsCountForUserInHours(userId);
+        var res = _requestsManagementService.GetYearRequestsCountForUserInHoursByRequestType(userId, requestType);
         return res;
     }
     
@@ -139,11 +140,13 @@ public class RequestsManagementController : ControllerBase
     /// <summary>
     /// DONE - Calendar Component
     /// </summary>
+    /// <param name="from"></param>
+    /// <param name="to"></param>
     /// <returns></returns>
     [HttpGet]
-    public ActionResult<List<RequestModelDto>> getAllAcceptedRequests()
+    public ActionResult<List<RequestModelDto>> getAllAcceptedRequestsMonthly(DateTime from, DateTime to)
     {
-        return Ok(_requestsManagementService.GetAllAcceptedRequests());
+        return Ok(_requestsManagementService.GetAllAcceptedRequestsMonthly(from, to));
     }
     
 }

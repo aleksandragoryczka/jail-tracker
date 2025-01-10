@@ -1,14 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { RequestsManagementService } from 'src/app/shared/service/requests-management.service';
 import { Request } from 'src/app/models/request.model';
 import { RequestType } from 'src/app/models/enums/request-type.enum';
 import { ApprovalState } from 'src/app/models/enums/approval-state.enum';
+import { TimeUtilities } from 'src/app/shared/web-utilities/time-utilities';
+import { PermissionTypes } from 'src/app/models/enums/permission-types.enum';
+import { PermissionRestrictDirective } from 'src/app/shared/directive/permission-restrict.directive';
+import { UserService } from 'src/app/shared/service/user.service';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent {
   todayVisits: Request[] | undefined;
@@ -16,7 +20,8 @@ export class DashboardComponent {
   todayPasses: Request[] | undefined;
   weekPasses: Request[] | undefined;
   visitsRequests: Request[] | undefined;
-  
+  permissionTypes = PermissionTypes;
+
   containers: {
     type: string;
     header: string;
@@ -27,7 +32,7 @@ export class DashboardComponent {
 
   constructor(
     private requestsManagementService: RequestsManagementService,
-    private router: Router,
+    private userService: UserService
   ) {
     this.fetchData();
   }
@@ -35,11 +40,12 @@ export class DashboardComponent {
   showRequestType: 0 | 1 = 0;
 
   toggleRequestType() {
+    console.log(this.showRequestType);
     this.showRequestType = this.showRequestType === 0 ? 1 : 0;
   }
 
   filterItemsByRequestType(items: any[]) {
-    return items.filter(item => item.requestType === this.showRequestType);
+    return items.filter((item) => item.requestType === this.showRequestType);
   }
 
   fetchData(): void {
@@ -50,31 +56,27 @@ export class DashboardComponent {
     weekDate.setDate(weekDate.getDate() + 7);
 
     //requests
-    this.requestsManagementService.getListOfRequests(0, 10).subscribe(
-      (res: { data: Request[] | undefined }) => {
-        if (res) {
-          console.log(res);
-          this.visitsRequests = res.data;
-          this.updateContainers();
+    if (this.userService.hasPermission(PermissionTypes.CanSupervise)) {
+      this.requestsManagementService.getListOfRequests(0, 10).subscribe(
+        (res: { data: Request[] | undefined }) => {
+          if (res) {
+            //console.log(res);
+            this.visitsRequests = res.data;
+            this.updateContainers();
+          }
+        },
+        (error) => {
+          if (error.status === 403) {
+            this.visitsRequests = undefined;
+          }
         }
-      },
-      error => {
-        if (error.status === 403) {
-          this.visitsRequests = undefined;
-        }
-      }
-    );
+      );
+    }
 
     // visits
     this.requestsManagementService
-      .getRequestsByDateForUser(
-        todayDate,
-        weekDate,
-        RequestType.Visit,
-        0,
-        10
-      )
-      .subscribe(res => {
+      .getRequestsByDateForUser(todayDate, weekDate, RequestType.Visit, 0, 10)
+      .subscribe(async (res) => {
         if (res) {
           console.log(res);
           const { today, week } = this.categorizeAbsencesByDate(
@@ -90,16 +92,9 @@ export class DashboardComponent {
 
     // passes
     this.requestsManagementService
-      .getRequestsByDateForUser(
-        todayDate,
-        weekDate,
-        RequestType.Pass,
-        0,
-        10
-      )
-      .subscribe(res => {
+      .getRequestsByDateForUser(todayDate, weekDate, RequestType.Pass, 0, 10)
+      .subscribe((res) => {
         if (res) {
-          console.log(res);
           const { today, week } = this.categorizeAbsencesByDate(
             res.data,
             todayDate,
@@ -112,7 +107,6 @@ export class DashboardComponent {
       });
   }
 
-
   getApprovalStateText(state: ApprovalState): string {
     switch (state) {
       case ApprovalState.Pending:
@@ -122,7 +116,7 @@ export class DashboardComponent {
       case ApprovalState.Rejected:
         return 'Rejected';
       default:
-        return 'Unknown'; 
+        return 'Unknown';
     }
   }
 
@@ -133,17 +127,17 @@ export class DashboardComponent {
       case RequestType.Pass:
         return 'Pass';
       default:
-        return 'Unknown'; 
+        return 'Unknown';
     }
   }
 
   formatTime(date: Date): string {
-    const hours = date.getHours(); 
-    const minutes = date.getMinutes(); 
-    
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+
     const formattedHours = `${hours}`;
     const formattedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
-    
+
     return `${formattedHours}:${formattedMinutes}`;
   }
 
@@ -153,48 +147,48 @@ export class DashboardComponent {
         type: 'visits',
         header: 'Upcoming visits',
         items: { today: this.todayVisits, week: this.weekVisits },
-        buttonAction: async () => {
-          await this.router.navigate([`/dashboard`]);
-        },
+        buttonAction: async () => {},
       },
       {
         type: 'passes',
         header: 'Upcoming passes',
         items: { today: this.todayPasses, week: this.weekPasses },
-        buttonAction: async () => {
-          await this.router.navigate([`/dashboard`]);
-        },
-      },
-      {
-        type: 'requests',
-        header: 'Prisoners visit requests',
-        items: { today: this.visitsRequests, week: [] },
-        buttonAction: async () => {
-          await this.router.navigate([`/dashboard`]);
-        },
+        buttonAction: async () => {},
       },
     ];
+
+    if (this.userService.hasPermission(PermissionTypes.CanSupervise)) {
+      this.containers.push({
+        type: 'requests',
+        header: 'Pending prisoners requests',
+        items: { today: this.visitsRequests, week: [] },
+        buttonAction: async () => {},
+      });
+    }
   }
 
   categorizeAbsencesByDate(
     absences: Request[],
-    tomorrowDate: Date,
+    todayDate: Date,
     weekDate: Date
   ): { today: Request[]; week: Request[] } {
     const today: Request[] = [];
     const week: Request[] = [];
-
-    absences.forEach(absence => {
-      if (new Date(absence.from) === tomorrowDate) {
+    var formattedTodayDate = TimeUtilities.getDayMonthYearFromDate(todayDate);
+    var formattedWeekDate = TimeUtilities.getDayMonthYearFromDate(weekDate);
+    absences.forEach((absence) => {
+      var formattedFromDate = TimeUtilities.getDayMonthYearFromDate(
+        absence.fromDate
+      );
+      if (formattedFromDate.valueOf() === formattedTodayDate.valueOf()) {
         today.push(absence);
       } else if (
-        new Date(absence.from) <= weekDate &&
-        !week.some(existingAbsence => existingAbsence.userId === absence.userId)
+        formattedFromDate.valueOf() <= formattedWeekDate.valueOf() &&
+        formattedFromDate.valueOf() > formattedTodayDate.valueOf()
       ) {
         week.push(absence);
       }
     });
     return { today, week };
   }
-  
 }

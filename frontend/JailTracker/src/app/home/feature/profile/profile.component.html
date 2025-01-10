@@ -35,12 +35,11 @@
                 <mat-icon class="icon-display">supervisor_account</mat-icon>
               </div>
               <div class="info">
-                {{ supervisor ? supervisor : 'No Guard ID' }}
+                {{ supervisor ? 'Guard: ' + supervisor : 'No Guard ID' }}
               </div>
               <div *ngIf="showHover" class="info-popup">Supervisor name</div>
             </div>
           </div>
-          
         </div>
       </div>
       <div class="profile-edit-button">

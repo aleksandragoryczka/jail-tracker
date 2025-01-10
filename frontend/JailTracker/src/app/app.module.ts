@@ -37,6 +37,7 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
+import { PermissionRestrictDirective } from './shared/directive/permission-restrict.directive';
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
     DashboardComponent,
     ProfileComponent,
     ProfilePopupComponent,
+    PermissionRestrictDirective
   ],
   imports: [
     BrowserModule,
