@@ -59,7 +59,6 @@ export class UserService {
 
   // USED
   public updateUser(updateUserDto: UpdateUserDto) {
-    console.log(updateUserDto);
     return this.http.put<boolean>(
       `${environment.apiUrl}/User/UpdateUserForUser`,
       updateUserDto
