@@ -29,10 +29,10 @@ namespace JailTracker.Infrastructure.Services
             try
             {
                 string generatedPassword = registerDto.Password;
-                if (registerDto.Role != Role.PrisonAdmin)
-                {
-                    generatedPassword = _encodeService.GeneratePassword(16);
-                }
+                // if (registerDto.Role != Role.PrisonAdmin)
+                // {
+                //     generatedPassword = _encodeService.GeneratePassword(16);
+                // }
 
                 var newUser = new UserModel
                 {
@@ -142,6 +142,18 @@ namespace JailTracker.Infrastructure.Services
             return users.ToList();
         }
 
+        public List<UserModel> GetAllUsers()
+        {
+            var users = _context.Users
+                .Where(u => u.IsActive);
+            return users.ToList();
+        }
+
+        public bool UserEmailExists(string email)
+        {
+            return _context.Users.Any(u => u.Email == email);
+        }
+
         public UserModel UpdateUser(UserModel existingUser, UpdateUserDto updateUserDto)
         {
             if (!String.IsNullOrEmpty(updateUserDto.FirstName) && !String.IsNullOrEmpty(updateUserDto.LastName))
@@ -163,6 +175,14 @@ namespace JailTracker.Infrastructure.Services
 
             return existingUser;
         }
+
+        public UserModel ResetUserPassword(int id, string password)
+        {
+            var user = GetUser(id);
+            user.Password = HashPassword(password);
+            _context.SaveChanges();
+            return user;
+        }
         
         private byte[] HashPassword(string password)
         {
@@ -183,6 +203,15 @@ namespace JailTracker.Infrastructure.Services
 	<p>If this is a mistake please ignore this message.</p>
 </body>";
             return res;
+        }
+
+        public UserModel SetUserSupervisor(int userId, int supervisorId)
+        {
+            var user = GetUser(userId);
+            var supervisor = GetUser(supervisorId);
+            user.CurrentRequestsSupervisor = supervisor;
+            _context.SaveChanges();
+            return user;
         }
     }
 }

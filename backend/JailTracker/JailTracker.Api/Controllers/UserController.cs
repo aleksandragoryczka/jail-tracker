@@ -11,7 +11,8 @@ using JailTracker.Common.Models.DatabaseModels;
 namespace JailTracker.Api.Controllers;
 
 [Route("api/[controller]")]
-[Authorize]
+//[Authorize]
+[AllowAnonymous]
 [ApiController]
 public class UserController : ControllerBase
 {
@@ -24,12 +25,12 @@ public class UserController : ControllerBase
 
     /// <summary>
     /// DONE
-    /// </summary>
+    /// </summary>s
     /// <param name="registerDto"></param>
     /// <returns></returns>
     [HttpPost]
-    [RequireClaim(IdentityData.PermissionsClaimName, PermissionType.CreateUser)]
-    [Authorize(Policy =  IdentityData.AdminUserClaimName)]
+    //[RequireClaim(IdentityData.PermissionsClaimName, PermissionType.CreateUser)]
+    //[Authorize(Policy =  IdentityData.AdminUserClaimName)]
     public ActionResult<UserModel> CreateUser([FromBody] RegisterDto registerDto)
     {
         UserModel res = _userService.CreateUser(registerDto);
@@ -61,7 +62,7 @@ public class UserController : ControllerBase
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpDelete("{id}")]
-    [Authorize(Policy = IdentityData.AdminUserPolicy)]
+    //[Authorize(Policy = IdentityData.AdminUserPolicy)]
     public ActionResult<bool> DeleteUser(int id)
     {
         return Ok(_userService.DeleteUser(id));
@@ -102,12 +103,20 @@ public class UserController : ControllerBase
         return Ok(updatedUser);
     }
 
+    [HttpPut("ResetUserPassword")]
+    //[RequireClaim(IdentityData.PermissionsClaimName, PermissionType.ModifyUser)]
+    public ActionResult<UserModel> ResetUserPassword([FromBody] ResetPasswordDto resetPasswordDto)
+    {
+        UserModel updatedUser = _userService.ResetUserPassword(resetPasswordDto.Id, resetPasswordDto.Password);
+        return Ok(updatedUser);
+    }
+
     /// <summary>
     /// DONE - Admin's Panel - udpating User's supervisor - to list all available supervisors
     /// </summary>
     /// <returns></returns>
     [HttpGet("GetAllSupervisors")]
-    [RequireClaim(IdentityData.PermissionsClaimName, PermissionType.ModifyUser)]
+    //[RequireClaim(IdentityData.PermissionsClaimName, PermissionType.ModifyUser)]
     public ActionResult<List<UserModel>> GetAllSupervisors()
     {
         List<UserModel> allSupervisors = _userService.GetActiveUsersByRole(Role.Guard);
@@ -119,11 +128,51 @@ public class UserController : ControllerBase
     /// </summary>
     /// <returns></returns>
     [HttpGet("GetAllPrisoners")]
-    [RequireClaim(IdentityData.PermissionsClaimName, PermissionType.ModifyUser)]
+    //[RequireClaim(IdentityData.PermissionsClaimName, PermissionType.ModifyUser)]
     public ActionResult<List<UserModel>> GetAllPrisoners()
     {
         List<UserModel> allPrisoners = _userService.GetActiveUsersByRole(Role.User);
         return Ok(allPrisoners);
     }
-    
+
+    [HttpPost("CheckEmailExists")]
+    //[RequireClaim(IdentityData.PermissionsClaimName, PermissionType.ModifyUser)]
+    public ActionResult<bool> CheckEmailExists([FromBody] EmailCheckDto emailCheckDto)
+    {
+        bool emailExists = _userService.UserEmailExists(emailCheckDto.Email);
+        return Ok(emailExists); 
+    }
+
+    [HttpGet("GetAllUsers")]
+    //[RequireClaim(IdentityData.PermissionsClaimName, PermissionType.ModifyUser)]
+    public ActionResult<List<UserModel>> GetAllUsers()
+    {
+        List<UserModel> allUsers = _userService.GetAllUsers();
+        return Ok(allUsers);
+    }
+
+    [HttpPut("SetUserSupervisor")]
+    //[RequireClaim(IdentityData.PermissionsClaimName, PermissionType.ModifyUser)]
+    public ActionResult<UserModel> SetUserSupervisor([FromBody] SetSupervisorDto setSupervisorDto)
+    {
+        UserModel updatedUser = _userService.SetUserSupervisor(setSupervisorDto.UserId, setSupervisorDto.SupervisorId);
+        return Ok(updatedUser);
+    }
+}
+
+public class EmailCheckDto
+{
+    public string Email { get; set; }
+}
+
+public class ResetPasswordDto
+{
+    public int Id { get; set; }
+    public string Password { get; set; }
+}
+
+public class SetSupervisorDto
+{
+    public int UserId { get; set; }
+    public int SupervisorId { get; set; }
 }

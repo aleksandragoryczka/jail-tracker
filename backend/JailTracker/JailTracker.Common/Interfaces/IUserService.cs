@@ -12,4 +12,9 @@ public interface IUserService
     UserModel UpdateUser(UserModel existingUser, UpdateUserDto updateUserDto);
     bool UpdateUserSupervisor(UpdateUserSupervisorDto updateUserSupervisor);
     List<UserModel> GetActiveUsersByRole(Role role);
+    bool UserEmailExists(string email);
+    List<UserModel> GetAllUsers();
+    UserModel ResetUserPassword(int id, string newPassword);
+    UserModel SetUserSupervisor(int userId, int supervisorId);
+
 }
