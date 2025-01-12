@@ -85,6 +85,16 @@ namespace JailTracker.Infrastructure.Services
                     newUser.Permissions.Add(adminPerm);
                 }
 
+                if (newUser.Role == Role.User)
+                {
+                    var supervisor = FindSupervisorWithFewestSupervised();
+                    if (supervisor != null)
+                    {
+                        newUser.CurrentRequestsSupervisorId = supervisor.Id;
+                        newUser.CurrentRequestsSupervisor = supervisor;
+                    }
+                }
+
                 _context.Users.Add(newUser);
                 _context.SaveChanges();
 
@@ -115,21 +125,93 @@ namespace JailTracker.Infrastructure.Services
                 return false;
             }
 
+            if (user.Role == Role.User)
+            {
+                var userRequests = _context.Requests
+                    .Where(r => r.UserId == id)
+                    .ToList();
+
+                _context.Requests.RemoveRange(userRequests);
+            }
+            else
+            {
+                var supervisedUsers = _context.Users
+                    .Where(u => u.CurrentRequestsSupervisorId == id)
+                    .ToList();
+
+                var selectedSupervisor = FindSupervisorWithFewestSupervised(id);
+
+                if (selectedSupervisor != null)
+                {
+                    foreach (var supervisedUser in supervisedUsers)
+                    {
+                        supervisedUser.CurrentRequestsSupervisorId = selectedSupervisor.Id;
+                        supervisedUser.CurrentRequestsSupervisor = selectedSupervisor;
+                    }
+
+                    var requestsToUpdateSupervisor = _context.Requests
+                        .Where(r => r.RequestSupervisorId == id)
+                        .ToList();
+
+                    foreach (var request in requestsToUpdateSupervisor)
+                    {
+                        request.RequestSupervisorId = selectedSupervisor.Id;
+                    }
+                }
+            }
+
+            _context.SaveChanges();
             _context.Users.Remove(user);
             _context.SaveChanges();
 
             return true;
         }
 
-        public bool UpdateUserSupervisor(UpdateUserSupervisorDto updateUserSupervisorDto)
+        private UserModel FindSupervisorWithFewestSupervised(int? userId = null)
         {
-            var user = _context.Users.Find(updateUserSupervisorDto.UserId);
-            if (user == null)
+            var availableSupervisors = _context.Users
+                .Where(u => u.Role == Role.Guard)  
+                .ToList();
+
+            if (userId.HasValue)
             {
-                return false;
+                availableSupervisors = availableSupervisors
+                    .Where(u => u.Id != userId.Value)
+                    .ToList();
             }
 
-            user.CurrentRequestsSupervisorId = updateUserSupervisorDto.NewSupervisorId;
+            var supervisorWithFewestSupervised = availableSupervisors
+                .Select(u => new
+                {
+                    Supervisor = u,
+                    SupervisedCount = _context.Users.Count(s => s.CurrentRequestsSupervisorId == u.Id) 
+                })
+                .OrderBy(x => x.SupervisedCount) 
+                .FirstOrDefault();  
+
+            return supervisorWithFewestSupervised?.Supervisor;  
+        }
+
+
+        public bool UpdateUserSupervisor(UpdateUserSupervisorDto updateUserSupervisorDto)
+        {
+            var user = _context.Users
+                .Include(x => x.CurrentRequestsSupervisor)
+                .Where(x => x.Id == updateUserSupervisorDto.UserId)
+                .FirstOrDefault();
+
+            if (user == null) return false;
+
+            var newSupervisor = _context.Users
+                .Where(x => x.Id == updateUserSupervisorDto.CurrentRequestsSupervisorId)
+                .FirstOrDefault();
+
+            if (newSupervisor == null) return false;
+
+            user.CurrentRequestsSupervisorId = updateUserSupervisorDto.CurrentRequestsSupervisorId;
+            user.CurrentRequestsSupervisor = newSupervisor;
+
+            _context.Users.Update(user);
             _context.SaveChanges();
 
             return true;
@@ -181,6 +263,7 @@ namespace JailTracker.Infrastructure.Services
         {
             var user = GetUser(id);
             user.Password = HashPassword(password);
+            _context.Users.Update(user);
             _context.SaveChanges();
             return user;
         }

@@ -412,6 +412,7 @@ export class AdminPanelComponent {
   
   private setSupervisor(inputs: Dictionary<InputPopupModel>): void {
     console.log("set sup");
+
     const userId = inputs['user'].value;
     console.log(userId);
     if (!userId) {
@@ -421,8 +422,9 @@ export class AdminPanelComponent {
   
     const userIdToNumber = Number(userId); 
     console.log(userIdToNumber);
+
     const supervisorId = inputs['supervisor'].value;
-    if (!userId) {
+    if (!supervisorId) {
       this.toastrService.error('No user selected.', 'Error');
       return;
     }
@@ -440,12 +442,12 @@ export class AdminPanelComponent {
       next: () => {
         this.dialog.closeAll(),
         this.toastrService.success('Supervisor successfully set.');
-        // setTimeout(() => {
-        //   location.reload();
-        // }, 1000);
+        setTimeout(() => {
+          location.reload();
+        }, 1000);
       },
       error: (err) => {
-        this.toastrService.error('An error occurred while deleting the user.', 'Error');
+        this.toastrService.error('An error occurred while setting the supervisor.', 'Error');
       },
     });
    

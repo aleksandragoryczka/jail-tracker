@@ -107,8 +107,9 @@ export class UserService {
 
   // set sup
   public setUserSupervisor(setSupervisorDto: SetSupervisorDto): Observable<void> {
-    return this.http.put<void>(
-      `${environment.apiUrl}/User/SetUserSupervisor`,
+    console.log(setSupervisorDto);
+    return this.http.post<void>(
+      `${environment.apiUrl}/User/UpdateUserSupervisor`,
       setSupervisorDto
     );
   }

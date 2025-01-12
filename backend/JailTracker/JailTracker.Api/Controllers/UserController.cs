@@ -74,7 +74,7 @@ public class UserController : ControllerBase
     /// <param name="updateUserDto"></param>
     /// <returns></returns>
     [HttpPost("UpdateUserSupervisor")]
-    [RequireClaim(IdentityData.PermissionsClaimName, PermissionType.ModifyUser)]
+    //[RequireClaim(IdentityData.PermissionsClaimName, PermissionType.ModifyUser)]
     public ActionResult<bool> UpdateUserSupervisor([FromBody] UpdateUserSupervisorDto updateUserSupervisor)
     {
         bool res = _userService.UpdateUserSupervisor(updateUserSupervisor);
@@ -151,14 +151,6 @@ public class UserController : ControllerBase
         return Ok(allUsers);
     }
 
-    [HttpPut("SetUserSupervisor")]
-    //[RequireClaim(IdentityData.PermissionsClaimName, PermissionType.ModifyUser)]
-    public ActionResult<UserModel> SetUserSupervisor([FromBody] SetSupervisorDto setSupervisorDto)
-    {
-        Console.WriteLine(setSupervisorDto);
-        UserModel updatedUser = _userService.SetUserSupervisor(setSupervisorDto.UserId, setSupervisorDto.SupervisorId);
-        return Ok(updatedUser);
-    }
 }
 
 public class EmailCheckDto
@@ -170,10 +162,4 @@ public class ResetPasswordDto
 {
     public int Id { get; set; }
     public string Password { get; set; }
-}
-
-public class SetSupervisorDto
-{
-    public int UserId { get; set; }
-    public int SupervisorId { get; set; }
 }

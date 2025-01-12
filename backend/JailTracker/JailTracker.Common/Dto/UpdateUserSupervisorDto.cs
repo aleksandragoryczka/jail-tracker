@@ -3,5 +3,5 @@
 public class UpdateUserSupervisorDto
 {
     public int UserId { get; set; }
-    public int NewSupervisorId { get; set; }
+    public int CurrentRequestsSupervisorId { get; set; }
 }

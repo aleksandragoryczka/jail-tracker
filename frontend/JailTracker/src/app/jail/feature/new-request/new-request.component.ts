@@ -180,6 +180,7 @@ export class NewRequestComponent {
 
     this.requestsService.createRequest(userRequest).subscribe((isSuccess) => {
       if (isSuccess) {
+        this.dialog.closeAll(),
         this.tostr.success('New Request created successfully');
       } else {
         this.tostr.success('Something went wrong');
@@ -299,6 +300,7 @@ export class NewRequestComponent {
       .cancelRequest(requestId)
       .subscribe((isCancelled) => {
         if (isCancelled) {
+          this.dialog.closeAll(),
           this.tostr.success('Time Off request cancelled successfully');
         } else {
           this.tostr.warning('Something went wrong');
@@ -394,6 +396,7 @@ export class NewRequestComponent {
       )
       .subscribe((updatedRequest: any) => {
         if (updatedRequest) {
+          this.dialog.closeAll(),
           this.tostr.success('Request successfully updated');
         } else {
           this.tostr.warning('Something went wrong');

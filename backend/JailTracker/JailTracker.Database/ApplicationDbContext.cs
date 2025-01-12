@@ -14,6 +14,12 @@ public class ApplicationDbContext : DbContext
             .HasForeignKey(x => x.CurrentRequestsSupervisorId)
             .IsRequired(false);
 
+        modelBuilder.Entity<UserModel>()
+            .HasMany(x => x.Requests) 
+            .WithOne(x => x.User) 
+            .HasForeignKey(x => x.UserId) 
+            .OnDelete(DeleteBehavior.Cascade); 
+
         modelBuilder.Entity<RequestModel>()
             .HasOne(a => a.User)
             .WithMany(g => g.Requests)

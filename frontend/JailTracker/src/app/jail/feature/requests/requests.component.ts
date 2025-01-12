@@ -132,6 +132,7 @@ export class RequestsComponent {
       {
         type: ButtonTypes.SECONDARY,
         text: 'NO',
+        onClick: () => this.dialog.closeAll(),
       },
     ];
 
@@ -151,6 +152,7 @@ export class RequestsComponent {
     this.requestsService
       .approveRequest(requestId, ApprovalState.Approved)
       .subscribe(() => {
+        this.dialog.closeAll(),
         this.listOfRequests$ = this.loadRequests();
         this.listOfRequestsHistory$ = this.loadRequestsHistory();
       });
@@ -233,6 +235,7 @@ export class RequestsComponent {
       {
         type: ButtonTypes.SECONDARY,
         text: 'NO',
+        onClick: () => this.dialog.closeAll(),
       },
     ];
 
@@ -252,6 +255,7 @@ export class RequestsComponent {
     this.requestsService
       .approveRequest(requestId, ApprovalState.Rejected)
       .subscribe(() => {
+        this.dialog.closeAll(),
         this.listOfRequests$ = this.loadRequests();
         this.listOfRequestsHistory$ = this.loadRequestsHistory();
       });
