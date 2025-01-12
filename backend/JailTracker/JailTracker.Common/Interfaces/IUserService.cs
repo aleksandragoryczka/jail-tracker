@@ -15,6 +15,4 @@ public interface IUserService
     bool UserEmailExists(string email);
     List<UserModel> GetAllUsers();
     UserModel ResetUserPassword(int id, string newPassword);
-    UserModel SetUserSupervisor(int userId, int supervisorId);
-
 }

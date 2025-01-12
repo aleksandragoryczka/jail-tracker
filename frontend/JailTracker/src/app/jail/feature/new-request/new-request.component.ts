@@ -73,12 +73,15 @@ export class NewRequestComponent {
       {
         type: ButtonTypes.PRIMARY,
         text: 'Continue',
-        onClick: () =>
+        onClick: () => {
+          if (!inputs['RequestOptions'].value) {
+            this.tostr.error('No event selected.', 'Error');
+            return;
+          }
           this.openNewRequestPopupSelectDatesRange(
-            RequestType[
-              inputs['RequestOptions'].value as keyof typeof RequestType
-            ]
-          ),
+            RequestType[inputs['RequestOptions'].value as keyof typeof RequestType]
+          );
+        },
       },
     ];
 
@@ -135,7 +138,15 @@ export class NewRequestComponent {
       {
         type: ButtonTypes.PRIMARY,
         text: 'Submit',
-        onClick: () => this.createTimeOffRequest(requestType, inputs),
+        onClick: () => {
+          const invalidInputs = Object.values(inputs).some(input => !input.value);
+  
+          if (invalidInputs) {
+            this.tostr.error('Please, fill all required fields..', 'Error');
+            return; 
+          }
+          this.createTimeOffRequest(requestType, inputs);
+        },
       },
     ];
 

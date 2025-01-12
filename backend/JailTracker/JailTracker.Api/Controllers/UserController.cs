@@ -11,8 +11,7 @@ using JailTracker.Common.Models.DatabaseModels;
 namespace JailTracker.Api.Controllers;
 
 [Route("api/[controller]")]
-//[Authorize]
-[AllowAnonymous]
+[Authorize]
 [ApiController]
 public class UserController : ControllerBase
 {
@@ -29,12 +28,11 @@ public class UserController : ControllerBase
     /// <param name="registerDto"></param>
     /// <returns></returns>
     [HttpPost]
-    //[RequireClaim(IdentityData.PermissionsClaimName, PermissionType.CreateUser)]
-    //[Authorize(Policy =  IdentityData.AdminUserClaimName)]
+    [RequireClaim(IdentityData.PermissionsClaimName, PermissionType.CreateUser)]
+    [Authorize(Policy =  IdentityData.AdminUserClaimName)]
     public ActionResult<UserModel> CreateUser([FromBody] RegisterDto registerDto)
     {
         UserModel res = _userService.CreateUser(registerDto);
-
         return Ok(res);
     }
 
@@ -74,7 +72,7 @@ public class UserController : ControllerBase
     /// <param name="updateUserDto"></param>
     /// <returns></returns>
     [HttpPost("UpdateUserSupervisor")]
-    //[RequireClaim(IdentityData.PermissionsClaimName, PermissionType.ModifyUser)]
+    [RequireClaim(IdentityData.PermissionsClaimName, PermissionType.ModifyUser)]
     public ActionResult<bool> UpdateUserSupervisor([FromBody] UpdateUserSupervisorDto updateUserSupervisor)
     {
         bool res = _userService.UpdateUserSupervisor(updateUserSupervisor);
@@ -104,7 +102,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPut("ResetUserPassword")]
-    //[RequireClaim(IdentityData.PermissionsClaimName, PermissionType.ModifyUser)]
+    [RequireClaim(IdentityData.PermissionsClaimName, PermissionType.ModifyUser)]
     public ActionResult<UserModel> ResetUserPassword([FromBody] ResetPasswordDto resetPasswordDto)
     {
         UserModel updatedUser = _userService.ResetUserPassword(resetPasswordDto.Id, resetPasswordDto.Password);
@@ -116,7 +114,7 @@ public class UserController : ControllerBase
     /// </summary>
     /// <returns></returns>
     [HttpGet("GetAllSupervisors")]
-    //[RequireClaim(IdentityData.PermissionsClaimName, PermissionType.ModifyUser)]
+    [RequireClaim(IdentityData.PermissionsClaimName, PermissionType.ModifyUser)]
     public ActionResult<List<UserModel>> GetAllSupervisors()
     {
         List<UserModel> allSupervisors = _userService.GetActiveUsersByRole(Role.Guard);
@@ -128,7 +126,7 @@ public class UserController : ControllerBase
     /// </summary>
     /// <returns></returns>
     [HttpGet("GetAllPrisoners")]
-    //[RequireClaim(IdentityData.PermissionsClaimName, PermissionType.ModifyUser)]
+    [RequireClaim(IdentityData.PermissionsClaimName, PermissionType.ModifyUser)]
     public ActionResult<List<UserModel>> GetAllPrisoners()
     {
         List<UserModel> allPrisoners = _userService.GetActiveUsersByRole(Role.User);
@@ -136,7 +134,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("CheckEmailExists")]
-    //[RequireClaim(IdentityData.PermissionsClaimName, PermissionType.ModifyUser)]
+    [RequireClaim(IdentityData.PermissionsClaimName, PermissionType.ModifyUser)]
     public ActionResult<bool> CheckEmailExists([FromBody] EmailCheckDto emailCheckDto)
     {
         bool emailExists = _userService.UserEmailExists(emailCheckDto.Email);
@@ -144,22 +142,11 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("GetAllUsers")]
-    //[RequireClaim(IdentityData.PermissionsClaimName, PermissionType.ModifyUser)]
+    [RequireClaim(IdentityData.PermissionsClaimName, PermissionType.ModifyUser)]
     public ActionResult<List<UserModel>> GetAllUsers()
     {
         List<UserModel> allUsers = _userService.GetAllUsers();
         return Ok(allUsers);
     }
 
-}
-
-public class EmailCheckDto
-{
-    public string Email { get; set; }
-}
-
-public class ResetPasswordDto
-{
-    public int Id { get; set; }
-    public string Password { get; set; }
 }

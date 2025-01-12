@@ -75,7 +75,6 @@ export class ProfileComponent {
         text: 'Edit',
         onClick: () => this.updateUser(inputs),
       },
-
       {
         type: ButtonTypes.SECONDARY,
         text: 'Cancel',

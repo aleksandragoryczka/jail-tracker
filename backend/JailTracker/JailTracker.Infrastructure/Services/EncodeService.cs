@@ -1,6 +1,5 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
-using BCrypt.Net;
 using JailTracker.Common.Interfaces;
 
 namespace JailTracker.Infrastructure.Services;
@@ -20,7 +19,6 @@ public class EncodeService : IEncodeService
             return true;
         }
         return false;
-        
     }
     
     private byte[] HashPassword(string password)
@@ -43,6 +41,5 @@ public class EncodeService : IEncodeService
             sb.Append(validChars[b % validChars.Length]);
         }
         return sb.ToString();
-
     }
 }

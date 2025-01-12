@@ -16,7 +16,6 @@ public class EmailService : IEmailService
     
     public void SendEmail(string recipient, string subject, string body)
     {
-#if RELEASE
         using var mailMessage = new MailMessage(_configuration["EmailSettings:Login"], recipient);
         mailMessage.Subject = subject;
         mailMessage.Body = body;
@@ -33,6 +32,5 @@ public class EmailService : IEmailService
 
         client.Send(mailMessage);
         client.Dispose();
-#endif
     }
 }

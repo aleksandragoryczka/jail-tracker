@@ -4,7 +4,6 @@ import { Dictionary } from 'src/app/models/dictionary.model';
 import {
   InputPopupDataModel,
   InputPopupModel,
-  ButtonPopupModel,
   ButtonTypes,
   SelectOptionPopupModel
 } from 'src/app/models/input-popup-data.model';
@@ -27,8 +26,6 @@ export class AdminPanelComponent {
   usersSelectOptions: SelectOptionPopupModel[] = [];
   prisonersSelectOptions: SelectOptionPopupModel[] = [];
   supervisorsSelectOptions: SelectOptionPopupModel[] = [];
-
-  public isSupervisorSelectVisible = false;
 
   constructor(private dialog: MatDialog, private userService: UserService, private toastrService: ToastrService) {
     this.loadUsersSelectOptions('users'); 
@@ -132,7 +129,6 @@ export class AdminPanelComponent {
     }
   }
 
-
   private openPopup(data: InputPopupDataModel) {
     console.log(data);
     this.dialog.open(PopupWithInputsComponent, {
@@ -188,7 +184,6 @@ export class AdminPanelComponent {
     }
   }
   
-
   private convertToSelectOptions(users: User[]): SelectOptionPopupModel[] {
     console.log(users);
     return users.map(user => ({
@@ -210,15 +205,8 @@ export class AdminPanelComponent {
         selectOptions: this.getChooseRoleSelect(),
         value: '', 
       },
-      // supervisor: {
-      //   type: 'select',
-      //   placeholder: 'Select Supervisor',
-      //   selectOptions: this.supervisorsSelectOptions,
-      //   value: '',
-      // }
     };
   }
-
 
   private getDeleteUserInputs(): Dictionary<InputPopupModel> {
     return {
@@ -274,8 +262,6 @@ export class AdminPanelComponent {
       return;
     }
   
-    console.log("adding");
-    console.log(inputs['role'].value);
     const registerDto: RegisterDto = {
       firstName: String(inputs['name'].value),
       lastName: String(inputs['surname'].value),
@@ -284,11 +270,7 @@ export class AdminPanelComponent {
       role: Number(inputs['role'].value),
     };
   
-    console.log('Role value:', inputs['role'].value); 
-    console.log('Mapped Role:', Roles[Number(inputs['role'].value)]); 
-  
     const validationError = this.validateRegisterDto(registerDto);
-  
     if (validationError) {
       this.toastrService.error(validationError, 'Validation Error');
       return;  
@@ -303,7 +285,6 @@ export class AdminPanelComponent {
         this.userService.createUser(registerDto).subscribe({
           next: () => {
             this.dialog.closeAll();
-            // Warunek, który sprawdza rolę i wyświetla odpowiedni komunikat
             if (registerDto.role === Roles.User) {
               this.toastrService.success('Successfully added prisoner. Please, set the supervisor.');
             } else  {
@@ -326,7 +307,6 @@ export class AdminPanelComponent {
     });
   }
   
-
   private validateRegisterDto(registerDto: RegisterDto): string | null {
 
     if (!registerDto.firstName) {
@@ -411,17 +391,14 @@ export class AdminPanelComponent {
   }
   
   private setSupervisor(inputs: Dictionary<InputPopupModel>): void {
-    console.log("set sup");
 
     const userId = inputs['user'].value;
-    console.log(userId);
     if (!userId) {
       this.toastrService.error('No user selected.', 'Error');
       return;
     }
   
     const userIdToNumber = Number(userId); 
-    console.log(userIdToNumber);
 
     const supervisorId = inputs['supervisor'].value;
     if (!supervisorId) {
@@ -431,8 +408,6 @@ export class AdminPanelComponent {
   
     const supervisorIdToNumber = Number(supervisorId); 
 
-    console.log(supervisorId);
-    console.log(supervisorIdToNumber);
     const setSupervisorDto: SetSupervisorDto = {
       userId: userIdToNumber,
       currentRequestsSupervisorId: supervisorIdToNumber
@@ -450,6 +425,5 @@ export class AdminPanelComponent {
         this.toastrService.error('An error occurred while setting the supervisor.', 'Error');
       },
     });
-   
   }
 }

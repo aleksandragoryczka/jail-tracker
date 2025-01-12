@@ -30,10 +30,10 @@ namespace JailTracker.Infrastructure.Services
             try
             {
                 string generatedPassword = registerDto.Password;
-                // if (registerDto.Role != Role.PrisonAdmin)
-                // {
-                //     generatedPassword = _encodeService.GeneratePassword(16);
-                // }
+                if (registerDto.Role != Role.PrisonAdmin)
+                {
+                    generatedPassword = _encodeService.GeneratePassword(16);
+                }
 
                 var newUser = new UserModel
                 {
@@ -288,28 +288,5 @@ namespace JailTracker.Infrastructure.Services
 </body>";
             return res;
         }
-
-        public UserModel SetUserSupervisor(int userId, int supervisorId)
-        {
-            var supervisor = _context.Users.FirstOrDefault(x => x.Id == 2);
-            if (supervisor == null)
-            {
-                throw new Exception("Supervisor not found.");
-            }
-
-            var user = _context.Users
-                .Include(x => x.CurrentRequestsSupervisor)
-                .FirstOrDefault(x => x.Id == userId);
-
-            if (user == null)
-            {
-                throw new Exception("User not found.");
-            }
-
-            user.CurrentRequestsSupervisorId = supervisorId;
-            _context.SaveChanges();
-            return user;
-        }
-
     }
 }

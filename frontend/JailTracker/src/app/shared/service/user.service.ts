@@ -41,7 +41,6 @@ export class UserService {
     return false;
   }
 
-  // USED
   public getUser(id: string): Observable<User> {
     return this.http.get<User>(`${environment.apiUrl}/User/${id}`);
   }
@@ -50,7 +49,6 @@ export class UserService {
     return this.http.post<boolean>(`${environment.apiUrl}/User/CheckEmailExists`, { email } );
   }  
 
-  // USED
   public login(loginModel: LoginModel): Observable<boolean> {
     return this.http
       .post<AuthenticatedResponse>(`${environment.apiUrl}/token`, loginModel)
@@ -64,32 +62,26 @@ export class UserService {
       );
   }
 
-  // add user
   public createUser(registerDto: RegisterDto): Observable<User> {
     return this.http.post<User>(`${environment.apiUrl}/User`, registerDto);
   }
 
-  // delete user
   public deleteUser(id: number): Observable<boolean> {
     return this.http.delete<boolean>(`${environment.apiUrl}/User/${id}`);
   }
 
-  // all users 
   public getAllUsers(): Observable<User[]> {
     return this.http.get<User[]>(`${environment.apiUrl}/User/GetAllUsers`);
   }
 
-  // prisoners
   public getPrisoners(): Observable<User[]> {
     return this.http.get<User[]>(`${environment.apiUrl}/User/GetAllPrisoners`);
   }
 
-  // supervisors 
   public getSupervisors(): Observable<User[]> {
     return this.http.get<User[]>(`${environment.apiUrl}/User/GetAllSupervisors`);
   }
 
-  // USED
   public updateUser(updateUserDto: UpdateUserDto) {
     return this.http.put<boolean>(
       `${environment.apiUrl}/User/UpdateUserForUser`,
@@ -97,7 +89,6 @@ export class UserService {
     );
   }
 
-  // reset pass
   public resetPassword(resetPasswordDto: ResetPasswordDto): Observable<void> {
     return this.http.put<void>(
       `${environment.apiUrl}/User/ResetUserPassword`,
@@ -105,7 +96,6 @@ export class UserService {
     );
   }
 
-  // set sup
   public setUserSupervisor(setSupervisorDto: SetSupervisorDto): Observable<void> {
     console.log(setSupervisorDto);
     return this.http.post<void>(
