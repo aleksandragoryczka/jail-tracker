@@ -35,6 +35,6 @@ export class PopupWithInputsComponent {
 
   async btnClick(button: ButtonPopupModel) {
     if (button.onClick != null) await button.onClick();
-    this.closePopup();
+    //this.closePopup();
   }
 }

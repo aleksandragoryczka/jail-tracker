@@ -5,6 +5,7 @@ using JailTracker.Common.Interfaces;
 using JailTracker.Common.Models.DatabaseModels;
 using JailTracker.Common.Enums;
 using JailTracker.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace JailTracker.Infrastructure.Services
 {
@@ -207,11 +208,25 @@ namespace JailTracker.Infrastructure.Services
 
         public UserModel SetUserSupervisor(int userId, int supervisorId)
         {
-            var user = GetUser(userId);
-            var supervisor = GetUser(supervisorId);
-            user.CurrentRequestsSupervisor = supervisor;
+            var supervisor = _context.Users.FirstOrDefault(x => x.Id == 2);
+            if (supervisor == null)
+            {
+                throw new Exception("Supervisor not found.");
+            }
+
+            var user = _context.Users
+                .Include(x => x.CurrentRequestsSupervisor)
+                .FirstOrDefault(x => x.Id == userId);
+
+            if (user == null)
+            {
+                throw new Exception("User not found.");
+            }
+
+            user.CurrentRequestsSupervisorId = supervisorId;
             _context.SaveChanges();
             return user;
         }
+
     }
 }

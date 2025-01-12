@@ -155,6 +155,7 @@ public class UserController : ControllerBase
     //[RequireClaim(IdentityData.PermissionsClaimName, PermissionType.ModifyUser)]
     public ActionResult<UserModel> SetUserSupervisor([FromBody] SetSupervisorDto setSupervisorDto)
     {
+        Console.WriteLine(setSupervisorDto);
         UserModel updatedUser = _userService.SetUserSupervisor(setSupervisorDto.UserId, setSupervisorDto.SupervisorId);
         return Ok(updatedUser);
     }

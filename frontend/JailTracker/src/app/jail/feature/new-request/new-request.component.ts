@@ -68,6 +68,7 @@ export class NewRequestComponent {
       {
         type: ButtonTypes.SECONDARY,
         text: 'Cancel',
+        onClick: () => this.dialog.closeAll(),
       },
       {
         type: ButtonTypes.PRIMARY,
@@ -129,6 +130,7 @@ export class NewRequestComponent {
       {
         type: ButtonTypes.SECONDARY,
         text: 'Cancel',
+        onClick: () => this.dialog.closeAll(),
       },
       {
         type: ButtonTypes.PRIMARY,

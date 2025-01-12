@@ -11,6 +11,9 @@ import { PermissionTypes } from 'src/app/models/enums/permission-types.enum';
 import { Roles } from 'src/app/models/enums/roles.enum';
 import { throwError as _throwError } from 'rxjs';
 import { UpdateUserDto } from 'src/app/models/update-user.model';
+import { RegisterDto } from 'src/app/models/register.model';
+import { ResetPasswordDto } from 'src/app/models/reset-password.model';
+import { SetSupervisorDto } from 'src/app/models/set-supervisor.model';
 
 @Injectable({
   providedIn: 'root',
@@ -43,6 +46,10 @@ export class UserService {
     return this.http.get<User>(`${environment.apiUrl}/User/${id}`);
   }
 
+  public checkEmailExists(email: string): Observable<boolean> {
+    return this.http.post<boolean>(`${environment.apiUrl}/User/CheckEmailExists`, { email } );
+  }  
+
   // USED
   public login(loginModel: LoginModel): Observable<boolean> {
     return this.http
@@ -57,11 +64,52 @@ export class UserService {
       );
   }
 
+  // add user
+  public createUser(registerDto: RegisterDto): Observable<User> {
+    return this.http.post<User>(`${environment.apiUrl}/User`, registerDto);
+  }
+
+  // delete user
+  public deleteUser(id: number): Observable<boolean> {
+    return this.http.delete<boolean>(`${environment.apiUrl}/User/${id}`);
+  }
+
+  // all users 
+  public getAllUsers(): Observable<User[]> {
+    return this.http.get<User[]>(`${environment.apiUrl}/User/GetAllUsers`);
+  }
+
+  // prisoners
+  public getPrisoners(): Observable<User[]> {
+    return this.http.get<User[]>(`${environment.apiUrl}/User/GetAllPrisoners`);
+  }
+
+  // supervisors 
+  public getSupervisors(): Observable<User[]> {
+    return this.http.get<User[]>(`${environment.apiUrl}/User/GetAllSupervisors`);
+  }
+
   // USED
   public updateUser(updateUserDto: UpdateUserDto) {
     return this.http.put<boolean>(
       `${environment.apiUrl}/User/UpdateUserForUser`,
       updateUserDto
+    );
+  }
+
+  // reset pass
+  public resetPassword(resetPasswordDto: ResetPasswordDto): Observable<void> {
+    return this.http.put<void>(
+      `${environment.apiUrl}/User/ResetUserPassword`,
+      resetPasswordDto
+    );
+  }
+
+  // set sup
+  public setUserSupervisor(setSupervisorDto: SetSupervisorDto): Observable<void> {
+    return this.http.put<void>(
+      `${environment.apiUrl}/User/SetUserSupervisor`,
+      setSupervisorDto
     );
   }
 

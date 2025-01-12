@@ -111,6 +111,7 @@ export class ProfileComponent {
     if (this.userID) {
       this.userService.updateUser(updateUserDto).subscribe({
         next: () => {
+          this.dialog.closeAll(),
           this.toastrService.success('Successfully updated profile.');
           setTimeout(() => {
             location.reload();
