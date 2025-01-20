@@ -6,6 +6,7 @@ import { ApprovalState } from 'src/app/models/enums/approval-state.enum';
 import { TimeUtilities } from 'src/app/shared/web-utilities/time-utilities';
 import { PermissionTypes } from 'src/app/models/enums/permission-types.enum';
 import { UserService } from 'src/app/shared/service/user.service';
+import { Roles } from 'src/app/models/enums/roles.enum';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,7 +19,7 @@ export class DashboardComponent {
   todayPasses: Request[] | undefined;
   weekPasses: Request[] | undefined;
   visitsRequests: Request[] | undefined;
-  permissionTypes = PermissionTypes;
+  roles = Roles;
 
   containers: {
     type: string;
@@ -53,9 +54,10 @@ export class DashboardComponent {
     weekDate.setDate(weekDate.getDate() + 7);
 
     //requests
-    if (this.userService.hasPermission(PermissionTypes.CanSupervise)) {
+    if (this.userService.isSupervisor()) {
       this.requestsManagementService.getListOfRequests(0, 10).subscribe(
         (res: { data: Request[] | undefined }) => {
+          console.log(res);
           if (res) {
             this.visitsRequests = res.data;
             this.updateContainers();
@@ -152,7 +154,7 @@ export class DashboardComponent {
       },
     ];
 
-    if (this.userService.hasPermission(PermissionTypes.CanSupervise)) {
+    if (this.userService.isSupervisor()) {
       this.containers.push({
         type: 'requests',
         header: 'Pending prisoners requests',

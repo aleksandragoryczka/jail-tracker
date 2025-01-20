@@ -59,7 +59,7 @@ export class NavigationComponent implements OnInit {
         },
       ];
     }else{
-      if (this.userService.hasPermission(PermissionTypes.CanSupervise)) {
+      if (this.userService.isSupervisor()) {
         menuData.push({
           icon: 'event_note',
           text: 'Requests',

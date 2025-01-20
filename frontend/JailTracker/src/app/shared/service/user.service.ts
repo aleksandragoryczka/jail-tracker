@@ -119,6 +119,11 @@ export class UserService {
     return this.user.value?.role == Roles.PrisonAdmin;
   }
 
+  public isSupervisor(): boolean {
+    if (!this.isUserAuthenticated) return false;
+    return this.user.value?.role == Roles.Guard;
+  }
+
   public logout(): void {
     this.tokenService.clearToken();
     this.clearUser();

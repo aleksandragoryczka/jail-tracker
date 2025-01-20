@@ -5,14 +5,14 @@ import {
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
-import { PermissionTypes } from 'src/app/models/enums/permission-types.enum';
 import { UserService } from '../service/user.service';
+import { Roles } from 'src/app/models/enums/roles.enum';
 
 @Directive({
   selector: '[appPermission]',
 })
 export class PermissionRestrictDirective implements OnChanges {
-  @Input() appPermission: PermissionTypes = PermissionTypes.BasicRead;
+  @Input() appPermission: Roles = Roles.User;
 
   constructor(
     private templateRef: TemplateRef<any>,
@@ -24,7 +24,7 @@ export class PermissionRestrictDirective implements OnChanges {
     this.viewContainer.clear();
     this.userService.user$.subscribe((user) => {
       if (
-        user?.permissions?.includes(this.appPermission) 
+        user?.role == Roles.Guard
       ) {
         this.viewContainer.createEmbeddedView(this.templateRef);
       }

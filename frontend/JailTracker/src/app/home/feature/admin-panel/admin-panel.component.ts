@@ -149,6 +149,7 @@ export class AdminPanelComponent {
       case 'users':
         this.userService.getAllUsers().subscribe({
           next: (users) => {
+            users = users.filter((user) => user.role != Roles.PrisonAdmin);
             this.usersSelectOptions = this.convertToSelectOptions(users);
           },
           error: () => {
@@ -197,8 +198,6 @@ export class AdminPanelComponent {
       name: { type: 'text', placeholder: 'Name', value: '' },
       surname: { type: 'text', placeholder: 'Surname', value: '' },
       email: { type: 'text', placeholder: 'Email', value: '' },
-      password: { type: 'password', placeholder: 'Password', value: '' },
-      confirmPassword: { type: 'password', placeholder: 'Confirm password', value: '' },
       role: {
         type: 'select',
         placeholder: 'Select Role',
@@ -266,7 +265,7 @@ export class AdminPanelComponent {
       firstName: String(inputs['name'].value),
       lastName: String(inputs['surname'].value),
       email: email,
-      password: String(inputs['password'].value),
+      password: '',
       role: Number(inputs['role'].value),
     };
   
@@ -314,9 +313,6 @@ export class AdminPanelComponent {
     }
     if (!registerDto.lastName) {
       return 'Last Name is required';
-    }
-    if (!registerDto.password) {
-      return 'Password is required';
     }
     if (registerDto.role === null) {
       return 'Role is required';
